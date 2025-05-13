@@ -11,8 +11,11 @@ import xlwt
 from django.http import HttpResponse, JsonResponse
 
 
-def enter_page(request):
-    return render(request, 'enter_page.html')
+def dashboard(request):
+    if request.user.is_authenticated:
+        return render(request, 'dashboard.html')
+    else:
+        return redirect ('login_page')
 
 def create_product(request):
     if request.method == "POST":
@@ -75,15 +78,15 @@ def create_product(request):
                 # мухобойка, мухобойка для {product.auto_model}, мухобойка {product.auto_model}, отбойник, отбойник для {product.auto_model},
                 # отбойник {product.auto_model},
                 # """
-                key_word=  f"""дефлектор, дефлектор {row.AutoModel}, дефлектор для {row.AutoModel}, дефлектор {row.AutoBrand}, дефлектор для {row.AutoBrand}, дефлектор {row.AutoBrand} {row.AutoModel}, дефлектор для {row.AutoBrand} {row.AutoModel}, 
+                key_word=  f"""{row.Russian_Brand}, {row.Russian_Model}, {row.Russian_Brand} {row.Russian_Model} дефлектор, дефлектор {row.AutoModel}, дефлектор для {row.AutoModel}, дефлектор {row.AutoBrand}, дефлектор для {row.AutoBrand}, дефлектор {row.AutoBrand} {row.AutoModel}, дефлектор {row.Russian_Brand}, дефлектор {row.Russian_Model}, дефлектор для {row.AutoBrand} {row.AutoModel}, 
 дефлектор капота, дефлектор капота для {row.AutoBrand}, дефлектор капота {row.AutoBrand}, дефлектор капота для {row.AutoBrand} {row.AutoModel}, дефлектор капота {row.AutoBrand} {row.AutoModel}, дефлектор капота {row.AutoModel}, дефлектор капота для {row.AutoModel},
 мухобойка, мухобойка для {row.AutoBrand}, мухобойка {row.AutoBrand}, мухобойка для {row.AutoBrand} {row.AutoModel}, мухобойка {row.AutoBrand} {row.AutoModel}, мухобойка {row.AutoModel}, мухобойка для {row.AutoModel},
 отбойник, отбойник для {row.AutoBrand}, отбойник {row.AutoBrand}, отбойник для {row.AutoBrand} {row.AutoModel}, отбойник {row.AutoBrand} {row.AutoModel}, отбойник {row.AutoModel}, отбойник для {row.AutoModel},
 {row.AutoModel}, {row.AutoBrand}, {row.AutoBrand} {row.AutoModel}"""
                 
-                description_string = f"""Дефлектор на капот разработан специально для {product.auto_model}, выполнен из гибкого оргстекла, представляет собой тонкую, просчитанную пластину.
+                description_string = f"""Дефлектор капота (мухобойка) разработан специально для {product.auto_model} ({row.Russian_Brand} {row.Russian_Model}), выполнен из гибкого оргстекла, представляет собой тонкую, просчитанную пластину.
 
-Устанавливается на капот при помощи креплений, которые идут в комплекте, в штатные места в усилителе капота Вашего автомобиля.
+Устанавливается на капот при помощи креплений, которые идут в комплекте, в штатные места в усилителе капота вашего автомобиля.
 
 Расстояние между капотом и дефлектором примерно равно 1 см, оно продувается и промывается на мойке.
 
@@ -246,23 +249,23 @@ def create_product(request):
                                     "values": [
                                         {
                                             "dictionary_value_id": 0,
-                                            "value": "Дефлектор, крепеж"
+                                            "value": "Дефлектор капота (мухобойка), крепеж, инструкция"
                                         }
                                     ]
                                 },
                                 #============================================
                                 #is requried: False
                                 #guarantee period
-                                #{
-                                #    "complex_id": 0,
-                                #    "id": 4385,
-                                #    "values": [
-                                #        {
-                                #           "dictionary_value_id": 0,
-                                #            "value": "12 месяцев"
-                                #        }
-                                #   ]
-                                #},
+                                {
+                                   "complex_id": 0,
+                                   "id": 4385,
+                                   "values": [
+                                       {
+                                          "dictionary_value_id": 0,
+                                           "value": "12 месяцев"
+                                       }
+                                  ]
+                                },
                                 #==================================================
                                 #is requred: False
                                 #Country of manufacture
@@ -412,6 +415,20 @@ def create_product(request):
                                 #         }
                                 #     ]
                                 # },
+                                 #=====================================
+                                #is required: False
+                                #Количество, штук
+                                {
+                                    "complex_id": 0,
+                                    "id": 7202,
+                                    "values": [
+                                        {
+                                            "dictionary_value_id": 45536,
+                                            "value": "1"
+                                        }
+                                    ]
+                                },
+
                             ],
                             "barcode":"",
                             "description_category_id": 17028755,
@@ -472,7 +489,7 @@ def create_product(request):
                 # print('============================================================')
                 # print('')
                 time.sleep(1.0)
-        return redirect("enter_page")
+        return redirect("dashboard")
 
 def getting_ozon_id (request):
     if request.user.is_authenticated:
@@ -783,7 +800,7 @@ def update_images(request):
             print(json)
             print('============================')      
             time.sleep(1)
-        return redirect ('enter_page')
+        return redirect ('dashboard')
 
 def sale (request):
     doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
@@ -842,7 +859,7 @@ def sale (request):
             # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
         )
    
-    return redirect ('enter_page')
+    return redirect ('dashboard')
 
 def return_product (request):
     pass
