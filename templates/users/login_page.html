@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- =====================Alert Messages Module=================== -->
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+ 
+        <h3><tag style="color:red"> {{ message }} </style></h3>
+        <!-- <button class="close" data-dismiss="alert">
+                    <small><sup>x</sup></small>
+                </button> -->
+    {% endfor%}
+    {% endif%}
+</div>
+<!-- ===================End of Alert Messages Module================ -->
+
+      <form action="{% url 'login' %}" method='POST'>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">Имя пользователя</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Пароль</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+
+                        <div class="row m-auto mt-3">
+                        <input type="submit" value="Войти" class="btn btn-primary btn-block">
+                        </div>
+                    </form>
+</body>
+</html>

@@ -193,7 +193,26 @@
          </a>
   </div>
   
+      ======================================================================
+    <label for="file_name">
+        <h5>Введите файл в формате Excel
+            <br>
+            Функция исправляет базу данных, которая не видим русских символов в названии товара и в rho.
+        </h5>
+    </label>
 
+   
+    <form action="{% url 'db_correct' %}" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+    
+        <input type="file" class='form-control' id="file_name" name="file_name" required>
+   
+            <input type="submit" value="Исправить"
+                class="btn btn-sm btn-block btn-outline-dark clear_storage">
+    
+    </form>
+    <br>
+    ==================================================================================
      
 </body>
 </html>
