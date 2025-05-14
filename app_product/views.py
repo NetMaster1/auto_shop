@@ -704,7 +704,7 @@ def synchronize_qnty(request):
                 #print(status_code)
                 print(json)
                 time.sleep(1)
-    return redirect (enter_page)
+    return redirect ('dashboard')
 
 def update_prices(request):
     if request.user.is_authenticated:
