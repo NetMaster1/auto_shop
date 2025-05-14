@@ -667,7 +667,7 @@ def delivery_auto(request):
         print('Product with no ozon_id:') 
         for key, value in  dict_no_ozon_id.items():
             print(str(key) +' : ' +str(value))
-        return redirect("enter_page")
+        return redirect("dashboard")
 
 def synchronize_qnty(request):
     products=Product.objects.all()
@@ -704,7 +704,7 @@ def synchronize_qnty(request):
                 #print(status_code)
                 print(json)
                 time.sleep(1)
-    return redirect (enter_page)
+    return redirect ('dashboard')
 
 def update_prices(request):
     if request.user.is_authenticated:
