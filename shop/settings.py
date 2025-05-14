@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'app_report',
     'app_users',
     'app_service',
+    'app_api',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     messages.ERROR: 'danger'
 # }
 
+STATIC_ROOT=os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'shop/static')
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
