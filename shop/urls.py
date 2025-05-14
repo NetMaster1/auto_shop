@@ -23,5 +23,6 @@ urlpatterns = [
     path('product', include ('app_product.urls')),
     path('report', include ('app_report.urls')),
     path('service', include ('app_service.urls')),
+    path('api', include ('app_api.urls')),
     
 ]
