@@ -758,12 +758,12 @@ def update_prices(request):
             if length>0:
                 string=f'Ozon_id для артикулов {dict_new_article} не был сохранен, так как данные артикулы отсутствуют в базе данных'
                 messages.error(request, string)
-                return redirect("enter_page")
+                return redirect("dashboard")
             else:
-                return redirect ('enter_page')    
+                return redirect ('dashboard')    
            
     else:
-        return redirect ('enter_page')
+        return redirect ('dashboard')
 
 def update_images(request):
     headers = {
