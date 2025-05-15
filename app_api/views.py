@@ -8,4 +8,4 @@ from .serializers import ServerResponseSerializer
 
 class ServerResponseView(viewsets.ModelViewSet):
     queryset=ServerResponse.objects.all()
-    serializer_classw=ServerResponseSerializer
+    serializer_class=ServerResponseSerializer
