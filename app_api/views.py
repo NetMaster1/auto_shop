@@ -25,5 +25,5 @@ def ozon_push(request):
         time = data.get("time")
         print (time)
     
-        messages.success(request, data)   
-        return redirect("dashboard")
+    messages.success(request, data)   
+    return redirect("dashboard")
