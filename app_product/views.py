@@ -925,9 +925,6 @@ def general_report (request):
 #=======================End of Excel Upload Module================================
 
 
-def get_push_from_ozon(request):
-    pass
-
 
 
 

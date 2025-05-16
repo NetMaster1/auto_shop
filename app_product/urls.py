@@ -14,7 +14,6 @@ urlpatterns = [
     path('update_images', views.update_images, name='update_images'),
     path('return_product', views.return_product, name='return_product'),
     path('general_report', views.general_report, name='general_report'),
-    path('get_push_from_ozon', views.get_push_from_ozon, name='get_push_from_ozon'),
     # path('choice', views.choice, name='choice'),
     # path('orders_history', views.orders_history, name='orders_history'),
 ]
