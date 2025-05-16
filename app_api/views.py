@@ -5,6 +5,7 @@ from .serializers import ServerResponseSerializer
 import json
 import requests
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -14,9 +15,15 @@ class ServerResponseView(viewsets.ModelViewSet):
     queryset=ServerResponse.objects.all()
     serializer_class=ServerResponseSerializer
 
-def receive_ozon_push_message(request):
-    data = json.loads(request.body)#получение данных запроса POST в формате json
 
+@csrf_exempt #отключает защиту csrf
+def ozon_push(request):
+    if request.method == 'POST':
+      #получение данных запроса POST в формате json
+        data = json.loads(request.body)
+        print(data)
+        time = data.get("time")
+        print (time)
     
-    messages.success(request, data)   
-    return redirect("dashboard")
+        messages.success(request, data)   
+        return redirect("dashboard")
