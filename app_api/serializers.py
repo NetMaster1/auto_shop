@@ -4,5 +4,5 @@ from .models import ServerResponse
 class ServerResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model= ServerResponse
-        fields = ('version', 'name')
-        #fields = ('version', 'name', 'time')
+        #fields = ('version', 'name')
+        fields = ('version', 'name', 'time')
