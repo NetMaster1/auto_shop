@@ -6,6 +6,8 @@ import json
 import requests
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -24,6 +26,12 @@ def ozon_push(request):
         print(data)
         time = data.get("time")
         print (time)
+        json_data = {
+          "version": "python",
+          "name": "3.13.1",
+          "time": time
+}
+        return JsonResponse(json_data, safe=False)
     
     messages.success(request, data)   
     return redirect("dashboard")
