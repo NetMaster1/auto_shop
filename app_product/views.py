@@ -837,7 +837,7 @@ def getting_ozon_id (request):
                     dict[row.Article]=row.Title
             string=f'Ozon_id для артикулов {dict} не был сохранен, так как данные артикулы отсутствуют в базе данных'
             messages.error(request, string)
-            return redirect("enter_page")
+            return redirect("dashboard")
 
 def delivery_auto(request):
     doc_type = DocumentType.objects.get(name="Поступление ТМЦ")
