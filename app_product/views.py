@@ -453,42 +453,333 @@ def create_product(request):
                         }
                     ]
                 }
-               
-                #uploading new or updating existing product
-                response=requests.post('https://api-seller.ozon.ru/v3/product/import', json=task, headers=headers)  
-                status_code=response.status_code
-                json=response.json()
-                # print('=========Request Status & Task ID==========================')
-                # print('Наименование ' + str(n))
-                # print(status_code)
-                # if status_code == 200:
-                #     print('Товар в БД Озон создан')
-                # else:
-                #     string=f'. Товар {product.id} в БД Озон не создан.'
-                #     print(string)
-                #messages.error(request,  string)
-                #print(json)
-                #a=json['result']
-                task_id=json['result']['task_id']
-                print('Task_id: ' + str(task_id))
-                # в качестве ответа данный метод возвращает task_id. Мы можем использовать task id 
-                #в методе response=requests.post('https://api-seller.ozon.ru/v1/product/import/info', json=task_1, headers=headers)
-                #для того, чтобы узнать статус загрузки наименования. Если всё ок, то данный метод должен возвратить ozon_id,
-                #но обычно озону нужно время, чтобы отмодерировать новое наименование, поэтому, если сделать запрос сразу,
-                # ответ приходит без ozon_id, который нам нужен для загрузки кол-ва.
+            elif 'Дефлектор окон' in row.Title:
+                key_word=  f"""дефлектор, дефлектор окна, дефлектор окон, дефлектор окна {row.AutoModel}, дефлектор для {row.AutoModel}, дефлектор {row.AutoBrand}, дефлектор для {row.AutoBrand}, 
+                дефлектор {row.AutoBrand} {row.AutoModel}, дефлектор для {row.AutoBrand} {row.AutoModel}"""
 
-                print('===================Status of Task Id=========================')
-                task_1  = {
-                    "task_id": task_id
-                }
-                response=requests.post('https://api-seller.ozon.ru/v1/product/import/info', json=task_1, headers=headers)
-                json=response.json() 
-                print(json)
-                # a=json['result']
-                # task_id=a['task_id']
-                # print('============================================================')
-                # print('')
-                time.sleep(1.0)
+
+
+                description_string = f"""Превратите каждую поездку в комфортное путешествие!
+
+Устали от сквозняков в салоне и грязи на стеклах? Наши дефлекторы окон – это идеальное решение для тех, кто ценит комфорт и безопасность в дороге.
+
+Почему наши дефлекторы – это must have для вашего автомобиля:
+
+Максимальная защита от пыли, грязи и влаги даже на высоких скоростях
+Эффективная циркуляция воздуха предотвращает запотевание стекол
+Комфортная поездка с приоткрытыми окнами без сквозняков и шума
+Стильный дизайн в спортивном стиле преобразит внешний вид вашего авто
+Надежное крепление на промышленный скотч 3М
+Безупречное качество наших дефлекторов:
+
+Изготовлены из ударопрочного поликарбоната
+Устойчивы к ультрафиолету и выцветанию
+Имеют идеальную геометрию для вашего автомобиля
+Доступны в различных цветовых решениях
+Простота установки – наши дефлекторы легко монтируются без повреждения кузова. Профессиональная установка в нашем сервисе гарантирует надежную фиксацию на долгие годы.
+
+Подарите себе комфорт и безопасность в каждой поездке! Закажите дефлекторы окон прямо сейчас и оцените все преимущества уже после первой поездки."""            
+            
+            task = {
+                    "items": [
+                        {
+                            "attributes": [    
+            
+            #===========================================
+            #is required: True
+            #"Название модели (для объединения в одну карточку)",
+            #"Укажите название модели товара. Не указывайте в этом поле тип и бренд."
+            #Чтобы объединить две карточки, для каждой передайте 9048 в массиве attributes. 
+            #Все атрибуты в этих карточках, кроме размера или цвета, должны совпадать.
+            {
+                "complex_id": 0,
+                "id": 9048,
+                "values": [
+                    {
+                        "dictionary_value_id": 0,
+                        "value": str(row.Model)
+                    }
+                ]
+            },
+            #====================================
+            # is required: true
+            # Бренд
+            {
+                "complex_id": 0,
+                "id": 85,
+                "values": [
+                    {
+                        "dictionary_value_id": 0,
+                        "value": "Нет бренда"
+                    }
+                ]
+            },
+            #============================================
+            #is requried: False
+            #guarantee period
+            #{
+            #    "complex_id": 0,
+            #    "id": 4385,
+            #    "values": [
+            #        {
+            #           "dictionary_value_id": 0,
+            #            "value": "12 месяцев"
+            #        }
+            #   ]
+            #},
+            #====================================
+            #is required: False
+            #Материал
+            {
+                "complex_id": 0,
+                "id": 7199,
+                "values": [
+                    {
+                        "dictionary_value_id": 62015,
+                        "value": "Пластик"
+                    }
+                ]
+            },
+            #============================================
+            #is required: False
+            #Цвет товара
+            {
+                "complex_id": 0,
+                "id": 10096,
+                "values": [
+                    {
+                        "dictionary_value_id": 61574,
+                        "value": "черный"
+                    }
+                ]
+            },
+            #=====================================
+            # is required: true
+            # Партномер(article)
+            # Уникальный код (артикул*) однозначно идентифицирующий деталь автомобиля. 
+            # *Маркировка завода-изготовителя автомобиля для OE (оригинальных) запчастей или 
+            # номер детали по каталогу фирмы-производителя для OEM (не оригинальных). 
+            # Если такого артикула у вас нет- продублируйте сюда артикул товара
+            {
+                "complex_id": 0,
+                "id": 7236,
+                "values": [
+                    {
+                        "dictionary_value_id": 0,
+                        "value": str(row.Article)
+                    }
+                ]
+            },
+            #=====================================================
+            #is required: false
+            #Название
+            #Название пишется по принципу:\nТип + Бренд + Модель (серия + пояснение) + Артикул производителя + , (запятая) + Атрибут\n
+            # Название не пишется большими буквами (не используем caps lock).\n
+            # Перед атрибутом ставится запятая. Если атрибутов несколько, они так же разделяются запятыми.\n
+            # Если какой-то составной части названия нет - пропускаем её.\n
+            # Атрибутом может быть: цвет, вес, объём, количество штук в упаковке и т.д.\n
+            # Цвет пишется с маленькой буквы, в мужском роде, единственном числе.\n
+            # Слово цвет в названии не пишем.\nТочка в конце не ставится.\n
+            # Никаких знаков препинания, кроме запятой, не используем.\n
+            # Кавычки используем только для названий на русском языке.\n
+            # Примеры корректных названий:\n
+            # Смартфон Apple iPhone XS MT572RU/A, space black \n
+            # Кеды Dr. Martens Киноклассика, бело-черные, размер 43\n
+            # Стиральный порошок Ariel Магия белого с мерной ложкой, 15 кг\n
+            # Соус Heinz Xtreme Tabasco суперострый, 10 мл\n
+            # Игрушка для животных Четыре лапы \"Бегающая мышка\" БММ, белый",
+            {
+                "complex_id": 0,
+                "id": 4180,
+                "values": [
+                    {
+                        "dictionary_value_id": 0,
+                        "value": str(row.Title)
+                    }
+                ]
+            },
+            #==========================================================
+            # is required: False
+            # Комплектация
+            # Перечислите, что входит в комплект вместе с товаром
+            {
+                "complex_id": 0,
+                "id": 4384,
+                "values": [
+                    {
+                        "dictionary_value_id": 0,
+                        "value": "Дефлекторы 4 шт., монтажный скотч"
+                    }
+                ]
+            },
+            #============================================
+            #is required: False
+            #Вид выпуска товара
+            {
+                "complex_id": 0,
+                "id": 22270,
+                "values": [
+                    {
+                        "dictionary_value_id": 971417785,
+                        "value": "Фабричное производство"
+                    }
+                ]
+            },
+            #==================================================
+            #is required: False
+            #Место установки
+            {
+                "complex_id": 0,
+                "id": 7271,
+                "values": [
+                    {
+                        "dictionary_value_id": 57649,
+                        "value": "Передние двери"
+                    },
+                    {
+                        "dictionary_value_id": 57640,
+                        "value": "Задние двери"
+                    }
+                ]
+            },
+            #==================================================
+            # is required: False
+            # Аннотация
+            # Описание товара, маркетинговый текст. Необходимо заполнять на русском языке
+            {
+                "complex_id": 0,
+                "id": 4191,
+                "values": [
+                    {
+                        "dictionary_value_id": 0,
+                        "value": description_string
+                    }
+                ]
+            },
+            #================================================
+            #is required : false
+            #key words
+            {
+                "complex_id": 0,
+                "id": 22336,
+                "values": [
+                    {
+                        "dictionary_value_id": 0,
+                        "value": key_word
+                    }
+                ]
+            },
+            #==================================================
+            #is requred: False
+            #Country of manufacture
+            {
+                "complex_id": 0,
+                "id": 4389,
+                "values": [
+                    {
+                        "dictionary_value_id": 90295,
+                        "value": "Россия"
+                    }
+                ]
+            },
+            #=======================================================
+            #is required: False
+            #Вид крепления дефлектора
+            {
+                "complex_id": 0,
+                "id": 22102,
+                "values": [
+                    {
+                        "dictionary_value_id": 971313323,
+                        "value": "Накладные"
+                    }
+                ]
+            },
+            #=======================================
+            # is required: true
+            # Тип
+            # Цифро-буквенный код товара для его учета,  
+            # является уникальным среди товаров бренда. Не является EAN/серийным  
+            # номером/штрихкодом, не равен названию модели товара - для этих параметров
+            # есть отдельные атрибуты. Артикул выводится в карточке товара на сайте и может
+            # спользоваться при автоматическом формировании названия товара.
+            {
+                "complex_id": 0,
+                "id": 8229,
+                "values": [
+                    {
+                        "dictionary_value_id": 97593,
+                        "value": "Дефлектор для окон"
+                    }
+                ]
+            },
+        ],
+                "barcode":"",
+                "description_category_id": 17028755,
+                "color_image": "",
+                "complex_attributes": [],
+                "currency_code": "RUB",
+                "depth":500,
+                "dimension_unit": "mm",
+                "height": 50,
+                "images": [str(row.Image_1), str(row.Image_2), str(row.Image_3), str(row.Image_4), str(row.Image_5) ],
+                "images360": [],
+                "name": str(row.Title),
+                "offer_id": str(row.Article),
+                "old_price": str(row.Old_Price),
+                "pdf_list": [],
+                "price": str(row.Retail_Price),
+                "primary_image":str(row.Primary_Image) ,
+                "vat": "0",
+                "weight": 1000,
+                "weight_unit": "g",
+                "width": 200,
+            }
+        ]
+    }
+
+
+
+
+            #uploading new or updating existing product
+            response=requests.post('https://api-seller.ozon.ru/v3/product/import', json=task, headers=headers)  
+            status_code=response.status_code
+            json=response.json()
+            # print('=========Request Status & Task ID==========================')
+            # print('Наименование ' + str(n))
+            # print(status_code)
+            # if status_code == 200:
+            #     print('Товар в БД Озон создан')
+            # else:
+            #     string=f'. Товар {product.id} в БД Озон не создан.'
+            #     print(string)
+            #messages.error(request,  string)
+            #print(json)
+            #a=json['result']
+            task_id=json['result']['task_id']
+            print('Task_id: ' + str(task_id))
+            # в качестве ответа данный метод возвращает task_id. Мы можем использовать task id 
+            #в методе response=requests.post('https://api-seller.ozon.ru/v1/product/import/info', json=task_1, headers=headers)
+            #для того, чтобы узнать статус загрузки наименования. Если всё ок, то данный метод должен возвратить ozon_id,
+            #но обычно озону нужно время, чтобы отмодерировать новое наименование, поэтому, если сделать запрос сразу,
+            # ответ приходит без ozon_id, который нам нужен для загрузки кол-ва.
+
+            print('===================Status of Task Id=========================')
+            task_1  = {
+                "task_id": task_id
+            }
+            response=requests.post('https://api-seller.ozon.ru/v1/product/import/info', json=task_1, headers=headers)
+            json=response.json() 
+            print(json)
+            # a=json['result']
+            # task_id=a['task_id']
+            # print('============================================================')
+            # print('')
+            time.sleep(1.0)
+        
+        
+        
+        
         return redirect("dashboard")
 
 def getting_ozon_id (request):

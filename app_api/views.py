@@ -27,8 +27,8 @@ def ozon_push(request):
         time = data.get("time")
         print (time)
         json_data = {
-          "version": "python",
-          "name": "3.13.1",
+          "version": "3.13.1",
+          "name": "python",
           "time": time
 }
         return JsonResponse(json_data, safe=False)
