@@ -9,7 +9,7 @@ class DocumentTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',  )
 
 class RemainderHistoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created', 'rho_type', 'article', 'name', 'pre_remainder', 'incoming_quantity', 'outgoing_quantity', 'current_remainder')
+    list_display = ('id', 'created', 'rho_type', 'article', 'name', 'status', 'shipment_id', 'pre_remainder', 'incoming_quantity', 'outgoing_quantity', 'current_remainder')
     search_fields = ('article', )
 
 admin.site.register(Product, ProductAdmin)

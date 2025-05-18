@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.http import JsonResponse
 import datetime
+import pytz
 
 # Create your views here.
 
@@ -29,6 +30,7 @@ def ozon_push(request):
         print(data)
         message_type=data.get("message_type")
         if message_type=='string':
+          print(message_type)
           time = data.get("time")
           print (time)
           json_data = {
@@ -37,28 +39,39 @@ def ozon_push(request):
             "time": time
           }
         elif message_type=="TYPE_NEW_POSTING":
+          status='initiated by ozon'
+          print(message_type)
           time = data.get("in_process_at")
+          #print(time)
+          #print('=================')
           # converting dateTime in str format (2021-07-08T01:05) to django format ()
-          dateTime = datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M")
-          #adding seconds & microseconds to 'dateTime' since it comes as '2021-07-10 01:05:03:00' and we need it real value of seconds & microseconds
-          current_dt=datetime.datetime.now()
-          mics=current_dt.microsecond
-          tdelta_1=datetime.timedelta(microseconds=mics)
-          secs=current_dt.second
-          tdelta_2=datetime.timedelta(seconds=secs)
-          tdelta_3=tdelta_1+tdelta_2
-          dateTime=dateTime+tdelta_3
+          # dateTime = datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M")
+          # print(dateTime)
+          # #adding seconds & microseconds to 'dateTime' since it comes as '2021-07-10 01:05:03:00' and we need it real value of seconds & microseconds
+          # current_dt=datetime.datetime.now()
+          # mics=current_dt.microsecond
+          # tdelta_1=datetime.timedelta(microseconds=mics)
+          # secs=current_dt.second
+          # tdelta_2=datetime.timedelta(seconds=secs)
+          # tdelta_3=tdelta_1+tdelta_2
+          # dateTime=dateTime+tdelta_3
+          # print(dateTime)
           # else:
-          #     tdelta=datetime.timedelta(hours=3)
-          #     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
-          #     dateTime=dT_utcnow+tdelta
+          tdelta=datetime.timedelta(hours=3)
+          dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+          dateTime=dT_utcnow+tdelta
+          #print(dateTime)
 
 
           doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
           product_sold=data.get('products')
+          print(product_sold)
           product=product_sold[0]
+          #print(product)
           sku=product['sku']
+          #print(f"SKU: {sku}")
           quantity=product['quantity']
+          #print(f"Quantity: {quantity}")
 
           item=Product.objects.get(ozon_id=sku)
           if RemainderHistory.objects.filter(ozon_id=sku, created__lt=dateTime).exists():
@@ -66,12 +79,14 @@ def ozon_push(request):
             pre_remainder=rho_latest_before.current_remainder
           else:
             pre_remainder=0
+          print(pre_remainder)
           rho = RemainderHistory.objects.create(
             rho_type=doc_type,
             created=dateTime,
             article=item.article,
             ozon_id=sku,
-            name=product.name,
+            name=item.name,
+            status=status,
             pre_remainder=pre_remainder,
             incoming_quantity=0,
             outgoing_quantity=int(quantity),
@@ -82,7 +97,7 @@ def ozon_push(request):
           json_data = {
             "result": True
             }
-        return JsonResponse(json_data, safe=False)
+        
       
       except:
         json_data = {
@@ -92,5 +107,6 @@ def ozon_push(request):
               "details": None
             }
         }
-    messages.success(request, data)   
-    return redirect("dashboard")
+      return JsonResponse(json_data, safe=False)
+    # messages.success(request, data)   
+    # return redirect("dashboard")

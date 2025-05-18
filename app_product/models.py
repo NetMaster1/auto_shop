@@ -36,6 +36,8 @@ class RemainderHistory(models.Model):
     rho_type = models.ForeignKey(DocumentType, on_delete=models.DO_NOTHING, null=True)
     ean = models.CharField(max_length=50, null=True, blank=True)
     name = models.CharField(max_length=250)
+    status = models.CharField(max_length=50, null=True, blank=True)#displays who initiated the creation of rho (ozon, WB or myself)
+    shipment_id = models.CharField(max_length=50, null=True, blank=True)
     ozon_id = models.CharField(max_length=50, null=True, blank=True)
     article = models.CharField(max_length=50, null=True, blank=True)
     bar_code = models.CharField(max_length=50, null=True, blank=True)
