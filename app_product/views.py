@@ -1110,6 +1110,7 @@ def sale (request):
             dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
             dateTime=dT_utcnow+tdelta
         article = request.POST["article"]
+        article=article.strip()
         retail_price = request.POST["retail_price"]
         retail_price=int(retail_price)
         if Product.objects.filter(article=article).exists():
@@ -1122,10 +1123,10 @@ def sale (request):
                 product.save()
             else:
                 messages.error(request,"Документ не проведен. Недостаточное кол-во товара на остатке")
-                return redirect("enter_page")
+                return redirect("dashboard")
         else:
             messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
-            return redirect("enter_page")
+            return redirect("dashboard")
           # checking docs before remainder_history
         if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
             rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
