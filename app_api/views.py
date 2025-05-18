@@ -42,6 +42,7 @@ def ozon_push(request):
           status='initiated by ozon'
           print(message_type)
           time = data.get("in_process_at")
+          shipment_id=data.get('posting_number')
           #print(time)
           #print('=================')
           # converting dateTime in str format (2021-07-08T01:05) to django format ()
@@ -87,6 +88,7 @@ def ozon_push(request):
             ozon_id=sku,
             name=item.name,
             status=status,
+            shipment_id=shipment_id,
             pre_remainder=pre_remainder,
             incoming_quantity=0,
             outgoing_quantity=int(quantity),
