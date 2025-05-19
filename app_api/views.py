@@ -30,12 +30,24 @@ def ozon_push(request):
         print(data)
         message_type=data.get("message_type")
         if message_type=='TYPE_PING':
-          print(message_type)
+          #print(message_type)
           # time = data.get("time")
           # print (time)
+          #adding seconds & microseconds to 'dateTime' since it comes as '2021-07-10 01:05:03:00' and we need it real value of seconds & microseconds
+          # current_dt=datetime.datetime.now()
+          # mics=current_dt.microsecond
+          # tdelta_1=datetime.timedelta(microseconds=mics)
+          # secs=current_dt.second
+          # tdelta_2=datetime.timedelta(seconds=secs)
+          # tdelta_3=tdelta_1+tdelta_2
+          # dateTime=dateTime+tdelta_2
+
           tdelta=datetime.timedelta(hours=3)
           dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
           dateTime=dT_utcnow+tdelta
+          dateTime=datetime.datetime.strftime(dateTime, "%Y-%m-%dT%H:%M:%SZ")
+          #dispays milliseconds in string format
+          # datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-2]
 
           json_data = {
             "version": "3.13.1",
@@ -63,9 +75,14 @@ def ozon_push(request):
           # print(dateTime)
           # else:
           tdelta=datetime.timedelta(hours=3)
+          dateTime=datetime.datetime.now()
           dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
           dateTime=dT_utcnow+tdelta
-          #print(dateTime)
+          print(dateTime)
+        
+      
+      
+      
 
 
           doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
@@ -122,12 +139,14 @@ def ozon_push(request):
       
       #Sending the answer in json format via HttpResponse method
       #converts python dictionnary to json object
-      #json_data=json.dumps(json_data)
-      #return HttpResponse(json_data, safe=False, content_type='application/json')
+      # json_data=json.dumps(json_data)
+      # print(json_data)
+      # return HttpResponse(json_data, content_type='application/json')
 
       #Sending the answer in json format via JsonRespose method.
       #It's a djago method which converts python dict to json & automatically sets the required headers.
       return JsonResponse(json_data, safe=False)
       #return JsonResponse(json_data, status=200)
-    #messages.success(request, data)   
-    #return redirect("dashboard")
+
+      #messages.success(request, data)   
+      #return redirect("dashboard")
