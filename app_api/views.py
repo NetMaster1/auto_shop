@@ -25,18 +25,22 @@ class ServerResponseView(viewsets.ModelViewSet):
 def ozon_push(request):
     if request.method == 'POST':
       try:
-        #получение данных запроса POST в формате json
+        #получение данных запроса POST от стороннего сайта в формате json
         data = json.loads(request.body)
         print(data)
         message_type=data.get("message_type")
-        if message_type=='string':
+        if message_type=='TYPE_PING':
           print(message_type)
-          time = data.get("time")
-          print (time)
+          # time = data.get("time")
+          # print (time)
+          tdelta=datetime.timedelta(hours=3)
+          dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+          dateTime=dT_utcnow+tdelta
+
           json_data = {
             "version": "3.13.1",
             "name": "python",
-            "time": time
+            "time": dateTime
           }
         elif message_type=="TYPE_NEW_POSTING":
           status='initiated by ozon'
@@ -99,8 +103,14 @@ def ozon_push(request):
           json_data = {
             "result": True
             }
-        
-      
+        else:
+          json_data = {
+              "error": {
+                "code": "ERROR_UNKNOWN",
+                "message": "message_type is not defined",
+                "details": None
+              }
+        }
       except:
         json_data = {
             "error": {
@@ -109,6 +119,15 @@ def ozon_push(request):
               "details": None
             }
         }
+      
+      #Sending the answer in json format via HttpResponse method
+      #converts python dictionnary to json object
+      #json_data=json.dumps(json_data)
+      #return HttpResponse(json_data, safe=False, content_type='application/json')
+
+      #Sending the answer in json format via JsonRespose method.
+      #It's a djago method which converts python dict to json & automatically sets the required headers.
       return JsonResponse(json_data, safe=False)
-    # messages.success(request, data)   
-    # return redirect("dashboard")
+      #return JsonResponse(json_data, status=200)
+    #messages.success(request, data)   
+    #return redirect("dashboard")
