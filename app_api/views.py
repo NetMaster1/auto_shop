@@ -28,6 +28,8 @@ def ozon_push(request):
         #получение данных запроса POST от стороннего сайта в формате json
         data = json.loads(request.body)
         print(data)
+        data=json.dumps(data)
+        print(data)
         message_type=data.get("message_type")
         if message_type=='TYPE_PING':
           #print(message_type)
@@ -45,6 +47,7 @@ def ozon_push(request):
           tdelta=datetime.timedelta(hours=3)
           dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
           dateTime=dT_utcnow+tdelta
+          #converts django time to string
           dateTime=datetime.datetime.strftime(dateTime, "%Y-%m-%dT%H:%M:%SZ")
           #dispays milliseconds in string format
           # datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-2]
@@ -54,6 +57,7 @@ def ozon_push(request):
             "name": "python",
             "time": dateTime
           }
+          print(json_data)
         elif message_type=="TYPE_NEW_POSTING":
           status='initiated by ozon'
           print(message_type)
@@ -81,10 +85,6 @@ def ozon_push(request):
           print(dateTime)
         
       
-      
-      
-
-
           doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
           product_sold=data.get('products')
           print(product_sold)
@@ -145,6 +145,9 @@ def ozon_push(request):
 
       #Sending the answer in json format via JsonRespose method.
       #It's a djago method which converts python dict to json & automatically sets the required headers.
+      print('========================')
+      print('my server response')
+      print('json_data')
       return JsonResponse(json_data, safe=False)
       #return JsonResponse(json_data, status=200)
 
