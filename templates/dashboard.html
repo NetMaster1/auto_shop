@@ -94,16 +94,16 @@
     ======================================================================
     <!-- ============================================================= -->
 
-    <form action="{% url 'getting_ozon_id' %}" method="POST" enctype="multipart/form-data" >
+    <form action="{% url 'getting_ozon_id_and_ozon_sku' %}" method="POST" enctype="multipart/form-data" >
         {% csrf_token %}
     
 
         <label for="file_name">
             <h5>Введите файл в формате Excel
                 <br>
-                Если артикул существует в таблице Product и на mp ozon, то загружает ozon_id для соответствующего <br>
+                Если артикул существует в таблице Product и на mp ozon, то загружает ozon_id и ozon_sku для соответствующего <br>
                 артикула и вносит его в таблицу Product в erms. <br>
-                Таким образом у нас есть артикул и ozon_id в таблице Product.
+                Таким образом у нас есть артикул, ozon_id и ozon_sku в таблице Product.
             </h5>
         </label>
         <input type="file" class='form-control' id="file_name" name="file_name" required>

@@ -779,7 +779,7 @@ def create_product(request):
         
         return redirect("dashboard")
 
-def getting_ozon_id (request):
+def getting_ozon_id_and_ozon_sku (request):
     if request.user.is_authenticated:
         headers = {
                     "Client-Id": "1711314",
@@ -813,11 +813,8 @@ def getting_ozon_id (request):
                             "limit": 100
                         }
                     response=requests.post('https://api-seller.ozon.ru/v3/product/list', json=task, headers=headers) 
-                    print(response)
+                    #print(response)
                     json=response.json()
-                    print(json)
-                    print('============================')
-                    print (row.Article)
                     ozon_id=json['result']['items'][0]['product_id']
                     #a=json['result']
                     #print (a)
@@ -828,6 +825,24 @@ def getting_ozon_id (request):
                     # d=c['product_id']
                     print(ozon_id)
                     product.ozon_id=ozon_id
+                    time.sleep(1)
+                    #================================
+                    task=    {
+                        "offer_id": [
+                                ],
+                        "product_id": [product.ozon_id],
+                            "sku": [
+                                ]
+                        }
+                    response=requests.post('https://api-seller.ozon.ru/v3/product/info/list', json=task, headers=headers) 
+                    json=response.json()
+                    sku_id=json['items'][0]['sources'][0]['sku']
+                    # data=json['items']
+                    # data=data[0]
+                    # data=data['sources']
+                    # data=data[0]
+                    # sku_id=data['sku']
+                    product.ozon_sku=sku_id
                     product.save()
                     time.sleep(1)
                 else:
@@ -835,6 +850,7 @@ def getting_ozon_id (request):
             string=f'Ozon_id для артикулов {dict} не был сохранен, так как данные артикулы отсутствуют в базе данных'
             messages.error(request, string)
             return redirect("dashboard")
+
 
 def delivery_auto(request):
     doc_type = DocumentType.objects.get(name="Поступление ТМЦ")
