@@ -78,6 +78,7 @@ def ozon_push(request):
           print(product.name)
           print(f'Ozon_id: {product.ozon_id}')
           print(f'Ozon_sku: {product.ozon_sku}')
+         
           if RemainderHistory.objects.filter(ozon_id=product.ozon_id, created__lt=dateTime).exists():
             print("True")
             rho_latest_before = RemainderHistory.objects.filter(ozon_id=product.ozon_id,  created__lt=dateTime).latest('created')
@@ -103,7 +104,14 @@ def ozon_push(request):
             #retail_price=int(retail_price),
             # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
             )
-          
+
+          #editing current quatityt in product table for future reports
+          #taking current qunatity report based on rho table takes too much time
+          product.quantity=rho.current_remainder
+          product.total_sum=rho.current_remainder * product.av_price
+          product.save()
+      
+
           json_data = {
             "result": True
             }

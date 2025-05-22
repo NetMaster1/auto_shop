@@ -851,7 +851,6 @@ def getting_ozon_id_and_ozon_sku (request):
             messages.error(request, string)
             return redirect("dashboard")
 
-
 def delivery_auto(request):
     doc_type = DocumentType.objects.get(name="Поступление ТМЦ")
     if request.method == "POST":
