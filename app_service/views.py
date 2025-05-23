@@ -37,7 +37,7 @@ def product_quant_correct(request):
                 product.save()
         messages.success(request, 'Product table quantity and total_sum changed')   
         return redirect("dashboard")   
-        return redirect('dashboard')
+        
             
 
 
