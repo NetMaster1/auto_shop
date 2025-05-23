@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from app_product.models import Product, RemainderHistory
 import pandas
 import xlwt
+from django.contrib import messages
 
 def db_correct(request):
     if request.user.is_authenticated:
@@ -24,4 +25,19 @@ def db_correct(request):
             return redirect('dashboard')
 
     return redirect ('login_page')
+
+def product_quant_correct(request):
+    if request.user.is_authenticated:
+        products=Product.objects.all()
+        for product in products:
+            if RemainderHistory.objects.filter(article=product.article).exists():
+                rho_latest = RemainderHistory.objects.filter(article=product.article).latest('created')
+                product.quantity=rho_latest.current_remainder
+                product.total_sum=rho_latest.current_remainder*product.av_price
+                product.save()
+        messages.success(request, 'Product table quantity and total_sum changed')   
+        return redirect("dashboard")   
+        return redirect('dashboard')
+            
+
 
