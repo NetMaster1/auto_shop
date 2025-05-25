@@ -454,8 +454,13 @@ def create_product(request):
                     ]
                 }
             elif 'Дефлекторы окон' in row.Title:
-                key_word=  f"""дефлектор, дефлектор окна, дефлектор окон, дефлектор окна {row.AutoModel}, дефлектор для {row.AutoModel}, дефлектор {row.AutoBrand}, дефлектор для {row.AutoBrand}, 
-                дефлектор {row.AutoBrand} {row.AutoModel}, дефлектор для {row.AutoBrand} {row.AutoModel}"""
+                key_word= f"""{row.Russian_Brand}, {row.Russian_Model}, {row.Russian_Brand} {row.Russian_Model}, {row.AutoBrand}, {row.AutoModel}, {row.AutoBrand} {row.AutoModel},
+                дефлектор, дефлектор {row.AutoBrand}, дефлектор {row.AutoModel}, дефлектор {row.AutoBrand} {row.AutoModel}, дефлектор {row.Russian_Brand}, дефлектор {row.Russian_Model}, дефлектор {row.Russian_Brand} {row.Russian_Model},
+                дефлектор окна, дефлектор окон, дефлектор окна {row.AutoModel}, дефлектор окна {row.AutoBrand}, дефлектор окна {row.AutoModel} {row.AutoBrand}, дефлектор окна {row.Russian_Brand}, дефлектор окна {row.Russian_Model}, дефлектор окна {row.Russian_Brand} {row.AutoModel}, 
+                дефлектор двери, дефлектор дверей, дефлектор для дверей, дефлектор двери {row.AutoBrand}, дефлектор двери {row.AutoModel}, дефлектор двери {row.AutoBrand} {row.AutoModel}, дефлектор двери {row.Russian_Brand}, дефлектор двери {row.Russian_Model}, дефлектор двери {row.Russian_Model} {row.Russian_Brand},
+               """
+
+
                 description_string = f"""Превратите каждую поездку в комфортное путешествие!
 
 Устали от сквозняков в салоне и грязи на стеклах? Наши дефлекторы окон – это идеальное решение для тех, кто ценит комфорт и безопасность в дороге.
@@ -1105,6 +1110,7 @@ def update_images(request):
             time.sleep(1)
         return redirect ('dashboard')
 
+#does not send any info to ozon
 def sale (request):
     doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
     if request.method == "POST":

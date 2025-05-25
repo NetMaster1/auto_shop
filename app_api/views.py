@@ -20,7 +20,7 @@ class ServerResponseView(viewsets.ModelViewSet):
     queryset=ServerResponse.objects.all()
     serializer_class=ServerResponseSerializer
 
-
+#url, куда приходит post request from ozon ( push уведомление) в формате json on поступившем заказе 
 @csrf_exempt #отключает защиту csrf
 def ozon_push(request):
     if request.method == 'POST':
@@ -149,3 +149,22 @@ def ozon_push(request):
 
       #messages.success(request, data)   
       #return redirect("dashboard")
+
+
+
+def wb_test(request):
+  url = "https://common-api.wildberries.ru/ping"  
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  response = requests.get(url, headers=headers)
+  a=response.json()
+  print(a)
+
+  messages.error(request,f'WB Response: {a}')
+  return redirect ('dashboard')
+
+
+#   url = "https://suppliers-api.wildberries.ru/api/v1/stocks"  
+# response = requests.get(url, headers=headers)  
+
+
+  pass
