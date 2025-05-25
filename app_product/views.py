@@ -455,7 +455,7 @@ def create_product(request):
                 }
             elif 'Дефлекторы окон' in row.Title:
                 key_word= f"""дефлектор; дефлекторы; дефлектор окна; дефлекторы окон; дефлектор двери; дефлекторы дверей; 
-дефлекторы на машину; дефлекторы на двери; {row.Russian_Model}; {row.Russian_Brand}; {row.AutoBrand}; {row.AutoModel}; {row.Russian_Model} {row.Russian_Brand}; {row.AutoBrnad} {row.AutoModel}"""
+дефлекторы на машину; дефлекторы на двери; {row.Russian_Model}; {row.Russian_Brand}; {row.AutoBrand}; {row.AutoModel}; {row.Russian_Model} {row.Russian_Brand}; {row.AutoBrand} {row.AutoModel}"""
 
 
                 description_string = f"""Превратите каждую поездку в комфортное путешествие!
