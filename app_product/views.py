@@ -454,10 +454,8 @@ def create_product(request):
                     ]
                 }
             elif 'Дефлекторы окон' in row.Title:
-                key_word= f"""{row.Russian_Brand}, {row.Russian_Model}, {row.Russian_Brand} {row.Russian_Model}, {row.AutoBrand}, {row.AutoModel}, {row.AutoBrand} {row.AutoModel},
-дефлектор, дефлектор {row.AutoBrand}, дефлектор {row.AutoModel}, дефлектор {row.AutoBrand} {row.AutoModel}, дефлектор {row.Russian_Brand}, дефлектор {row.Russian_Model}, дефлектор {row.Russian_Brand} {row.Russian_Model},
-дефлектор окна, дефлектор окон, дефлектор окна {row.AutoModel}, дефлектор окна {row.AutoBrand}, дефлектор окна {row.AutoModel} {row.AutoBrand}, дефлектор окна {row.Russian_Brand}, дефлектор окна {row.Russian_Model}, дефлектор окна {row.Russian_Brand} {row.AutoModel}, 
-дефлектор двери, дефлектор дверей, дефлектор для дверей, дефлектор двери {row.AutoBrand}, дефлектор двери {row.AutoModel}, дефлектор двери {row.AutoBrand} {row.AutoModel}, дефлектор двери {row.Russian_Brand}, дефлектор двери {row.Russian_Model}, дефлектор двери {row.Russian_Model} {row.Russian_Brand}"""
+                key_word= f"""дефлектор; дефлекторы; дефлектор окна; дефлекторы окон; дефлектор двери; дефлекторы дверей; 
+дефлекторы на машину; дефлекторы на двери; {row.Russian_Model}; {row.Russian_Brand}; {row.AutoBrand}; {row.AutoModel}; {row.Russian_Model} {row.Russian_Brand}; {row.AutoBrnad} {row.AutoModel}"""
 
 
                 description_string = f"""Превратите каждую поездку в комфортное путешествие!
