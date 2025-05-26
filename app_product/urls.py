@@ -8,6 +8,7 @@ urlpatterns = [
     path('getting_ozon_id_and_ozon_sku', views.getting_ozon_id_and_ozon_sku, name='getting_ozon_id_and_ozon_sku'),
 
     path('delivery_auto', views.delivery_auto, name='delivery_auto'),
+    path('zero_ozon_qnty', views.zero_ozon_qnty, name='zero_ozon_qnty'),
     path('synchronize_qnty', views.synchronize_qnty, name='synchronize_qnty'),
     path('sale', views.sale, name='sale'),
     path('update_prices', views.update_prices, name='update_prices'),
