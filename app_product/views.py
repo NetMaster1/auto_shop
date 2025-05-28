@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 import requests
 import pandas
 import time
-from .models import Product, DocumentType, RemainderHistory, Report, Identifier
+from .models import Product, DocumentType, RemainderHistory, Report, Identifier, ProductCategory
 import datetime
 import pytz
 from django.contrib import messages
@@ -963,33 +963,14 @@ def delivery_auto(request):
 
 def zero_ozon_qnty(request):
     #if request.method == "POST":
-    products=Product.objects.all()
+    category=ProductCategory.objects.get(name='Дефлектор двери')
+    products=Product.objects.filter(category=category)
     headers = {
                 "Client-Id": "1711314",
                 "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
             }
     for product in products:
-        #Сначала мы создаём новую позицию на площадке озон в функции (def ozon_product_create), которая содержит API метод
-        #response=requests.post('https://api-seller.ozon.ru/v3/product/import', json=task, headers=headers)
-        #мы не можем сразу ввести количество на маркетплейсе Ozon, так как ему требуется время для модерации
-
-        #В процессе содания нового товара Ozon присваивает ему уникальный product_id
-        #Мы получаем product_id посредством метода: response=requests.post('https://api-seller.ozon.ru/v3/product/list', 
-        # json=task, headers=headers) (def getting_ozon_id) и сохраняем ozon_id в модели Product в поле ozon_id
-
-        #Ozon_id и offer_id нужны для редактирования количества товара на стоке озон посредством метода:
-        #response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task_3, headers=headers)
-        #offer_id это номер товара уникальный в erms. В качестве offer_id мы используем артикул товара.
-
-        #я пытался создать товар и задать ему количество в одной функции, но Озону нужно время для того, чтобы проверить,
-        #что я создал у него на площадке, и он возвращает нужныйм нам ozon_id только через какое-то время, а не сразу
-        #поэтому я разделил процесс создания товара на озоне, получения ozon_id и ввода кол-ва на озон на три отдельных функции
-        #Сначала мы создаем товар (def ozon_product_create), а 
-        #Затем получаем ozon_id (def getting_ozon_id)
-        #Вводим документ (def deliver_auto), где загружаем поступившее кол-во товара на ООС и одновременно на озон
-
-
-            
+                   
         #update quantity of products at ozon warehouse making it equal to OOC warehouse
         task = {
             "stocks": [

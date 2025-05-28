@@ -2,10 +2,17 @@ from django.db import models
 from datetime import datetime, date
 from django.utils import timezone
 
+class ProductCategory (models.Model):
+    name = models.CharField(max_length=50, null=True, blank=True)
+   
+    def __int__(self):
+        return self.id
+
 class Product (models.Model):
     created = models.DateTimeField(auto_now=True)
     emumerator = models.IntegerField(null=True, blank=True)
     name = models.CharField(max_length=160)
+    category = models.ForeignKey(ProductCategory, on_delete=models.DO_NOTHING, null=True, blank=True)
     auto_model = models.CharField(max_length=160, null=True, blank=True)
     bar_code = models.CharField(max_length=50, unique=True, null=True, blank=True)
     article = models.CharField(max_length=50, unique=True, null=True, blank=True)
@@ -63,7 +70,7 @@ class Identifier(models.Model):
         return self.id
     class Meta:
         ordering = ('-created',)  # sorting by date
-
+  
 class Report(models.Model):
     identifier = models.ForeignKey(Identifier, on_delete=models.DO_NOTHING, null=True, blank=True)
     #temporary utility field for numbering rhos while displaying them at change_sale_posted html page
