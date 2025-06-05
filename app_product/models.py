@@ -22,6 +22,9 @@ class Product (models.Model):
     quantity = models.IntegerField(default=0)
     av_price = models.IntegerField(default=0)
     total_sum = models.IntegerField(default=0)
+    length = models.IntegerField(null=True, blank=True)
+    width = models.IntegerField(null=True, blank=True)
+    
 
     def __int__(self):
         return self.id

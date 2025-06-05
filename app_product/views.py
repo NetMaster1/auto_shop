@@ -13,7 +13,11 @@ from django.http import HttpResponse, JsonResponse
 
 def dashboard(request):
     if request.user.is_authenticated:
-        return render(request, 'dashboard.html')
+        categories=ProductCategory.objects.all()
+        context = {
+            'categories': categories,
+        }
+        return render(request, 'dashboard.html', context)
     else:
         return redirect ('login_page')
 
@@ -994,40 +998,44 @@ def zero_ozon_qnty(request):
 
 
 def synchronize_qnty(request):
-    products=Product.objects.all()
+    
     tdelta=datetime.timedelta(hours=3)
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
     dateTime=dT_utcnow+tdelta
-    for product in products:
-        article=product.article
-        if RemainderHistory.objects.filter(article=article).exists():
-            rhos=RemainderHistory.objects.filter(article=article)
-            rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-            current_remainder=rho_latest.current_remainder
-            if product.ozon_id:
-                headers = {
-                    "Client-Id": "1711314",
-                    "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-                }
-        
-                #update quantity of products at ozon warehouse making it equal to OOC warehouse
-                task = {
-                    "stocks": [
-                        {
-                            "offer_id": str(product.article),
-                            "product_id": str(product.ozon_id),
-                            "stock": rho_latest.current_remainder,
-                            #warehouse (Неклюдово)
-                            "warehouse_id": 1020005000113280
-                        }
-                    ]
-                }
-                response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-                print(response)
-                json=response.json()
-                #print(status_code)
-                print(json)
-                time.sleep(1)
+    if request.method == "POST":
+        category = request.POST["category"]
+        category=ProductCategory.objects.get(id=category)
+        products=Product.objects.filter(category=category)
+        for product in products:
+            article=product.article
+            if RemainderHistory.objects.filter(article=article).exists():
+                rhos=RemainderHistory.objects.filter(article=article)
+                rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+                current_remainder=rho_latest.current_remainder
+                # if product.ozon_id:
+                #     headers = {
+                #         "Client-Id": "1711314",
+                #         "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+                #     }
+            
+                #     #update quantity of products at ozon warehouse making it equal to OOC warehouse
+                #     task = {
+                #         "stocks": [
+                #             {
+                #                 "offer_id": str(product.article),
+                #                 "product_id": str(product.ozon_id),
+                #                 "stock": rho_latest.current_remainder,
+                #                 #warehouse (Неклюдово)
+                #                 "warehouse_id": 1020005000113280
+                #             }
+                #         ]
+                #     }
+                #     response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+                #     print(response)
+                #     json=response.json()
+                #     #print(status_code)
+                #     print(json)
+                #     time.sleep(1)
     return redirect ('dashboard')
 
 def update_prices(request):

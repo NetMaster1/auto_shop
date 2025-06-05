@@ -2,9 +2,9 @@ from django.contrib import admin
 from . models import Product, DocumentType, RemainderHistory, ProductCategory
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'category', 'name', 'article', 'ozon_id', 'ozon_sku', 'quantity', 'av_price', 'total_sum' )
+    list_display = ('id', 'category', 'name', 'article', 'ozon_id', 'ozon_sku', 'length', 'width', 'quantity', 'av_price', 'total_sum', )
     search_fields = ('article', 'ozon_id', 'ozon_sku' )
-    list_editable = ('category', )
+    list_editable = ('category', 'length', 'width' )
 
 class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)
