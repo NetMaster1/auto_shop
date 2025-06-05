@@ -1127,7 +1127,6 @@ def update_images(request):
         return redirect ('dashboard')
 
 
-
 #does not send any info to ozon
 def sale (request):
     doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
