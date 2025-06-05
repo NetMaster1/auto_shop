@@ -963,7 +963,7 @@ def delivery_auto(request):
 
 def zero_ozon_qnty(request):
     #if request.method == "POST":
-    category=ProductCategory.objects.get(name='Дефлектор двери')
+    category=ProductCategory.objects.get(name='Дефлектор капота')
     products=Product.objects.filter(category=category)
     headers = {
                 "Client-Id": "1711314",
@@ -1125,8 +1125,6 @@ def update_images(request):
             print('============================')      
             time.sleep(1)
         return redirect ('dashboard')
-
-
 
 #does not send any info to ozon
 def sale (request):
