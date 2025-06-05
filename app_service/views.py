@@ -38,13 +38,14 @@ def product_quant_correct(request):
                 product.total_sum=rho_latest.current_remainder*product.av_price
                 product.save()
         messages.success(request, 'Product table quantity and total_sum changed')   
-        return redirect("dashboard")   
+        return redirect("dashboard")  
+    return redirect ('login_page')
         
 def change_ozon_qnt_for_short_deflectors (request):
     # tdelta=datetime.timedelta(hours=3)
     # dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
     # dateTime=dT_utcnow+tdelta
-    if request.method == "POST":
+    if request.user.is_authenticated:
         products=Product.objects.filter(length__lte=140)
         for product in products:
             article=product.article
@@ -77,4 +78,5 @@ def change_ozon_qnt_for_short_deflectors (request):
                     #print(status_code)
                     print(json)
                     time.sleep(1)
-    return redirect ('dashboard')
+        return redirect ('dashboard')
+    return redirect ('login_page')
