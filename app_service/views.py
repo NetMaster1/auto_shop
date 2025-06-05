@@ -3,6 +3,8 @@ from app_product.models import Product, RemainderHistory
 import pandas
 import xlwt
 from django.contrib import messages
+import requests
+import time
 
 def db_correct(request):
     if request.user.is_authenticated:
@@ -38,6 +40,41 @@ def product_quant_correct(request):
         messages.success(request, 'Product table quantity and total_sum changed')   
         return redirect("dashboard")   
         
+def change_ozon_qnt_for_short_deflectors (request):
+    # tdelta=datetime.timedelta(hours=3)
+    # dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+    # dateTime=dT_utcnow+tdelta
+    if request.method == "POST":
+        products=Product.objects.filter(length__lte=140)
+        for product in products:
+            article=product.article
+            if RemainderHistory.objects.filter(article=article).exists():
+                rhos=RemainderHistory.objects.filter(article=article)
+                #rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+                rho_latest = RemainderHistory.objects.filter(article=article).latest("created")
+                current_remainder=rho_latest.current_remainder
+                if product.ozon_id:
+                    headers = {
+                        "Client-Id": "1711314",
+                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+                    }
             
-
-
+                    #update quantity of products at ozon warehouse making it equal to OOC warehouse
+                    task = {
+                        "stocks": [
+                            {
+                                "offer_id": str(product.article),
+                                "product_id": str(product.ozon_id),
+                                "stock": rho_latest.current_remainder,
+                                #warehouse (Неклюдово)
+                                "warehouse_id": 1020005000113280
+                            }
+                        ]
+                    }
+                    response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+                    print(response)
+                    json=response.json()
+                    #print(status_code)
+                    print(json)
+                    time.sleep(1)
+    return redirect ('dashboard')

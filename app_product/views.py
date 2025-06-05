@@ -998,7 +998,6 @@ def zero_ozon_qnty(request):
 
 
 def synchronize_qnty(request):
-    
     tdelta=datetime.timedelta(hours=3)
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
     dateTime=dT_utcnow+tdelta
@@ -1012,30 +1011,30 @@ def synchronize_qnty(request):
                 rhos=RemainderHistory.objects.filter(article=article)
                 rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
                 current_remainder=rho_latest.current_remainder
-                # if product.ozon_id:
-                #     headers = {
-                #         "Client-Id": "1711314",
-                #         "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-                #     }
+                if product.ozon_id:
+                    headers = {
+                        "Client-Id": "1711314",
+                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+                    }
             
-                #     #update quantity of products at ozon warehouse making it equal to OOC warehouse
-                #     task = {
-                #         "stocks": [
-                #             {
-                #                 "offer_id": str(product.article),
-                #                 "product_id": str(product.ozon_id),
-                #                 "stock": rho_latest.current_remainder,
-                #                 #warehouse (Неклюдово)
-                #                 "warehouse_id": 1020005000113280
-                #             }
-                #         ]
-                #     }
-                #     response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-                #     print(response)
-                #     json=response.json()
-                #     #print(status_code)
-                #     print(json)
-                #     time.sleep(1)
+                    #update quantity of products at ozon warehouse making it equal to OOC warehouse
+                    task = {
+                        "stocks": [
+                            {
+                                "offer_id": str(product.article),
+                                "product_id": str(product.ozon_id),
+                                "stock": rho_latest.current_remainder,
+                                #warehouse (Неклюдово)
+                                "warehouse_id": 1020005000113280
+                            }
+                        ]
+                    }
+                    response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+                    print(response)
+                    json=response.json()
+                    #print(status_code)
+                    print(json)
+                    time.sleep(1)
     return redirect ('dashboard')
 
 def update_prices(request):
