@@ -34,6 +34,9 @@ def create_product(request):
             article=article.replace(' ', '')#getting rid of extra spaces
             if '/' in str(article):
                 article=article.replace('/', '_')
+            category=row.Category
+            category=category.replace(' ', '')#getting rid of extra spaces
+            category=ProductCategory.objects.get(name=category)
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
                 product.name=row.Title
@@ -42,7 +45,8 @@ def create_product(request):
                 product = Product.objects.create(
                     name=row.Title,
                     article=article, #without extra spaces
-                    auto_model=row.Model           
+                    auto_model=row.Model, 
+                    category=category    
                 )
             #==========Ozon import module==========================
             #Озон воспринимает товар как уже существующий, если у него совпадают обязательные аттрибуты.
