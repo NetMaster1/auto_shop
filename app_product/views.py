@@ -680,8 +680,8 @@ def create_product(request):
                         "id": 22102,
                         "values": [
                             {
-                                "dictionary_value_id": 971313323,
-                                "value": "Накладные"
+                                "dictionary_value_id": str(row.Installation_ID),
+                                "value": str(row.Installation)
                             }
                         ]
                     },
