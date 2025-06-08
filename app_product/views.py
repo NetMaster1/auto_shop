@@ -31,15 +31,17 @@ def create_product(request):
         for i in range(cycle):
             row = df1.iloc[i]#reads each row of the df1 one by one
             article=row.Article
-            article=article.replace(' ', '')
+            article=article.replace(' ', '')#getting rid of extra spaces
             if '/' in str(article):
                 article=article.replace('/', '_')
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
+                product.name=row.Title
+                product.save()
             else:
                 product = Product.objects.create(
                     name=row.Title,
-                    article=row.Article,
+                    article=article, #without extra spaces
                     auto_model=row.Model           
                 )
             #==========Ozon import module==========================
@@ -167,7 +169,7 @@ def create_product(request):
                                     "values": [
                                         {
                                             "dictionary_value_id": 0,
-                                            "value": str(row.Article)
+                                            "value": article
                                         }
                                     ]
                                 },
@@ -558,7 +560,7 @@ def create_product(request):
                         "values": [
                             {
                                 "dictionary_value_id": 0,
-                                "value": str(row.Article)
+                                "value": article
                             }
                         ]
                     },
