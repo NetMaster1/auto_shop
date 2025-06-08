@@ -728,16 +728,14 @@ def create_product(request):
                 ]
             }
 
-
-
-
             #uploading new or updating existing product
             response=requests.post('https://api-seller.ozon.ru/v3/product/import', json=task, headers=headers)  
             status_code=response.status_code
             json=response.json()
+
             # print('=========Request Status & Task ID==========================')
             # print('Наименование ' + str(n))
-            # print(status_code)
+            print(status_code)
             # if status_code == 200:
             #     print('Товар в БД Озон создан')
             # else:
@@ -754,13 +752,13 @@ def create_product(request):
             #но обычно озону нужно время, чтобы отмодерировать новое наименование, поэтому, если сделать запрос сразу,
             # ответ приходит без ozon_id, который нам нужен для загрузки кол-ва.
 
-            print('===================Status of Task Id=========================')
-            task_1  = {
-                "task_id": task_id
-            }
-            response=requests.post('https://api-seller.ozon.ru/v1/product/import/info', json=task_1, headers=headers)
-            json=response.json() 
-            print(json)
+            # print('===================Status of Task Id=========================')
+            # task_1  = {
+            #     "task_id": task_id
+            # }
+            # response=requests.post('https://api-seller.ozon.ru/v1/product/import/info', json=task_1, headers=headers)
+            # json=response.json() 
+            # print(json)
             # a=json['result']
             # task_id=a['task_id']
             # print('============================================================')
