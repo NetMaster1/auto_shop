@@ -449,7 +449,8 @@ def create_product(request):
                             "old_price": str(row.Old_Price),
                             "pdf_list": [],
                             "price": str(row.Retail_Price),
-                            "primary_image":str(row.Primary_Image) ,
+                            "primary_image":str(row.Primary_Image),
+                            "type_id": 94656,
                             "vat": "0",
                             "weight": 1000,
                             "weight_unit": "g",
@@ -457,10 +458,11 @@ def create_product(request):
                         }
                     ]
                 }
+            
+            
             elif 'Дефлекторы окон' in row.Title:
                 key_word= f"""дефлектор; дефлекторы; дефлектор окна; дефлекторы окон; дефлектор двери; дефлекторы дверей; 
 дефлекторы на машину; дефлекторы на двери; {row.Russian_Model}; {row.Russian_Brand}; {row.AutoBrand}; {row.AutoModel}; {row.Russian_Brand} {row.Russian_Model}; {row.AutoBrand} {row.AutoModel}"""
-
 
                 description_string = f"""Дефлекторы окон - это необходимый аксессуар для любого автомобиля, который помогает защитить ваши окна от грязи и пыли. Они также могут служить дополнительной опцией безопасности, предотвращая попадание мусора внутрь машины.
 
@@ -688,11 +690,6 @@ def create_product(request):
                     #=======================================
                     # is required: true
                     # Тип
-                    # Цифро-буквенный код товара для его учета,  
-                    # является уникальным среди товаров бренда. Не является EAN/серийным  
-                    # номером/штрихкодом, не равен названию модели товара - для этих параметров
-                    # есть отдельные атрибуты. Артикул выводится в карточке товара на сайте и может
-                    # спользоваться при автоматическом формировании названия товара.
                     {
                         "complex_id": 0,
                         "id": 8229,
@@ -719,7 +716,8 @@ def create_product(request):
                         "old_price": str(row.Old_Price),
                         "pdf_list": [],
                         "price": str(row.Retail_Price),
-                        "primary_image":str(row.Primary_Image) ,
+                        "primary_image":str(row.Primary_Image),
+                        "type_id": 97593,
                         "vat": "0",
                         "weight": 1000,
                         "weight_unit": "g",
@@ -732,17 +730,16 @@ def create_product(request):
             response=requests.post('https://api-seller.ozon.ru/v3/product/import', json=task, headers=headers)  
             status_code=response.status_code
             json=response.json()
-
-            # print('=========Request Status & Task ID==========================')
-            # print('Наименование ' + str(n))
+            print('=========Request Status & Task ID==========================')
+            #print('Наименование ' + str(n))
             print(status_code)
-            # if status_code == 200:
-            #     print('Товар в БД Озон создан')
-            # else:
-            #     string=f'. Товар {product.id} в БД Озон не создан.'
-            #     print(string)
-            #messages.error(request,  string)
-            #print(json)
+            if status_code == 200:
+                print('Товар в БД Озон создан')
+            else:
+                string=f'. Товар {product.id} в БД Озон не создан.'
+                print(string)
+                messages.error(request,  string)
+            print(json)
             #a=json['result']
             task_id=json['result']['task_id']
             print('Task_id: ' + str(task_id))
