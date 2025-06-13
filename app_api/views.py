@@ -139,7 +139,7 @@ def ozon_push(request):
       # return HttpResponse(json_data, content_type='application/json')
 
       #Sending the answer in json format via JsonRespose method.
-      #It's a djago method which converts python dict to json & automatically sets the required headers.
+      #It's a djago method which converts python dict to json & automatically & sets the required headers.
 
       # a= JsonResponse(json_data, safe=False)
       # print(a)
