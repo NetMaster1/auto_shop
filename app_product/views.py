@@ -35,7 +35,16 @@ def create_product(request):
             if '/' in str(article):
                 article=article.replace('/', '_')
             category=row.Category
-            category=category.replace(' ', '')#getting rid of extra spaces
+            #====================getting rid of extra spaces in the string==================================
+            #category=category.strip()#getting rid of extra spaces at both sides of the string
+            category=category.split()
+            category=' '.join(category)
+            #============================end of block=======================================================
+            #====================getting rid of extra spaces in the string==================================
+            #category=category.strip()#getting rid of extra spaces at both sides of the string
+            article=article.split()
+            article=' '.join(article)
+            #============================end of block=======================================================
             category=ProductCategory.objects.get(name=category)
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
