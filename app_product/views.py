@@ -31,17 +31,18 @@ def create_product(request):
         for i in range(cycle):
             row = df1.iloc[i]#reads each row of the df1 one by one
             article=row.Article
-            article=article.replace(' ', '')#getting rid of extra spaces
             if '/' in str(article):
                 article=article.replace('/', '_')
             category=row.Category
             #====================getting rid of extra spaces in the string==================================
+            #category=category.replace(' ', '')#getting rid of extra spaces
             #category=category.strip()#getting rid of extra spaces at both sides of the string
             category=category.split()
             category=' '.join(category)
             #============================end of block=======================================================
             #====================getting rid of extra spaces in the string==================================
-            #category=category.strip()#getting rid of extra spaces at both sides of the string
+            #article=article.replace(' ', '')#getting rid of extra spaces
+            #article=article.strip()#getting rid of extra spaces at both sides of the string
             article=article.split()
             article=' '.join(article)
             #============================end of block=======================================================
@@ -796,9 +797,14 @@ def getting_ozon_id_and_ozon_sku (request):
             for i in range(cycle):
                 row = df1.iloc[i]#reads each row of the df1 one by one
                 article=row.Article
-                article=article.replace(' ', '')
                 if '/' in str(article):
                     article=article.replace('/', '_')
+                #====================getting rid of extra spaces in the string==================================
+                #article=article.replace(' ', '')#getting rid of extra spaces
+                #article=article.strip()#getting rid of extra spaces at both sides of the string
+                article=article.split()
+                article=' '.join(article)
+                #============================end of block=======================================================
                 if Product.objects.filter(article=article).exists():
                     product=Product.objects.get(article=article)
                     #ozon_id assigned by Ozon for further saving it in erms product model
@@ -883,9 +889,14 @@ def delivery_auto(request):
         for i in range(cycle):
             row = df1.iloc[i]#reads each row of the df1 one by one
             article=str(row.Article)
-            article=article.replace(' ', '')
             if '/' in str(article):
                 article=article.replace('/', '_')
+            #====================getting rid of extra spaces in the string==================================
+            #article=article.replace(' ', '')#getting rid of extra spaces
+            #article=article.strip()#getting rid of extra spaces at both sides of the string
+            article=article.split()
+            article=' '.join(article)
+            #============================end of block=======================================================
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
                 total_qnty = product.quantity + int(row.Qnty)
@@ -1006,7 +1017,6 @@ def zero_ozon_qnty(request):
 
     return redirect("dashboard")
 
-
 def synchronize_qnty(request):
     tdelta=datetime.timedelta(hours=3)
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
@@ -1061,9 +1071,16 @@ def update_prices(request):
             for i in range(cycle):
                 row = df1.iloc[i]#reads each row of the df1 one by one
                 article=row.Article
-                article=article.replace(' ', '')
                 if '/' in str(article):
                     article=article.replace('/', '_')
+                #====================getting rid of extra spaces in the string==================================
+                #article=article.replace(' ', '')#getting rid of extra spaces
+                #article=article.strip()#getting rid of extra spaces at both sides of the string
+                article=article.split()
+                article=' '.join(article)
+                #============================end of block=======================================================
+
+
                 if Product.objects.filter(article=article).exists():
                     product=Product.objects.get(article=article)
                 
@@ -1118,9 +1135,14 @@ def update_images(request):
         for i in range(cycle):
             row = df1.iloc[i]#reads each row of the df1 one by one
             article=row.Article
-            article=article.replace(' ', '')
             if '/' in str(article):
                 article=article.replace('/', '_')
+            #====================getting rid of extra spaces in the string==================================
+            #article=article.replace(' ', '')#getting rid of extra spaces
+            #article=article.strip()#getting rid of extra spaces at both sides of the string
+            article=article.split()
+            article=' '.join(article)
+            #============================end of block=======================================================  
             product=Product.objects.get(article=row.Article)
             task = {
                 "color_image": "string",
@@ -1164,7 +1186,13 @@ def sale (request):
             dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
             dateTime=dT_utcnow+tdelta
         article = request.POST["article"]
-        article=article.strip()
+
+        #====================getting rid of extra spaces in the string==================================
+        #article=article.replace(' ', '')#getting rid of extra spaces
+        #article=article.strip()#getting rid of extra spaces at both sides of the string
+        article=article.split()
+        article=' '.join(article)
+        #============================end of block=======================================================
         retail_price = request.POST["retail_price"]
         retail_price=int(retail_price)
         if Product.objects.filter(article=article).exists():
