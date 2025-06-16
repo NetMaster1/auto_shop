@@ -10,5 +10,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('ozon_push', views.ozon_push, name='ozon_push'),
     path('wb_test', views.wb_test, name='wb_test'),
+    path('wb_categories', views.wb_categories, name='wb_categories'),
+    path('wb_subjects', views.wb_subjects, name='wb_subjects'),
+    path('wb_subject_specs', views.wb_subject_specs, name='wb_subject_specs'),
    
 ]
