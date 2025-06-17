@@ -239,58 +239,73 @@ def wb_create_product (request):
           {
             "subjectID": 2251,
             "variants": [
-
-
-
+              {
+                "vendorCode": "DK-IN-00081",
+                "title": "Дефлектор капота NISSAN NOTE I (2005-2009) хэтчбек",
+                "description": "Дефлектор капота это - стильный аксессуар",
+                "brand": "Delta Avto",
+                "dimensions": 
+                  {
+                    "length": 100,
+                    "width": 30,
+                    "height": 5,
+                    "weightBrutto": 1
+                  },
               
 
-          {
-            "charID": 5023,
-            "name" : 'Lada'
-           
-          },
-          {
-            "charID": 16532,
-            "name" : 'Granta'
-           
-          },
-          {
-            "charID": 17596,
-            "name" : 'пластик'
-           
-          },
-          {
-            "charID": 74242,
-            "name" : 'капот'
-           
-          },
-          {
-            "charID": 90702,
-            "name" : '1'
-           
-          },
-          {
-            "charID": 378533,
-            "name" : 'Дефлектор, крепеж, инструкция'
-           
-          },
-          {
-            "charID": 5522881,
-            "name" : 'DKN-00017'
-           
-          },
-
-
-
-
-            ]
-          }
-
-
+              "characteristics": [
+                  {
+                    "id": 5023,
+                    "value": "Lada"
+                  },
+                  {
+                    "id": 16532,
+                    "name" : 'Granta'
+                  },
+                  {
+                    "id": 17596,
+                    "name" : 'пластик'
+                  },
+                  {
+                    "id": 74242,
+                    "name" : 'капот'
+                  },
+                  {
+                    "id": 90702,
+                    "name" : '1'
+                  },
+                  {
+                    "id": 378533,
+                    "name" : 'Дефлектор, крепеж, инструкция'
+                  },
+                  {
+                    "id": 5522881,
+                    "name" : 'DK-IN-00081'
+                  },
+                  {
+                    "id": 14177451,
+                    "name" : 'Россия'
+                  },
+                  {
+                    "id": 14177451,
+                    "name" : 'Россия'
+                  },
+              ],
+              "sizes": [
+                {
+                "techSize": "M",
+                "wbSize": "42",
+                "price": 2500,
+                "skus": []
+                }
+              ]
+            }
+          ]
+        }
       ]
 
 
-    response = requests.get(url, headers=headers, params=params)
+    response = requests.post(url, headers=headers, params=params)
     status_code=response.status_code
     a=response.json()
     print(f'status_code: {status_code}')
