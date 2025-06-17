@@ -216,6 +216,92 @@ def wb_subject_specs (request):
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
+def wb_limits (request):
+  url=f'https://content-api.wildberries.ru/content/v2/cards/limits'
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+
+  response = requests.get(url, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  print(a)
+  # b=a['data']
+  # for i in b:
+  #   print(i)
+  
+  messages.error(request,f'WB Response: {a}')
+  return redirect ('dashboard')
+
+def wb_create_product (request):
+    url=f'https://content-api.wildberries.ru/content/v2/cards/upload'
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+    params = [
+          {
+            "subjectID": 2251,
+            "variants": [
+
+
+
+              
+
+          {
+            "charID": 5023,
+            "name" : 'Lada'
+           
+          },
+          {
+            "charID": 16532,
+            "name" : 'Granta'
+           
+          },
+          {
+            "charID": 17596,
+            "name" : 'пластик'
+           
+          },
+          {
+            "charID": 74242,
+            "name" : 'капот'
+           
+          },
+          {
+            "charID": 90702,
+            "name" : '1'
+           
+          },
+          {
+            "charID": 378533,
+            "name" : 'Дефлектор, крепеж, инструкция'
+           
+          },
+          {
+            "charID": 5522881,
+            "name" : 'DKN-00017'
+           
+          },
+
+
+
+
+            ]
+          }
+
+
+      ]
+
+
+    response = requests.get(url, headers=headers, params=params)
+    status_code=response.status_code
+    a=response.json()
+    print(f'status_code: {status_code}')
+    print(a)
+    # b=a['data']
+    # for i in b:
+    #   print(i)
+    
+    messages.error(request,f'WB Response: {a}')
+    return redirect ('dashboard')
+
 
 
 
