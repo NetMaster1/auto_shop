@@ -1028,9 +1028,9 @@ def synchronize_qnty(request):
         for product in products:
             article=product.article
             if RemainderHistory.objects.filter(article=article).exists():
-                rhos=RemainderHistory.objects.filter(article=article)
+                #rhos=RemainderHistory.objects.filter(article=article)
                 rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-                current_remainder=rho_latest.current_remainder
+                #current_remainder=rho_latest.current_remainder
                 if product.ozon_id:
                     headers = {
                         "Client-Id": "1711314",
