@@ -291,21 +291,20 @@ def wb_create_product (request):
                     "name" : 'Россия'
                   },
               ],
-              "sizes": [
-                {
-                "techSize": "M",
-                "wbSize": "42",
-                "price": 2500,
-                "skus": []
-                }
-              ]
+              # "sizes": [
+              #   {
+              #   "techSize": "M",
+              #   "wbSize": "42",
+              #   "price": 2500,
+              #   "skus": []
+              #   }
+              # ]
             }
           ]
         }
       ]
 
-
-    response = requests.post(url, headers=headers, params=params)
+    response = requests.post(url, json=params, headers=headers)
     status_code=response.status_code
     a=response.json()
     print(f'status_code: {status_code}')
@@ -317,13 +316,27 @@ def wb_create_product (request):
     messages.error(request,f'WB Response: {a}')
     return redirect ('dashboard')
 
-
-
-
-
-
-#   url = "https://suppliers-api.wildberries.ru/api/v1/stocks"  
-# response = requests.get(url, headers=headers)  
+def wb_add_media_files (request):
+  url=f'https://content-api.wildberries.ru/content/v3/media/save'
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+  params = {
+     "nmId": 447261570,
+     "data": [
+       "https://disk.yandex.ru/i/0mJD992aSymCow",
+       "https://disk.yandex.ru/i/QAlZnFMAW11KQA",
+       "https://disk.yandex.ru/i/vzbsu-k-Hmd5IA",
+       "https://disk.yandex.ru/i/kmCMse7Ag4h__g."
+     ]
+  }
+  
+          
+  response = requests.post(url, json=params, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  print(a)
+  messages.error(request,f'WB Response: {a}')
+  return redirect ('dashboard')
 
 
 

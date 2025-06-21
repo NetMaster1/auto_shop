@@ -18,12 +18,21 @@ class Product (models.Model):
     article = models.CharField(max_length=50, unique=True, null=True, blank=True)
     ozon_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     ozon_sku = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    wb_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     ean = models.CharField(max_length=50, null=True, blank=True)
     quantity = models.IntegerField(default=0)
     av_price = models.IntegerField(default=0)
     total_sum = models.IntegerField(default=0)
     length = models.IntegerField(null=True, blank=True)
     width = models.IntegerField(null=True, blank=True)
+    image_1 = models.FileField(upload_to='uploads', null=True, blank=True)
+    image_2 = models.FileField(upload_to='uploads', null=True, blank=True)
+    image_3 = models.FileField(upload_to='uploads', null=True, blank=True)
+    image_4 = models.FileField(upload_to='uploads', null=True, blank=True)
+    image_5 = models.FileField(upload_to='uploads', null=True, blank=True)
+    image_6 = models.FileField(upload_to='uploads', null=True, blank=True)
+    image_7 = models.FileField(upload_to='uploads', null=True, blank=True)
+    video_1 = models.FileField(upload_to='uploads', null=True, blank=True)
     
 
     def __int__(self):

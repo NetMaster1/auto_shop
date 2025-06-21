@@ -15,5 +15,6 @@ urlpatterns = [
     path('wb_subject_specs', views.wb_subject_specs, name='wb_subject_specs'),
     path('wb_limits', views.wb_limits, name='wb_limits'),
     path('wb_create_product', views.wb_create_product, name='wb_create_product'),
+    path('wb_add_media_files', views.wb_add_media_files, name='wb_add_media_files'),
    
 ]
