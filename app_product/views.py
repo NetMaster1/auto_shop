@@ -1345,7 +1345,7 @@ def wb_create_product (request):
                     "subjectID": 2251,
                     "variants": [
                     {
-                        "vendorCode": str(row.Article),
+                        "vendorCode": article,
                         "title": str(row.Title),
                         "description": description_string,
                         "brand": "Delta Avto",
