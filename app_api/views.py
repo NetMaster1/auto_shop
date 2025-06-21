@@ -322,10 +322,10 @@ def wb_add_media_files (request):
   params = {
      "nmId": 447261570,
      "data": [
-       "https://disk.yandex.ru/i/0mJD992aSymCow",
-       "https://disk.yandex.ru/i/QAlZnFMAW11KQA",
-       "https://disk.yandex.ru/i/vzbsu-k-Hmd5IA",
-       "https://disk.yandex.ru/i/kmCMse7Ag4h__g."
+       "https://mp-system.ru/media/uploads/Nissan_Note_I_2005.png",
+      #  "https://disk.yandex.ru/i/QAlZnFMAW11KQA",
+      #  "https://disk.yandex.ru/i/vzbsu-k-Hmd5IA",
+      #  "https://disk.yandex.ru/i/kmCMse7Ag4h__g."
      ]
   }
   
