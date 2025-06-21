@@ -1413,6 +1413,7 @@ def wb_create_product (request):
             # b=a['data']
             # for i in b:
             #   print(i)
+            time.sleep(7)
     
     messages.error(request,f'WB Response: {a}')
     return redirect ('dashboard')
