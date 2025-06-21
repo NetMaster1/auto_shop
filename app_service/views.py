@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
-from app_product.models import Product, RemainderHistory
+from app_product.models import Product, ProductCategory, RemainderHistory
 import pandas
 import xlwt
 from django.contrib import messages
 import requests
+import time
+import os
 import time
 
 def db_correct(request):
@@ -80,3 +82,18 @@ def change_ozon_qnt_for_short_deflectors (request):
                     time.sleep(1)
         return redirect ('dashboard')
     return redirect ('login_page')
+
+def create_list_of_files(request):
+    files=os.listdir('DeflectorsDoor')
+    category=ProductCategory.objects.get(name='Дефлектор двери')
+    products=Product.objects.filter(category=category)
+    for i in files:
+        a=i.split('.')[0]
+        for product in products:
+            if a in product.name:
+                product.image_1=i
+                product.save()
+                print(product.article)
+                time.sleep(1)
+    return redirect ('dashboard')
+        

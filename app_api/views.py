@@ -328,8 +328,7 @@ def wb_add_media_files (request):
       #  "https://disk.yandex.ru/i/kmCMse7Ag4h__g."
      ]
   }
-  
-          
+       
   response = requests.post(url, json=params, headers=headers)
   status_code=response.status_code
   a=response.json()
@@ -338,5 +337,87 @@ def wb_add_media_files (request):
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
+def wb_change_qnty (request):
+  url=f'https://content-api.wildberries.ru/content/v3/media/save'
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+  params = {
+     "nmId": 447261570,
+     "data": [
+       "https://mp-system.ru/media/uploads/Nissan_Note_I_2005.png",
+      #  "https://disk.yandex.ru/i/QAlZnFMAW11KQA",
+      #  "https://disk.yandex.ru/i/vzbsu-k-Hmd5IA",
+      #  "https://disk.yandex.ru/i/kmCMse7Ag4h__g."
+     ]
+  }
+           
+  response = requests.post(url, json=params, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  print(a)
+  messages.error(request,f'WB Response: {a}')
+  return redirect ('dashboard')
 
+def wb_change_qnty (request):
+  warehouseId=1368124
+  url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
 
+  params= {
+    "stocks": [
+      {
+        "sku": "447261570",#Артикул WB
+        "amount": 5
+      }
+    ]
+  }
+          
+  response = requests.put(url, json=params, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  print(a)
+  messages.error(request,f'WB Response: {a}')
+  return redirect ('dashboard')
+
+def wb_warehouse_list(request):
+  url=f'https://marketplace-api.wildberries.ru/api/v3/offices'
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+
+  response = requests.get(url, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  for i in a:
+    print(i)
+    messages.error(request,f'WB Response: {i}')
+  return redirect ('dashboard')
+
+def wb_create_warehouse(request):
+  url=f'https://marketplace-api.wildberries.ru/api/v3/warehouses'
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+
+  params = {
+    'name': 'Склад Неклюдово',
+    'officeId': 168
+  }
+
+  response = requests.post(url, json=params, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  print(a)
+  messages.error(request,f'WB Response: {a}')
+  return redirect ('dashboard')
+
+def wb_seller_warehouse_list(request):
+  url=f'https://marketplace-api.wildberries.ru/api/v3/warehouses'
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+
+  response = requests.get(url, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  print(a)
+  messages.error(request,f'WB Response: {a}')
+  return redirect ('dashboard')
