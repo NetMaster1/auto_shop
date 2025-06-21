@@ -1405,14 +1405,14 @@ def wb_create_product (request):
                 }
             ]
 
-    response = requests.post(url, json=params, headers=headers)
-    status_code=response.status_code
-    a=response.json()
-    print(f'status_code: {status_code}')
-    print(a)
-    # b=a['data']
-    # for i in b:
-    #   print(i)
+            response = requests.post(url, json=params, headers=headers)
+            status_code=response.status_code
+            a=response.json()
+            print(f'status_code: {status_code}')
+            print(a)
+            # b=a['data']
+            # for i in b:
+            #   print(i)
     
     messages.error(request,f'WB Response: {a}')
     return redirect ('dashboard')
