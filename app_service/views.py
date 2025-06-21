@@ -97,3 +97,8 @@ def create_list_of_files(request):
                 time.sleep(1)
     return redirect ('dashboard')
         
+def rename_files(request):
+    files=os.listdir('DeflectorsDoor')
+    for i in files:
+        os.rename(f'DeflectorsDoor/{i}', f'DeflectorsDoor/Дефлектор двери_{i}')
+    return redirect ('dashboard')

@@ -17,4 +17,6 @@ urlpatterns = [
     path('general_report', views.general_report, name='general_report'),
     # path('choice', views.choice, name='choice'),
     # path('orders_history', views.orders_history, name='orders_history'),
+
+    path('wb_create_product', views.wb_create_product, name='wb_create_product'),
 ]

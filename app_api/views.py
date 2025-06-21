@@ -198,6 +198,36 @@ def wb_subjects (request):
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
+def wb_colors (request):
+  url="https://content-api.wildberries.ru/content/v2/directory/colors"
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  response = requests.get(url, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  #print(a)
+  b=a['data']
+  for i in b:
+    print(i)
+  
+    messages.error(request,f'WB Response: {i}')
+  return redirect ('dashboard')
+
+def wb_country_of_manufacture(request):
+  url="https://content-api.wildberries.ru/content/v2/directory/countries"
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  response = requests.get(url, headers=headers)
+  status_code=response.status_code
+  a=response.json()
+  print(f'status_code: {status_code}')
+  #print(a)
+  b=a['data']
+  for i in b:
+    print(i)
+  
+    messages.error(request,f'WB Response: {i}')
+  return redirect ('dashboard')
+
 
 def wb_subject_specs (request):
   subjectID=2251
@@ -232,89 +262,7 @@ def wb_limits (request):
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
-def wb_create_product (request):
-    url=f'https://content-api.wildberries.ru/content/v2/cards/upload'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
-    params = [
-          {
-            "subjectID": 2251,
-            "variants": [
-              {
-                "vendorCode": "DK-IN-00081",
-                "title": "Дефлектор капота NISSAN NOTE I (2005-2009) хэтчбек",
-                "description": "Дефлектор капота это - стильный аксессуар",
-                "brand": "Delta Avto",
-                "dimensions": 
-                  {
-                    "length": 100,
-                    "width": 30,
-                    "height": 5,
-                    "weightBrutto": 1
-                  },
-              
 
-              "characteristics": [
-                  {
-                    "id": 5023,
-                    "value": "Lada"
-                  },
-                  {
-                    "id": 16532,
-                    "name" : 'Granta'
-                  },
-                  {
-                    "id": 17596,
-                    "name" : 'пластик'
-                  },
-                  {
-                    "id": 74242,
-                    "name" : 'капот'
-                  },
-                  {
-                    "id": 90702,
-                    "name" : '1'
-                  },
-                  {
-                    "id": 378533,
-                    "name" : 'Дефлектор, крепеж, инструкция'
-                  },
-                  {
-                    "id": 5522881,
-                    "name" : 'DK-IN-00081'
-                  },
-                  {
-                    "id": 14177451,
-                    "name" : 'Россия'
-                  },
-                  {
-                    "id": 14177451,
-                    "name" : 'Россия'
-                  },
-              ],
-              # "sizes": [
-              #   {
-              #   "techSize": "M",
-              #   "wbSize": "42",
-              #   "price": 2500,
-              #   "skus": []
-              #   }
-              # ]
-            }
-          ]
-        }
-      ]
-
-    response = requests.post(url, json=params, headers=headers)
-    status_code=response.status_code
-    a=response.json()
-    print(f'status_code: {status_code}')
-    print(a)
-    # b=a['data']
-    # for i in b:
-    #   print(i)
-    
-    messages.error(request,f'WB Response: {a}')
-    return redirect ('dashboard')
 
 def wb_add_media_files (request):
   url=f'https://content-api.wildberries.ru/content/v3/media/save'
@@ -329,27 +277,6 @@ def wb_add_media_files (request):
      ]
   }
        
-  response = requests.post(url, json=params, headers=headers)
-  status_code=response.status_code
-  a=response.json()
-  print(f'status_code: {status_code}')
-  print(a)
-  messages.error(request,f'WB Response: {a}')
-  return redirect ('dashboard')
-
-def wb_change_qnty (request):
-  url=f'https://content-api.wildberries.ru/content/v3/media/save'
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-  params = {
-     "nmId": 447261570,
-     "data": [
-       "https://mp-system.ru/media/uploads/Nissan_Note_I_2005.png",
-      #  "https://disk.yandex.ru/i/QAlZnFMAW11KQA",
-      #  "https://disk.yandex.ru/i/vzbsu-k-Hmd5IA",
-      #  "https://disk.yandex.ru/i/kmCMse7Ag4h__g."
-     ]
-  }
-           
   response = requests.post(url, json=params, headers=headers)
   status_code=response.status_code
   a=response.json()
@@ -421,3 +348,4 @@ def wb_seller_warehouse_list(request):
   print(a)
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
+

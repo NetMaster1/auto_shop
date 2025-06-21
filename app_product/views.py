@@ -1295,7 +1295,127 @@ def general_report (request):
     return response
 #=======================End of Excel Upload Module================================
 
+def wb_create_product (request):
+    url=f'https://content-api.wildberries.ru/content/v2/cards/upload'
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    if request.method == "POST":
+        file = request.FILES["file_name"]
+        df1 = pandas.read_excel(file)
+        cycle = len(df1)
+        for i in range(cycle):
+            row = df1.iloc[i]#reads each row of the df1 one by one
+            article=row.Article
+            if '/' in str(article):
+                article=article.replace('/', '_')
+            category=row.Category
+            #====================getting rid of extra spaces in the string==================================
+            #category=category.replace(' ', '')#getting rid of extra spaces
+            #category=category.strip()#getting rid of extra spaces at both sides of the string
+            category=category.split()
+            category=' '.join(category)
+            #============================end of block=======================================================
+            #====================getting rid of extra spaces in the string==================================
+            #article=article.replace(' ', '')#getting rid of extra spaces
+            #article=article.strip()#getting rid of extra spaces at both sides of the string
+            article=article.split()
+            article=' '.join(article)
+            #============================end of block=======================================================
+            category=ProductCategory.objects.get(name=category)
+            if Product.objects.filter(article=article).exists():
+                product=Product.objects.get(article=article)
+                product.name=row.Title
+                product.save()
+            else:
+                product = Product.objects.create(
+                    name=row.Title,
+                    article=article, #without extra spaces
+                    auto_model=row.Model, 
+                    category=category    
+                )
+            description_string = f"""Дефлекторы окон - это необходимый аксессуар для любого автомобиля, который помогает защитить ваши окна от грязи и пыли. Они также могут служить дополнительной опцией безопасности, предотвращая попадание мусора внутрь машины.
 
+Дефлекторы окон {row.Model} - это отличный выбор для тех, кто хочет добавить стиль и функциональность своему автомобилю. Эти дефлекторы изготовлены из высококачественного пластика, что обеспечивает их долговечность и прочность.
+
+Дефлекторы окон {row.Model} имеют накладное крепление, которое позволяет легко установить их на любую модель автомобиля. Они подходят как для передних, так и для задних дверей, что делает их универсальными и удобными в использовании.
+
+Дефлекторы окон {row.Model} - это отличный выбор для тех, кто хочет добавить стиль и функциональность своему автомобилю. Они изготовлены из высококачественного пластика, что обеспечивает их долговечность и прочность. Их накладное крепление позволяет легко установить их на любую модель автомобиля, а их универсальность делает их идеальным решением для всех водителей.""" 
+
+            params = [
+                {
+                    "subjectID": 2251,
+                    "variants": [
+                    {
+                        "vendorCode": str(row.Article),
+                        "title": str(row.Title),
+                        "description": description_string,
+                        "brand": "Delta Avto",
+                        "dimensions": 
+                        {
+                            "length": 90,
+                            "width": 20,
+                            "height": 5,
+                            "weightBrutto": 1
+                        },
+                    
+
+                    "characteristics": [
+                        {
+                            "id": 5023,
+                            "value": str(row.AutoModel)
+                        },
+                        {
+                            "id": 16532,
+                            "name" : str(row.AutoBrand)
+                        },
+                        {
+                            "id": 17596,
+                            "name" : 'пластик'
+                        },
+                        {
+                            "id": 74242,
+                            "name" : 'окна'
+                        },
+                        {
+                            "id": 90702,
+                            "name" : '4'
+                        },
+                        {
+                            "id": 378533,
+                            "name" : 'Дефлекторы (4 шт.), инструкция'
+                        },
+                        {
+                            "id": 5522881,
+                            "name" : str(row.Article)
+                        },
+                        {
+                            "id": 14177451,
+                            "name" : 'Россия'
+                        },
+                    ],
+                    # "sizes": [
+                    #   {
+                    #   "techSize": "M",
+                    #   "wbSize": "42",
+                    #   "price": 2500,
+                    #   "skus": []
+                    #   }
+                    # ]
+                    }
+                ]
+                }
+            ]
+
+    response = requests.post(url, json=params, headers=headers)
+    status_code=response.status_code
+    a=response.json()
+    print(f'status_code: {status_code}')
+    print(a)
+    # b=a['data']
+    # for i in b:
+    #   print(i)
+    
+    messages.error(request,f'WB Response: {a}')
+    return redirect ('dashboard')
 
 
 

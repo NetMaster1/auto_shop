@@ -21,12 +21,13 @@
 <!-- ===================End of Alert Messages Module================ -->
     <div class="row m-auto mt-3 ">
         <div class="col-2">
+            Title
             <form action="{% url 'create_product' %}" method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
 
               
                         <label for="file_name">
-                            <h5>Введите файл в формате Excel <br>
+                            <h5>Введите файл в формате Excel для Оzon <br>
                             Если наименование с таким артикулом отсутсвует в erms, то создаёт новое наименование в таблице<br>
                             Product. Одновременно создаёт новое или обновляет существующее наименование на mp ozon. Обновляет<br>
                             поля: image, price, name;
@@ -38,6 +39,32 @@
                         <input type="file" class='form-control' id="file_name" name="file_name" required>
                 
             <input type="submit" value="Создать позицию на озон"
+                class="btn btn-sm btn-block btn-outline-dark clear_storage">
+        </div>
+    </form>
+    <br>
+    ===================================================================
+    <!-- ============================================================= -->
+    <div class="row m-auto mt-3 ">
+        <div class="col-2">
+            Title
+            <form action="{% url 'wb_create_product' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+
+              
+                        <label for="file_name">
+                            <h5>Введите файл в формате Excel для WB <br>
+                            Если наименование с таким артикулом отсутсвует в erms, то создаёт новое наименование в таблице<br>
+                            Product. Создаёт только наименование с характеристиками. Если наименование с таким артикулом уже есть,
+                            выдаёт ошибку в ответе.
+                        </h5>
+
+                        </label>
+                  
+             
+                        <input type="file" class='form-control' id="file_name" name="file_name" required>
+                
+            <input type="submit" value="Создать позицию на WB"
                 class="btn btn-sm btn-block btn-outline-dark clear_storage">
         </div>
     </form>
@@ -60,7 +87,7 @@
              
                         <input type="file" class='form-control' id="file_name" name="file_name" required>
                 
-            <input type="submit" value="Изменить цены"
+            <input type="submit" value="Изменить цены для Ozon "
                 class="btn btn-sm btn-block btn-outline-dark clear_storage">
         </div>
     </form>
@@ -84,7 +111,7 @@
              
                         <input type="file" class='form-control' id="file_name" name="file_name" required>
                 
-            <input type="submit" value="Обновить медиа"
+            <input type="submit" value="Обновить медиа для Ozon"
                 class="btn btn-sm btn-block btn-outline-dark clear_storage">
         </div>
     </form>
