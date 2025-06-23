@@ -298,7 +298,7 @@ def wb_id (request):
       print('======================')
       time.sleep(1)
 
-  messages.error(request,f'WB Product: {product.name} : {product.article} : {product.wb_id}')
+ # messages.error(request,f'WB Product: {product.name} : {product.article} : {product.wb_id}')
   return redirect ('dashboard')
 
 
