@@ -11,6 +11,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import datetime
 import pytz
+import pandas
+import time
 
 # Create your views here.
 
@@ -151,8 +153,6 @@ def ozon_push(request):
       #messages.success(request, data)   
       #return redirect("dashboard")
 
-
-
 def wb_test(request):
   #url = "https://common-api.wildberries.ru/ping"
   url = "https://common-api.wildberries.ru/api/v1/seller-info"
@@ -228,7 +228,6 @@ def wb_country_of_manufacture(request):
     messages.error(request,f'WB Response: {i}')
   return redirect ('dashboard')
 
-
 def wb_subject_specs (request):
   subjectID=2251
   url=f'https://content-api.wildberries.ru/content/v2/object/charcs/{subjectID}'
@@ -262,26 +261,54 @@ def wb_limits (request):
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
-
-
-def wb_add_media_files (request):
-  url=f'https://content-api.wildberries.ru/content/v3/media/save'
+def wb_id (request):
+  url=f'https://content-api.wildberries.ru/content/v2/get/cards/list'
   headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-  params = {
-     "nmId": 447261570,
-     "data": [
-       "https://mp-system.ru/media/uploads/Nissan_Note_I_2005.png",
-      #  "https://disk.yandex.ru/i/QAlZnFMAW11KQA",
-      #  "https://disk.yandex.ru/i/vzbsu-k-Hmd5IA",
-      #  "https://disk.yandex.ru/i/kmCMse7Ag4h__g."
-     ]
-  }
-       
-  response = requests.post(url, json=params, headers=headers)
+
+  response = requests.post(url, headers=headers)
   status_code=response.status_code
   a=response.json()
   print(f'status_code: {status_code}')
   print(a)
+  time.sleep(7)
+  messages.error(request,f'WB Response: {a}')
+  return redirect ('dashboard')
+
+
+def wb_add_media_files (request):
+  if request.method == "POST":
+    file = request.FILES["file_name"]
+    df1 = pandas.read_excel(file)
+    cycle = len(df1)
+    for i in range(cycle):
+      row = df1.iloc[i]#reads each row of the df1 one by one
+      article=row.Article
+      if '/' in str(article):
+          article=article.replace('/', '_')
+
+      if Product.objects.filter(article=article).exists():
+        product=Product.objects.get(article=article)
+    
+      url=f'https://content-api.wildberries.ru/content/v3/media/save'
+      headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+      params = {
+        "nmId": product.wb_id,
+        "data": [
+          product.image_1,
+          "https://mp-system.ru/media/uploads/DeflectorDoor_im_2.jpg",
+          "https://mp-system.ru/media/uploads/DeflectorDoor_im_3.jpg",
+          "https://mp-system.ru/media/uploads/DeflectorDoor_im_4.jpg",
+          "https://mp-system.ru/media/uploads/DeflectorDoor_im_5.jpg",
+          "https://mp-system.ru/media/uploads/DeflectorDoor_im_6.jpg"
+        ]
+      }
+          
+      response = requests.post(url, json=params, headers=headers)
+      status_code=response.status_code
+      a=response.json()
+      print(f'status_code: {status_code}')
+      print(a)
+      time.sleep(7)
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
