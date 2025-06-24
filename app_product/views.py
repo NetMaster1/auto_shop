@@ -1435,12 +1435,14 @@ def wb_add_media_files (request):
         if product.wb_id:
             print(product.wb_id)
             print(product.image_1)
+            image_1='https://mp-system.ru/media/' + str(product.image_1)
             url=f'https://content-api.wildberries.ru/content/v3/media/save'
             headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
             params = {
-                "nmId": product.wb_id,
+                #"nmId": product.wb_id,
+                "nmId": 447408585,
                 "data": [
-                    #product.image_1,
+                    image_1,
                     "https://mp-system.ru/media/uploads/DeflectorDoor_im_2.jpg",
                     "https://mp-system.ru/media/uploads/DeflectorDoor_im_3.jpg",
                     "https://mp-system.ru/media/uploads/DeflectorDoor_im_4.jpg",
@@ -1448,7 +1450,7 @@ def wb_add_media_files (request):
                     "https://mp-system.ru/media/uploads/DeflectorDoor_im_6.jpg"
                 ]
             }
-                
+
             response = requests.post(url, json=params, headers=headers)
             status_code=response.status_code
             a=response.json()
