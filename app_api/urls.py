@@ -16,7 +16,6 @@ urlpatterns = [
     path('wb_colors', views.wb_colors, name='wb_colors'),
     path('wb_country_of_manufacture', views.wb_country_of_manufacture, name='wb_country_of_manufacture'),
     path('wb_limits', views.wb_limits, name='wb_limits'),
-    path('wb_add_media_files', views.wb_add_media_files, name='wb_add_media_files'),
     path('wb_change_qnty', views.wb_change_qnty, name='wb_change_qnty'),
     path('wb_warehouse_list', views.wb_warehouse_list, name='wb_warehouse_list'),
     path('wb_create_warehouse', views.wb_create_warehouse, name='wb_create_warehouse'),

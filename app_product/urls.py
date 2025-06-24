@@ -19,4 +19,5 @@ urlpatterns = [
     # path('orders_history', views.orders_history, name='orders_history'),
 
     path('wb_create_product', views.wb_create_product, name='wb_create_product'),
+    path('wb_add_media_files', views.wb_add_media_files, name='wb_add_media_files'),
 ]

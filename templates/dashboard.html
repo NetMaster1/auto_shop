@@ -118,6 +118,30 @@
     <br>
 
 
+
+     <br>
+    <div class="row m-auto mt-3 ">
+        <div class="col-2">
+            <form action="{% url 'wb_add_media_files' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+
+              
+                        <label for="file_name">
+                            <h5>Введите файл в формате Excel <br>
+                        </h5>
+
+                        </label>
+                  
+             
+                        <input type="file" class='form-control' id="file_name" name="file_name" required>
+                
+            <input type="submit" value="Создать медиа для WB"
+                class="btn btn-sm btn-block btn-outline-dark clear_storage">
+        </div>
+    </form>
+    <br>
+
+
     ======================================================================
     <!-- ============================================================= -->
 
