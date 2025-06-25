@@ -152,7 +152,7 @@ def ozon_push(request):
 
       #messages.success(request, data)   
       #return redirect("dashboard")
-
+#===================================WB Reference Data===========================================
 def wb_test(request):
   #url = "https://common-api.wildberries.ru/ping"
   url = "https://common-api.wildberries.ru/api/v1/seller-info"
@@ -261,46 +261,6 @@ def wb_limits (request):
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
-def wb_id (request):
-  url=f'https://content-api.wildberries.ru/content/v2/get/cards/list'
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-
-  params = {
-        "settings": {
-              "sort": {
-                  "ascending": False
-                  },
-              "filter": {
-                  "withPhoto": -1
-              },
-              "cursor": {
-                'limit':100
-              }
-
-
-        }
-  }
-
-  response = requests.post(url, json=params, headers=headers)
-  status_code=response.status_code
-  a=response.json()
-  print(f'status_code: {status_code}')
-  a=a['cards']
-  for i in a:
-    wb_id=i['nmID']
-    article=i['vendorCode']
-    print(article)
-    if Product.objects.filter(article=article).exists():
-      product=Product.objects.get(article=article)
-      product.wb_id=wb_id
-      product.save()
-      print(f'{product.name} : {product.article} : {product.wb_id}')
-      print('======================')
-      time.sleep(1)
-
-      # messages.error(request,f'WB Product: {product.name} : {product.article} : {product.wb_id}')
-  return redirect ('dashboard')
-
 def wb_change_qnty (request):
   warehouseId=1368124
   url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
@@ -309,8 +269,8 @@ def wb_change_qnty (request):
   params= {
     "stocks": [
       {
-        "sku": "447261570",#Артикул WB
-        "amount": 5
+        "sku": "2044497780708",#Артикул WB
+        "amount": 3
       }
     ]
   }
@@ -320,7 +280,7 @@ def wb_change_qnty (request):
   a=response.json()
   print(f'status_code: {status_code}')
   print(a)
-  messages.error(request,f'WB Response: {a}')
+  messages.error(request,f'Status Code: {status_code}; WB Response: {a}')
   return redirect ('dashboard')
 
 def wb_warehouse_list(request):

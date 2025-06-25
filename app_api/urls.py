@@ -20,6 +20,6 @@ urlpatterns = [
     path('wb_warehouse_list', views.wb_warehouse_list, name='wb_warehouse_list'),
     path('wb_create_warehouse', views.wb_create_warehouse, name='wb_create_warehouse'),
     path('wb_seller_warehouse_list', views.wb_seller_warehouse_list, name='wb_seller_warehouse_list'),
-    path('wb_id', views.wb_id, name='wb_id'),
+    
    
 ]

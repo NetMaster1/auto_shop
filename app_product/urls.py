@@ -20,4 +20,5 @@ urlpatterns = [
 
     path('wb_create_product', views.wb_create_product, name='wb_create_product'),
     path('wb_add_media_files', views.wb_add_media_files, name='wb_add_media_files'),
+    path('wb_get_id', views.wb_get_id, name='wb_get_id'),
 ]
