@@ -24,6 +24,7 @@ class Product (models.Model):
     av_price = models.IntegerField(default=0)
     total_sum = models.IntegerField(default=0)
     length = models.IntegerField(null=True, blank=True)
+    height = models.IntegerField(null=True, blank=True)
     width = models.IntegerField(null=True, blank=True)
     image_1 = models.FileField(upload_to='uploads', null=True, blank=True)
     image_2 = models.FileField(upload_to='uploads', null=True, blank=True)
