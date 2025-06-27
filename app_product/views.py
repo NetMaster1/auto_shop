@@ -1531,5 +1531,45 @@ def wb_get_id (request):
       # messages.error(request,f'WB Product: {product.name} : {product.article} : {product.wb_id}')
   return redirect ('dashboard')
 
+def wb_update_prices(request):
+    url=f'https://discounts-prices-api.wildberries.ru/api/v2/upload/task'
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    if request.method == "POST":
+        file = request.FILES["file_name"]
+        df1 = pandas.read_excel(file)
+        cycle = len(df1)
+        dict_new_article={}
+        for i in range(cycle):
+            row = df1.iloc[i]#reads each row of the df1 one by one
+            article=row.Article
+            if '/' in str(article):
+                article=article.replace('/', '_')
+            #====================getting rid of extra spaces in the string==================================
+            #article=article.replace(' ', '')#getting rid of extra spaces
+            #article=article.strip()#getting rid of extra spaces at both sides of the string
+            article=article.split()
+            article=' '.join(article)
+            #============================end of block=======================================================
 
 
+            if Product.objects.filter(article=article).exists():
+                product=Product.objects.get(article=article)
+                wb_id=product.wb_id
+                params={
+                        "data": [
+                            {
+                            "nmID": wb_id,
+                            "price": 2999,
+                            "discount": 30
+                            }
+                        ]
+                    }
+                response = requests.put(url, json=params, headers=headers)
+                status_code=response.status_code
+                a=response.json()
+                print(f'status_code: {status_code}')
+                print(a)
+                messages.error(request,f'WB Response: {a}')
+
+            time.sleep(1)
+        return redirect ('dashboard')
