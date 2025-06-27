@@ -1561,13 +1561,13 @@ def wb_update_prices(request):
                     params={
                             "data": [
                                 {
-                                "nmID": wb_id,
-                                "price": retail_price,
-                                "discount": 30
+                                "nmID": int(wb_id),
+                                "price": int(retail_price),
+                                "discount": 20
                                 }
                             ]
                         }
-                    response = requests.put(url, json=params, headers=headers)
+                    response = requests.post(url, json=params, headers=headers)
                     status_code=response.status_code
                     a=response.json()
                     print(f'status_code: {status_code}')
