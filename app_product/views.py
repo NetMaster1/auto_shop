@@ -1058,27 +1058,27 @@ def synchronize_qnty(request):
                     time.sleep(1)
 
 
-                if product.wb_bar_code:
-                    warehouseId=1368124
-                    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-                    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-                    wb_bar_code=str(product.wb_bar_code)
-                    params= {
-                        "stocks": [
-                        {
-                            "sku": wb_bar_code,#WB Barcode
-                            "amount": int(rho_latest.current_remainder),
-                        }
-                        ]
-                    }
-                    response = requests.put(url, json=params, headers=headers)
-                    status_code=response.status_code
-                    a=response.json()
-                    print(f'status_code: {status_code}')
-                    print(a)
-                    messages.error(request,f'WB Response: {a}')
+                # if product.wb_bar_code:
+                #     warehouseId=1368124
+                #     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                #     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+                #     wb_bar_code=str(product.wb_bar_code)
+                #     params= {
+                #         "stocks": [
+                #         {
+                #             "sku": wb_bar_code,#WB Barcode
+                #             "amount": int(rho_latest.current_remainder),
+                #         }
+                #         ]
+                #     }
+                #     response = requests.put(url, json=params, headers=headers)
+                #     status_code=response.status_code
+                #     a=response.json()
+                #     print(f'status_code: {status_code}')
+                #     print(a)
+                #     messages.error(request,f'WB Response: {a}')
 
-            time.sleep(1)
+            # time.sleep(1)
     return redirect ('dashboard')
 
 def update_prices(request):
