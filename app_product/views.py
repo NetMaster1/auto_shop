@@ -984,6 +984,7 @@ def delivery_auto(request):
         print('Product with no ozon_id:') 
         for key, value in  dict_no_ozon_id.items():
             print(str(key) +' : ' +str(value))
+
         return redirect("dashboard")
 
 def zero_ozon_qnty(request):
@@ -1031,7 +1032,6 @@ def synchronize_qnty(request):
             if RemainderHistory.objects.filter(article=article).exists():
                 #rhos=RemainderHistory.objects.filter(article=article)
                 rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-                #current_remainder=rho_latest.current_remainder
                 if product.ozon_id:
                     headers = {
                         "Client-Id": "1711314",
@@ -1051,34 +1051,35 @@ def synchronize_qnty(request):
                         ]
                     }
                     response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-                    print(response)
+                    status_code=response.status_code
+                    print(status_code)
+                    #print(response)
                     json=response.json()
-                    #print(status_code)
                     print(json)
                     time.sleep(1)
-
-
-                # if product.wb_bar_code:
-                #     warehouseId=1368124
-                #     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-                #     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-                #     wb_bar_code=str(product.wb_bar_code)
-                #     params= {
-                #         "stocks": [
-                #         {
-                #             "sku": wb_bar_code,#WB Barcode
-                #             "amount": int(rho_latest.current_remainder),
-                #         }
-                #         ]
-                #     }
-                #     response = requests.put(url, json=params, headers=headers)
-                #     status_code=response.status_code
-                #     a=response.json()
-                #     print(f'status_code: {status_code}')
-                #     print(a)
-                #     messages.error(request,f'WB Response: {a}')
-
-            # time.sleep(1)
+            
+                if product.wb_bar_code:
+                    warehouseId=1368124
+                    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+                    wb_bar_code=str(product.wb_bar_code)
+                    qnty=rho_latest.current_remainder
+                    # print('======================')
+                    # print(wb_bar_code)
+                    # print(rho_latest.current_remainder)
+                    params= {
+                        "stocks": [
+                        {
+                            "sku": wb_bar_code,#WB Barcode
+                            "amount": qnty,
+                        }
+                        ]
+                    }
+                    response = requests.put(url, json=params, headers=headers)
+                    #status_code=response.status_code
+                    #Status Code: 204 No Content
+                    #There is no content to send for this request except for headers.
+                    time.sleep(1)
     return redirect ('dashboard')
 
 def update_prices(request):
@@ -1538,7 +1539,7 @@ def wb_update_prices(request):
         file = request.FILES["file_name"]
         df1 = pandas.read_excel(file)
         cycle = len(df1)
-        dict_new_article={}
+        # dict_new_article={}
         for i in range(cycle):
             row = df1.iloc[i]#reads each row of the df1 one by one
             article=row.Article
@@ -1559,7 +1560,7 @@ def wb_update_prices(request):
                         "data": [
                             {
                             "nmID": wb_id,
-                            "price": 2999,
+                            "price": 3490,
                             "discount": 30
                             }
                         ]
