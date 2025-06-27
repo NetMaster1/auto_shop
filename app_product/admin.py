@@ -2,8 +2,8 @@ from django.contrib import admin
 from . models import Product, DocumentType, RemainderHistory, ProductCategory
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'article', 'image_1', 'ozon_id', 'ozon_sku', 'wb_id', 'length', 'width', 'height', 'quantity', 'av_price', 'total_sum', )
-    search_fields = ('article', 'ozon_id', 'ozon_sku', 'wb_id' )
+    list_display = ('id', 'name', 'article', 'image_1', 'ozon_id', 'ozon_sku', 'wb_id', 'wb_bar_code', 'length', 'width', 'height', 'quantity', 'av_price', 'total_sum', )
+    search_fields = ('article', 'ozon_id', 'ozon_sku', 'wb_id', 'wb_bar_code' )
     list_editable = ('length', 'width', 'height', 'image_1')
 
 class ProductCategoryAdmin(admin.ModelAdmin):

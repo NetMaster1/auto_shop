@@ -19,6 +19,7 @@ class Product (models.Model):
     ozon_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     ozon_sku = models.CharField(max_length=50, unique=True, null=True, blank=True)
     wb_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    wb_bar_code = models.CharField(max_length=50, unique=True, null=True, blank=True)
     ean = models.CharField(max_length=50, null=True, blank=True)
     quantity = models.IntegerField(default=0)
     av_price = models.IntegerField(default=0)
