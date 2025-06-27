@@ -1543,6 +1543,8 @@ def wb_update_prices(request):
         for i in range(cycle):
             row = df1.iloc[i]#reads each row of the df1 one by one
             article=row.Article
+            retail_price=row.Retail_Price
+
             if '/' in str(article):
                 article=article.replace('/', '_')
             #====================getting rid of extra spaces in the string==================================
@@ -1552,25 +1554,25 @@ def wb_update_prices(request):
             article=' '.join(article)
             #============================end of block=======================================================
 
-
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
-                wb_id=product.wb_id
-                params={
-                        "data": [
-                            {
-                            "nmID": wb_id,
-                            "price": 3490,
-                            "discount": 30
-                            }
-                        ]
-                    }
-                response = requests.put(url, json=params, headers=headers)
-                status_code=response.status_code
-                a=response.json()
-                print(f'status_code: {status_code}')
-                print(a)
-                messages.error(request,f'WB Response: {a}')
+                if product.wb_id:
+                    wb_id=product.wb_id
+                    params={
+                            "data": [
+                                {
+                                "nmID": wb_id,
+                                "price": retail_price,
+                                "discount": 30
+                                }
+                            ]
+                        }
+                    response = requests.put(url, json=params, headers=headers)
+                    status_code=response.status_code
+                    a=response.json()
+                    print(f'status_code: {status_code}')
+                    print(a)
+                    messages.error(request,f'WB Response: {a}')
 
             time.sleep(1)
         return redirect ('dashboard')
