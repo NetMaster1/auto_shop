@@ -252,10 +252,31 @@
     <br>
     ============================================================================
     <!-- ==================================================================== -->
+
+    <label for="file_name">
+        <h5>Оприходование
+            <br>
+            Содаёт запись в таблице RemainderHistory (Оприходование ТМЦ)
+        </h5>
+    </label>
+
+    <form action="{% url 'recognition' %}" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+    
+        <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
+        <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите кол-во" required >
+   
+            <input type="submit" value="Оприходование ТМЦ"
+                class="btn btn-sm btn-block btn-outline-dark clear_storage">
+    
+    </form>
+    <br>
+    ============================================================================
+    <!-- ==================================================================== -->
     <label for="file_name">
         <h5>Возврат ТМЦ
             <br>
-            Содаёт запись в таблице RemainderHistory (Возврат ТМЦ ТМЦ)
+            Содаёт запись в таблице RemainderHistory (Возврат ТМЦ)
         </h5>
     </label>
 
