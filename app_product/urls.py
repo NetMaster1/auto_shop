@@ -11,6 +11,7 @@ urlpatterns = [
     path('zero_ozon_qnty', views.zero_ozon_qnty, name='zero_ozon_qnty'),
     path('synchronize_qnty', views.synchronize_qnty, name='synchronize_qnty'),
     path('sale', views.sale, name='sale'),
+    path('recognition', views.recognition, name='recognition'),
     path('update_prices', views.update_prices, name='update_prices'),
     path('update_images', views.update_images, name='update_images'),
     path('return_product', views.return_product, name='return_product'),

@@ -1257,6 +1257,9 @@ def sale (request):
    
     return redirect ('dashboard')
 
+def recognition (request):
+    pass
+
 def return_product (request):
     pass
 
@@ -1562,8 +1565,9 @@ def wb_update_prices(request):
                             "data": [
                                 {
                                 "nmID": int(wb_id),
-                                "price": int(retail_price),
-                                "discount": 20
+                                # "price": int(retail_price),
+                                "price": 2990,
+                                "discount": 0
                                 }
                             ]
                         }
