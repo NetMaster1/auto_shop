@@ -1047,20 +1047,11 @@ def synchronize_qnty(request):
                         "warehouse_id": 1020005000113280
                     }
                     stock_arr.append(stock_dict)
-                    #update quantity of products at ozon warehouse making it equal to OOC warehouse
-                    # task = {
-                    #     "stocks": [
-                    #         {
-                    #             "offer_id": str(product.article),
-                    #             "product_id": str(product.ozon_id),
-                    #             "stock": rho_latest.current_remainder,
-                    #             #warehouse (Неклюдово)
-                    #             "warehouse_id": 1020005000113280
-                    #         }
-                    #     ]
-                    # }
-                    #За один запрос можно изменить наличие для 100 товаров. 
-                    #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
+        #update quantity of products at ozon warehouse making it equal to OOC warehouse
+        #За один запрос можно изменить наличие для 100 товаров. 
+        #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
+        #в настоящий момент в каждой категории товара менее 100 позиций, поэтому проблем не возникает, но
+        #с увеличением кол-ва более 100 нужно будет менять код
         task={
             "stocks" : stock_arr
         }
