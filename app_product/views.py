@@ -896,7 +896,7 @@ def delivery_auto(request):
             #article=article.strip()#getting rid of extra spaces at both sides of the string
             article=article.split()
             article=' '.join(article)
-            #============================end of block=======================================================
+
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
                 total_qnty = product.quantity + int(row.Qnty)
@@ -1024,6 +1024,11 @@ def synchronize_qnty(request):
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
     dateTime=dT_utcnow+tdelta
     if request.method == "POST":
+        headers = {
+                        "Client-Id": "1711314",
+                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+                    }
+        stock_arr=[]
         category = request.POST["category"]
         category=ProductCategory.objects.get(id=category)
         products=Product.objects.filter(category=category)
@@ -1032,54 +1037,63 @@ def synchronize_qnty(request):
             if RemainderHistory.objects.filter(article=article).exists():
                 #rhos=RemainderHistory.objects.filter(article=article)
                 rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+               
                 if product.ozon_id:
-                    headers = {
-                        "Client-Id": "1711314",
-                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+                    stock_dict={
+                        "offer_id": str(product.article),
+                        "product_id": str(product.ozon_id),
+                        "stock": rho_latest.current_remainder,
+                        #warehouse (Неклюдово)
+                        "warehouse_id": 1020005000113280
                     }
-            
+                    stock_arr.append(stock_dict)
                     #update quantity of products at ozon warehouse making it equal to OOC warehouse
-                    task = {
-                        "stocks": [
-                            {
-                                "offer_id": str(product.article),
-                                "product_id": str(product.ozon_id),
-                                "stock": rho_latest.current_remainder,
-                                #warehouse (Неклюдово)
-                                "warehouse_id": 1020005000113280
-                            }
-                        ]
-                    }
-                    response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-                    status_code=response.status_code
-                    print(status_code)
-                    #print(response)
-                    json=response.json()
-                    print(json)
-                    time.sleep(1)
+                    # task = {
+                    #     "stocks": [
+                    #         {
+                    #             "offer_id": str(product.article),
+                    #             "product_id": str(product.ozon_id),
+                    #             "stock": rho_latest.current_remainder,
+                    #             #warehouse (Неклюдово)
+                    #             "warehouse_id": 1020005000113280
+                    #         }
+                    #     ]
+                    # }
+                    #За один запрос можно изменить наличие для 100 товаров. 
+                    #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
+        task={
+            "stocks" : stock_arr
+        }
+        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+        status_code=response.status_code
+        print(status_code)
+        #print(response)
+        json=response.json()
+        print(json)
+        #time.sleep(1)
             
-                if product.wb_bar_code:
-                    warehouseId=1368124
-                    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-                    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-                    wb_bar_code=str(product.wb_bar_code)
-                    qnty=rho_latest.current_remainder
-                    # print('======================')
-                    # print(wb_bar_code)
-                    # print(rho_latest.current_remainder)
-                    params= {
-                        "stocks": [
-                        {
-                            "sku": wb_bar_code,#WB Barcode
-                            "amount": qnty,
-                        }
-                        ]
-                    }
-                    response = requests.put(url, json=params, headers=headers)
-                    #status_code=response.status_code
-                    #Status Code: 204 No Content
-                    #There is no content to send for this request except for headers.
-                    time.sleep(1)
+                # if product.wb_bar_code:
+                #     warehouseId=1368124
+                #     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                #     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+                #     wb_bar_code=str(product.wb_bar_code)
+                #     qnty=rho_latest.current_remainder
+                #     # print('======================')
+                #     # print(wb_bar_code)
+                #     # print(rho_latest.current_remainder)
+                #     params= {
+                #         "stocks": [
+                #         {
+                #             "sku": wb_bar_code,#WB Barcode
+                #             "amount": qnty,
+                #         }
+                #         ]
+                #     }
+                #     response = requests.put(url, json=params, headers=headers)
+                #     #status_code=response.status_code
+                #     #Status Code: 204 No Content
+                #     #There is no content to send for this request except for headers.
+                #     time.sleep(1)
     return redirect ('dashboard')
 
 def update_prices(request):
