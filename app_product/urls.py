@@ -23,4 +23,5 @@ urlpatterns = [
     path('wb_add_media_files', views.wb_add_media_files, name='wb_add_media_files'),
     path('wb_get_id', views.wb_get_id, name='wb_get_id'),
     path('wb_update_prices', views.wb_update_prices, name='wb_update_prices'),
+    path('wb_update_prices_ver_1', views.wb_update_prices_ver_1, name='wb_update_prices_ver_1'),
 ]
