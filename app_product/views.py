@@ -884,6 +884,7 @@ def delivery_auto(request):
                     "Client-Id": "1711314",
                         "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
                 }
+        stock_arr=[]
         # print(file)
         # df1 = pandas.read_excel('Delivery_21_06_21.xlsx')
         df1 = pandas.read_excel(file)
@@ -932,6 +933,9 @@ def delivery_auto(request):
                     retail_price=int(row.Retail_Price),
                     total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
                 )
+
+                #checking if product already has Ozon_id & does not have to be created again
+                if product.ozon_id:
                 #Сначала мы создаём новую позицию на площадке озон в функции (def ozon_product_create), которая содержит API метод
                 #response=requests.post('https://api-seller.ozon.ru/v3/product/import', json=task, headers=headers)
                 #мы не можем сразу ввести количество на маркетплейсе Ozon, так как ему требуется время для модерации
@@ -951,32 +955,44 @@ def delivery_auto(request):
                 #Затем получаем ozon_id (def getting_ozon_id)
                 #Вводим документ (def deliver_auto), где загружаем поступившее кол-во товара на ООС и одновременно на озон
 
-
-                #checking if product already has Ozon_id & does not have to be created again
-                if product.ozon_id:
-                   
-            
-                    #update quantity of products at ozon warehouse making it equal to OOC warehouse
-                    task = {
-                        "stocks": [
-                            {
+                
+                    stock_dict={
                                 "offer_id": str(product.article),
                                 "product_id": str(product.ozon_id),
                                 "stock": rho.current_remainder,
                                 #warehouse (Неклюдово)
                                 "warehouse_id": 1020005000113280
                             }
-                        ]
-                    }
-                    response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-                    print(response)
-                    json=response.json()
-                    #print(status_code)
-                    print(json)
+                    stock_arr.append(stock_dict)
+                   
+            
+                    #update quantity of products at ozon warehouse making it equal to OOC warehouse
+                    # task = {
+                    #     "stocks": [
+                    #         {
+                    #             "offer_id": str(product.article),
+                    #             "product_id": str(product.ozon_id),
+                    #             "stock": rho.current_remainder,
+                    #             #warehouse (Неклюдово)
+                    #             "warehouse_id": 1020005000113280
+                    #         }
+                    #     ]
+                    # }
                 else:
                     dict_no_ozon_id[row.Article]=row.Title
             else:
                 dict_new_article[row.Article]=row.Title
+
+        task={
+            "stocks" : stock_arr
+        }
+        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+        print(response)
+        json=response.json()
+        #print(status_code)
+        print(json)
+                
+            
         print('=============================')        
         print('No product with this article:')        
         for key, value in  dict_new_article.items():
