@@ -1350,6 +1350,7 @@ def general_report (request):
 def wb_create_product (request):
     url=f'https://content-api.wildberries.ru/content/v2/cards/upload'
     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    params=[]
     if request.method == "POST":
         file = request.FILES["file_name"]
         df1 = pandas.read_excel(file)
@@ -1384,88 +1385,235 @@ def wb_create_product (request):
                     auto_model=row.Model, 
                     category=category    
                 )
-            description_string = f"""Дефлекторы окон - это необходимый аксессуар для любого автомобиля, который помогает защитить ваши окна от грязи и пыли. Они также могут служить дополнительной опцией безопасности, предотвращая попадание мусора внутрь машины.
+
+
+            if category=="Дефлектор двери":
+                description_string = f"""Дефлекторы окон - это необходимый аксессуар для любого автомобиля, который помогает защитить ваши окна от грязи и пыли. Они также могут служить дополнительной опцией безопасности, предотвращая попадание мусора внутрь машины.
 
 Дефлекторы окон {row.Model} - это отличный выбор для тех, кто хочет добавить стиль и функциональность своему автомобилю. Эти дефлекторы изготовлены из высококачественного пластика, что обеспечивает их долговечность и прочность.
 
 Дефлекторы окон {row.Model} имеют накладное крепление, которое позволяет легко установить их на любую модель автомобиля. Они подходят как для передних, так и для задних дверей, что делает их универсальными и удобными в использовании.
 
 Дефлекторы окон {row.Model} - это отличный выбор для тех, кто хочет добавить стиль и функциональность своему автомобилю. Они изготовлены из высококачественного пластика, что обеспечивает их долговечность и прочность. Их накладное крепление позволяет легко установить их на любую модель автомобиля, а их универсальность делает их идеальным решением для всех водителей.""" 
-
-            params = [
-                {
+                item={
                     "subjectID": 2251,
-                    "variants": [
-                    {
-                        "vendorCode": article,
-                        "title": str(row.Title),
-                        "description": description_string,
-                        "brand": "Delta Avto",
-                        "dimensions": 
+                        "variants": [
                         {
-                            "length": 90,
-                            "width": 20,
-                            "height": 5,
-                            "weightBrutto": 1
-                        },
+                            "vendorCode": article,
+                            "title": str(row.Title),
+                            "description": description_string,
+                            "brand": "Delta Avto",
+                            "dimensions": 
+                            {
+                                "length": 90,
+                                "width": 20,
+                                "height": 5,
+                                "weightBrutto": 1
+                            },
+                        
+
+                        "characteristics": [
+                            {
+                                "id": 5023,
+                                "value": str(row.AutoModel)
+                            },
+                            {
+                                "id": 16532,
+                                "name" : str(row.AutoBrand)
+                            },
+                            {
+                                "id": 17596,
+                                "name" : 'пластик'
+                            },
+                            {
+                                "id": 74242,
+                                "name" : 'окна'
+                            },
+                            {
+                                "id": 90702,
+                                "name" : '4'
+                            },
+                            {
+                                "id": 378533,
+                                "name" : 'Дефлекторы (4 шт.), инструкция'
+                            },
+                            {
+                                "id": 5522881,
+                                "name" : str(row.Article)
+                            },
+                            {
+                                "id": 14177451,
+                                "name" : 'Россия'
+                            },
+                        ],
+                        # "sizes": [
+                        #   {
+                        #   "techSize": "M",
+                        #   "wbSize": "42",
+                        #   "price": 2500,
+                        #   "skus": []
+                        #   }
+                        # ]
+                        }
+                    ]
                     
-
-                    "characteristics": [
-                        {
-                            "id": 5023,
-                            "value": str(row.AutoModel)
-                        },
-                        {
-                            "id": 16532,
-                            "name" : str(row.AutoBrand)
-                        },
-                        {
-                            "id": 17596,
-                            "name" : 'пластик'
-                        },
-                        {
-                            "id": 74242,
-                            "name" : 'окна'
-                        },
-                        {
-                            "id": 90702,
-                            "name" : '4'
-                        },
-                        {
-                            "id": 378533,
-                            "name" : 'Дефлекторы (4 шт.), инструкция'
-                        },
-                        {
-                            "id": 5522881,
-                            "name" : str(row.Article)
-                        },
-                        {
-                            "id": 14177451,
-                            "name" : 'Россия'
-                        },
-                    ],
-                    # "sizes": [
-                    #   {
-                    #   "techSize": "M",
-                    #   "wbSize": "42",
-                    #   "price": 2500,
-                    #   "skus": []
-                    #   }
-                    # ]
-                    }
-                ]
                 }
-            ]
+                params.append(item)
 
-            response = requests.post(url, json=params, headers=headers)
-            status_code=response.status_code
-            a=response.json()
-            print(f'status_code: {status_code}')
-            print(a)
-            # b=a['data']
-            # for i in b:
-            #   print(i)
-            time.sleep(7)
+                # params = [
+                #     {
+                #         "subjectID": 2251,
+                #         "variants": [
+                #         {
+                #             "vendorCode": article,
+                #             "title": str(row.Title),
+                #             "description": description_string,
+                #             "brand": "Delta Avto",
+                #             "dimensions": 
+                #             {
+                #                 "length": 90,
+                #                 "width": 20,
+                #                 "height": 5,
+                #                 "weightBrutto": 1
+                #             },
+                        
+
+                #         "characteristics": [
+                #             {
+                #                 "id": 5023,
+                #                 "value": str(row.AutoModel)
+                #             },
+                #             {
+                #                 "id": 16532,
+                #                 "name" : str(row.AutoBrand)
+                #             },
+                #             {
+                #                 "id": 17596,
+                #                 "name" : 'пластик'
+                #             },
+                #             {
+                #                 "id": 74242,
+                #                 "name" : 'окна'
+                #             },
+                #             {
+                #                 "id": 90702,
+                #                 "name" : '4'
+                #             },
+                #             {
+                #                 "id": 378533,
+                #                 "name" : 'Дефлекторы (4 шт.), инструкция'
+                #             },
+                #             {
+                #                 "id": 5522881,
+                #                 "name" : str(row.Article)
+                #             },
+                #             {
+                #                 "id": 14177451,
+                #                 "name" : 'Россия'
+                #             },
+                #         ],
+                #         # "sizes": [
+                #         #   {
+                #         #   "techSize": "M",
+                #         #   "wbSize": "42",
+                #         #   "price": 2500,
+                #         #   "skus": []
+                #         #   }
+                #         # ]
+                #         }
+                #     ]
+                #     }
+                # ]
+
+            elif category == "Дефлектор капота":
+                description_string = f"""Дефлектор капота (мухобойка) разработан специально для {product.auto_model} ({row.Russian_Brand} {row.Russian_Model}), выполнен из гибкого оргстекла, представляет собой тонкую, просчитанную пластину.
+
+Устанавливается на капот при помощи креплений, которые идут в комплекте, в штатные места в усилителе капота вашего автомобиля.
+
+Расстояние между капотом и дефлектором примерно равно 1 см, оно продувается и промывается на мойке.
+
+Дефлектор защищает фронтальную часть капота от повреждений и царапин. Он отражает камни и песок от впереди идущих машин, сохраняя лакокрасочное покрытие капота целым. Также дефлектор изменяет воздушный поток, уменьшает загрязнение лобового стекла и щёток стеклоочистителя.
+
+В быту дефлектор капота еще называют отбойник или мухобойка, так как помимо камешков он отражает и летящих навстречу машине насекомых.
+
+Цвет дефлектора капота тёмный, тонированный до 20%, на машине он будет выглядеть полностью чёрным. Дефлектор - это не только функциональный атрибут, но и стильный элемент тюнинга, который выгодно выделит на фоне других ваше авто."""
+                
+                item={
+                    "subjectID": 2251,
+                        "variants": [
+                        {
+                            "vendorCode": article,
+                            "title": str(row.Title),
+                            "description": description_string,
+                            "brand": "Delta Avto",
+                            "dimensions": 
+                            {
+                                "length": 100,
+                                "width": 30,
+                                "height": 5,
+                                "weightBrutto": 1
+                            },
+                        
+
+                        "characteristics": [
+                            {
+                                "id": 5023,
+                                "value": str(row.AutoModel)
+                            },
+                            {
+                                "id": 16532,
+                                "name" : str(row.AutoBrand)
+                            },
+                            {
+                                "id": 17596,
+                                "name" : 'пластик'
+                            },
+                            {
+                                "id": 74242,
+                                "name" : 'капот'
+                            },
+                            {
+                                "id": 90702,
+                                "name" : '3'
+                            },
+                            {
+                                "id": 378533,
+                                "name" : 'Дефлектор (1 шт.), крепеж, инструкция'
+                            },
+                            {
+                                "id": 5522881,
+                                "name" : str(row.Article)
+                            },
+                            {
+                                "id": 14177451,
+                                "name" : 'Россия'
+                            },
+                        ],
+                        # "sizes": [
+                        #   {
+                        #   "techSize": "M",
+                        #   "wbSize": "42",
+                        #   "price": 2500,
+                        #   "skus": []
+                        #   }
+                        # ]
+                        }
+                    ]
+                    
+                }
+                params.append(item)
+
+        #Максимум 10 запросов в минуту на один аккаунт продавца
+        #В одном запросе можно создать максимум 100 объединённых карточек товаров (imtID), по 30 карточек товаров в каждой. Максимальный размер запроса 10 Мб.
+        response = requests.post(url, json=params, headers=headers)
+        status_code=response.status_code
+        a=response.json()
+        print(f'status_code: {status_code}')
+        print(a)
+        # b=a['data']
+        # for i in b:
+        #   print(i)
+         
     
     messages.error(request,f'WB Response: {a}')
     return redirect ('dashboard')
