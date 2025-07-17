@@ -880,6 +880,10 @@ def delivery_auto(request):
             dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
             dateTime=dT_utcnow+tdelta
         file = request.FILES["file_name"]
+        headers = {
+                    "Client-Id": "1711314",
+                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+                }
         # print(file)
         # df1 = pandas.read_excel('Delivery_21_06_21.xlsx')
         df1 = pandas.read_excel(file)
@@ -950,10 +954,7 @@ def delivery_auto(request):
 
                 #checking if product already has Ozon_id & does not have to be created again
                 if product.ozon_id:
-                    headers = {
-                        "Client-Id": "1711314",
-                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-                    }
+                   
             
                     #update quantity of products at ozon warehouse making it equal to OOC warehouse
                     task = {
