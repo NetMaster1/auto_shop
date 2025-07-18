@@ -1660,9 +1660,11 @@ def wb_get_id (request):
       # messages.error(request,f'WB Product: {product.name} : {product.article} : {product.wb_id}')
   return redirect ('dashboard')
 
-
 def wb_add_media_files (request):
   if request.method == "POST":
+    url=f'https://content-api.wildberries.ru/content/v3/media/save'
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    params_dict={}
     file = request.FILES["file_name"]
     df1 = pandas.read_excel(file)
     cycle = len(df1)
@@ -1680,8 +1682,9 @@ def wb_add_media_files (request):
             print(product.wb_id)
             print(product.image_1)
             image_1='https://mp-system.ru/media/' + str(product.image_1)
-            url=f'https://content-api.wildberries.ru/content/v3/media/save'
-            headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+            
+
+            
             params = {
                 "nmId": int(wb_id),
                 #"nmId": 447408585,
@@ -1703,7 +1706,6 @@ def wb_add_media_files (request):
             time.sleep(1)
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
-
 
 def wb_update_prices(request):
     #Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
@@ -1753,19 +1755,18 @@ def wb_update_prices(request):
                     #         ]
                     #     }
             
-            params={
+        params={
                 "data" : task_arr
             }
-            response = requests.post(url, json=params, headers=headers)
-            status_code=response.status_code
-            a=response.json()
-            print(f'status_code: {status_code}')
-            print(a)
-            messages.error(request,f'WB Response: {a}')
+        response = requests.post(url, json=params, headers=headers)
+        status_code=response.status_code
+        a=response.json()
+        print(f'status_code: {status_code}')
+        print(a)
+        messages.error(request,f'WB Response: {a}')
 
         return redirect ('dashboard')
     
-
 def wb_update_prices_ver_1(request):
     #Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
 	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
@@ -1794,4 +1795,39 @@ def wb_update_prices_ver_1(request):
     print(a)
     messages.error(request,f'WB Response: {a}')
 
+    return redirect ('dashboard')
+
+def synchronize_qnty_wb(request):
+    tdelta=datetime.timedelta(hours=3)
+    dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+    dateTime=dT_utcnow+tdelta
+    products=Product.objects.all()
+    warehouseId=1368124
+    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    stock_arr=[]
+
+    for product in products:
+        article=product.article
+        if RemainderHistory.objects.filter(article=article).exists():
+            #rhos=RemainderHistory.objects.filter(article=article)
+            rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+            
+            if product.wb_bar_code:
+                wb_bar_code=str(product.wb_bar_code)
+                qnty=rho_latest.current_remainder
+                stock_dict={
+                    "sku": wb_bar_code,#WB Barcode
+                    "amount": qnty,
+                }
+                stock_arr.append(stock_dict)
+     
+    params= {
+        "stocks": stock_arr  
+    }
+    response = requests.put(url, json=params, headers=headers)
+    #status_code=response.status_code
+    #Status Code: 204 No Content
+    #There is no content to send for this request except for headers.
+                   
     return redirect ('dashboard')
