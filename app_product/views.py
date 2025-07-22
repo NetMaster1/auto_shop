@@ -1017,8 +1017,8 @@ def zero_ozon_qnty(request):
                 "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
             }
     stock_arr=[]
+    n=0
     for product in products:
-        n=0
         if product.ozon_id:
             # while n < 99:
             stock_dict= {
