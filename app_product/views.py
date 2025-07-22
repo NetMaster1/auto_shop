@@ -1004,6 +1004,10 @@ def delivery_auto(request):
 
         return redirect("dashboard")
 
+
+#За один запрос можно изменить наличие для 100 товаров. 
+#С одного аккаунта продавца можно отправить до 80 запросов в минуту.
+#В настоящий момент у нас уже более 100 позиций по Дефлектор капота
 def zero_ozon_qnty(request):
     #if request.method == "POST":
     category=ProductCategory.objects.get(name='Дефлектор капота')
@@ -1012,38 +1016,42 @@ def zero_ozon_qnty(request):
                 "Client-Id": "1711314",
                 "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
             }
-    task_arr=[]
+    stock_arr=[]
     for product in products:
-                   
-        #update quantity of products at ozon warehouse making it equal to OOC warehouse
-        task_dict= {
-                    "offer_id": str(product.article),
-                    "product_id": str(product.ozon_id),
-                    "stock": 0,
-                    #warehouse (Неклюдово)
-                    "warehouse_id": 1020005000113280
-                }
-        task_arr.append(task_dict)
-      
-        # task = {
-        #     "stocks": [
-        #         {
-        #             "offer_id": str(product.article),
-        #             "product_id": str(product.ozon_id),
-        #             "stock": 0,
-        #             #warehouse (Неклюдово)
-        #             "warehouse_id": 1020005000113280
-        #         }
-        #     ]
-        # }
+        n=0
+        if product.ozon_id:
+            # while n < 99:
+            stock_dict= {
+                        "offer_id": str(product.article),
+                        "product_id": str(product.ozon_id),
+                        "stock": 0,
+                        #warehouse (Неклюдово)
+                        "warehouse_id": 1020005000113280
+                    }
+            stock_arr.append(stock_dict)
+            n=+1
+            if n==99:
+                break
+
+        
+            # task = {
+            #     "stocks": [
+            #         {
+            #             "offer_id": str(product.article),
+            #             "product_id": str(product.ozon_id),
+            #             "stock": 0,
+            #             #warehouse (Неклюдово)
+            #             "warehouse_id": 1020005000113280
+            #         }
+            #     ]
+            # }
 
     task={
-        "stocks": task_arr
-    }
-
+            "stocks" : stock_arr
+        }
     response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
     
-    # print(response)
+    print(response)
     # json=response.json()
     #print(status_code)
     # print(json)
@@ -1051,6 +1059,9 @@ def zero_ozon_qnty(request):
     return redirect("dashboard")
 
 #for both ozon & wb
+#За один запрос можно изменить наличие для 100 товаров. 
+#С одного аккаунта продавца можно отправить до 80 запросов в минуту.
+#В настоящий момент у нас уже более 100 позиций по Дефлектор капота
 def synchronize_qnty(request):
     tdelta=datetime.timedelta(hours=3)
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
