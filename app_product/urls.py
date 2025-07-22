@@ -25,4 +25,5 @@ urlpatterns = [
     path('wb_get_id', views.wb_get_id, name='wb_get_id'),
     path('wb_update_prices', views.wb_update_prices, name='wb_update_prices'),
     path('wb_update_prices_ver_1', views.wb_update_prices_ver_1, name='wb_update_prices_ver_1'),
+    path('zero_wb_qnty', views.zero_wb_qnty, name='zero_wb_qnty'),
 ]
