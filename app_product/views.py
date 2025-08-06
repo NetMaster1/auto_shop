@@ -1075,13 +1075,15 @@ def synchronize_qnty(request):
         category = request.POST["category"]
         category=ProductCategory.objects.get(id=category)
         products=Product.objects.filter(category=category)
+        #update quantity of products at ozon warehouse making it equal to OOC warehouse
+        #За один запрос можно изменить наличие для 100 товаров. 
+        #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
         for product in products:
-            article=product.article
-            if RemainderHistory.objects.filter(article=article).exists():
-                #rhos=RemainderHistory.objects.filter(article=article)
-                rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-               
-                if product.ozon_id:
+            if product.ozon_id:
+                article=product.article
+                if RemainderHistory.objects.filter(article=article).exists():
+                    #rhos=RemainderHistory.objects.filter(article=article)
+                    rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
                     stock_dict={
                         "offer_id": str(product.article),
                         "product_id": str(product.ozon_id),
@@ -1090,21 +1092,26 @@ def synchronize_qnty(request):
                         "warehouse_id": 1020005000113280
                     }
                     stock_arr.append(stock_dict)
-        #update quantity of products at ozon warehouse making it equal to OOC warehouse
-        #За один запрос можно изменить наличие для 100 товаров. 
-        #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
-        #в настоящий момент в каждой категории товара менее 100 позиций, поэтому проблем не возникает, но
-        #с увеличением кол-ва более 100 нужно будет менять код
-        task={
-            "stocks" : stock_arr
-        }
-        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-        status_code=response.status_code
-        print(status_code)
-        #print(response)
-        json=response.json()
-        print(json)
-        #time.sleep(1)
+                    #если в списке 100 позиций, прерываем обработку и посылаем запрос
+                    #далее продолжаем обработку
+                    if len(stock_arr) == 100:
+                        task={
+                            "stocks" : stock_arr
+                        }
+                        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+                        status_code=response.status_code
+                        stock_arr.clear()
+        if len(stock_arr) != 0:
+            task={
+                "stocks" : stock_arr
+            }
+            response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+            status_code=response.status_code
+            print(status_code)
+            #print(response)
+            json=response.json()
+            print(json)
+            #time.sleep(1)
             
                 # if product.wb_bar_code:
                 #     warehouseId=1368124
