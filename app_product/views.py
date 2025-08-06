@@ -1099,6 +1099,7 @@ def synchronize_qnty(request):
                             "stocks" : stock_arr
                         }
                         response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+                        time.sleep(1)
                         status_code=response.status_code
                         stock_arr.clear()
         if len(stock_arr) != 0:
