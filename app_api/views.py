@@ -112,7 +112,28 @@ def ozon_push(request):
           product.quantity=rho.current_remainder
           product.total_sum=rho.current_remainder * product.av_price
           product.save()
-      
+
+          #changing qnty at WB
+          if product.wb_bar_code:
+            warehouseId=1368124
+            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+            headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+            stock_arr=[]
+            wb_bar_code=str(product.wb_bar_code)
+            qnty=rho.current_remainder
+            stock_dict={
+                "sku": wb_bar_code,#WB Barcode
+                "amount": qnty,
+            }
+            stock_arr.append(stock_dict)
+            params= {
+                "stocks": stock_arr  
+            }
+            response = requests.put(url, json=params, headers=headers)
+            #status_code=response.status_code
+            #Status Code: 204 No Content
+            #There is no content to send for this request except for headers.
+
 
           json_data = {
             "result": True
