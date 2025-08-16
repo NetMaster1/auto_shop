@@ -885,8 +885,6 @@ def delivery_auto(request):
                         "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
                 }
         stock_arr=[]
-        # print(file)
-        # df1 = pandas.read_excel('Delivery_21_06_21.xlsx')
         df1 = pandas.read_excel(file)
         cycle = len(df1)
         dict_new_article={}
@@ -1030,31 +1028,25 @@ def zero_ozon_qnty(request):
                     }
             stock_arr.append(stock_dict)
             n=+1
-            if n==99:
-                break
+            if len(stock_arr) == 100:
+                task={
+                    "stocks" : stock_arr
+                }
+                response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+                time.sleep(1)
+                status_code=response.status_code
+                stock_arr.clear()
 
-        
-            # task = {
-            #     "stocks": [
-            #         {
-            #             "offer_id": str(product.article),
-            #             "product_id": str(product.ozon_id),
-            #             "stock": 0,
-            #             #warehouse (Неклюдово)
-            #             "warehouse_id": 1020005000113280
-            #         }
-            #     ]
-            # }
-
-    task={
+    if len(stock_arr) != 0:
+        task={
             "stocks" : stock_arr
         }
-    response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-    
-    print(response)
-    # json=response.json()
-    #print(status_code)
-    # print(json)
+        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+        status_code=response.status_code
+        print(status_code)
+        #print(response)
+        json=response.json()
+        print(json)
 
     return redirect("dashboard")
 
@@ -1679,7 +1671,7 @@ def wb_get_id (request):
 
   for i in a:
     wb_id=i['nmID']
-    wb_bar_code=i['sizes'][0]['skus'][0]
+    wb_bar_code=i['sizes'][0]['skus'][0]#sku
     article=i['vendorCode']
     print(article)
     if Product.objects.filter(article=article).exists():
@@ -1743,7 +1735,7 @@ def wb_add_media_files (request):
                         "data": [
                             image_1,
                             image_2,
-                            "https://mp-system.ru/media/uploads/DeflectorDoor_im_6.jpg"
+                            "https://mp-system.ru/media/uploads/DeflectorHood_im_7.jpg"
                         ]
                     }
                 else:
@@ -1752,7 +1744,7 @@ def wb_add_media_files (request):
                         #"nmId": 447408585,
                         "data": [
                             image_1,
-                            "https://mp-system.ru/media/uploads/DeflectorDoor_im_6.jpg"
+                            "https://mp-system.ru/media/uploads/DeflectorHood_im_7.jpg"
                         ]
                     }
 
@@ -1891,7 +1883,6 @@ def synchronize_qnty_wb(request):
     #There is no content to send for this request except for headers.
                    
     return redirect ('dashboard')
-
 
 def zero_wb_qnty (request):
     products=Product.objects.all()
