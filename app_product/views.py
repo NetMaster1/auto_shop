@@ -1071,7 +1071,7 @@ def synchronize_qnty(request):
         #За один запрос можно изменить наличие для 100 товаров. 
         #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
         for product in products:
-            if product.ozon_id:
+            if product.ozon_id and product.ozon_true == True:
                 article=product.article
                 if RemainderHistory.objects.filter(article=article).exists():
                     #rhos=RemainderHistory.objects.filter(article=article)
@@ -1860,7 +1860,7 @@ def synchronize_qnty_wb(request):
     stock_arr=[]
 
     for product in products:
-        if product.wb_bar_code:
+        if product.wb_bar_code and product.wb_true == True:
             article=product.article
             if RemainderHistory.objects.filter(article=article).exists():
                 #rhos=RemainderHistory.objects.filter(article=article)
@@ -1873,7 +1873,9 @@ def synchronize_qnty_wb(request):
                     "amount": qnty,
                 }
                 stock_arr.append(stock_dict)
-     
+
+    for i in stock_arr:
+        print(i)
     params= {
         "stocks": stock_arr  
     }

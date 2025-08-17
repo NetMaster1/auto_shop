@@ -37,5 +37,18 @@ def wb_update_prices_auto():
     response = requests.post(url, json=params, headers=headers)
 
 
+def wb_synchronize_orders_with_ozon():
+	#Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
+	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
+    url=f'https://marketplace-api.wildberries.ru/api/v3/orders/new'
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+   
+    response = requests.get(url, headers=headers)
+    status_code=response.status_code
+    a=response.json()
+
+    
+
+
 
 
