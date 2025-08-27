@@ -1875,10 +1875,12 @@ def synchronize_qnty_wb_warehouse(request):
 
     for i in stock_arr:
         print(i)
+
     params= {
         "stocks": stock_arr  
     }
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+
     response = requests.put(url, json=params, headers=headers)
     #status_code=response.status_code
     #Status Code: 204 No Content
