@@ -35,34 +35,66 @@ def wb_update_prices_auto():
     }
     response = requests.post(url, json=params, headers=headers)
 
-def wb_synchronize_orders_with_ozon():
+def wb_synchronize_orders_with_ozon ():
+    headers_ozon = {
+        "Client-Id": "1711314",
+        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+        }
+    doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
+    status='initiated by wb'
+    stock_arr=[]
 	#Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
 	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
     url=f'https://marketplace-api.wildberries.ru/api/v3/orders/new'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers_wb = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
    
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers_wb)
     status_code=response.status_code
     a=response.json()
+    orders_list=a['orders']
+    time.sleep(1)
+    for i in orders_list:
+        #print(f'Order #{n}: {i}')
+        print('======================')
+        order_id=i['id']
+        print(i['id'])
+        sku=i['skus']
+        sku=sku[0]
+        print(sku)
+        
+        if RemainderHistory.objects.filter(shipment_id=order_id).exists():
+            print('Error_1. RHO with such shipment_id exists.')
+            print("========================")
+            continue
 
-    
+        else:
+            tdelta=datetime.timedelta(hours=3)
+            dateTime=datetime.datetime.now()
+            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            dateTime=dT_utcnow+tdelta
+            print(dateTime)
+            print("========================")
 
-
-
-            product=Product.objects.get(wb_bar_cod=sku)
-            article=product.article
-            print(product.name)
-            print(f'wb_bar_code: {product.wb_bar_code}')
+            if Product.objects.filter(wb_bar_code=sku).exists():
+                # print('ok')
+                product=Product.objects.get(wb_bar_code=sku)
+                article=product.article
+            #     print(product.name)
+            #     print(f'wb_bar_code: {product.wb_bar_code}')
+            else:
+                print('Error_2. No product with such wb_bar_code')
+                continue
+                
          
             if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
-                print("True")
+                # print("True")
                 rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
-                print(rho_latest_before)
-                print(rho_latest_before.current_remainder)
+                # print(rho_latest_before)
+                # print(rho_latest_before.current_remainder)
                 pre_remainder=rho_latest_before.current_remainder
             else:
                 pre_remainder=0
-                print(pre_remainder)
+                # print(pre_remainder)
             rho = RemainderHistory.objects.create(
                 rho_type=doc_type,
                 created=dateTime,
@@ -83,10 +115,6 @@ def wb_synchronize_orders_with_ozon():
             product.save()
 
             if product.ozon_id:
-                headers_ozon = {
-                    "Client-Id": "1711314",
-                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-                }
                 stock_dict={
                     "offer_id": str(product.article),
                     "product_id": str(product.ozon_id),
@@ -95,10 +123,16 @@ def wb_synchronize_orders_with_ozon():
                     "warehouse_id": 1020005000113280
                     }
                 stock_arr.append(stock_dict)
-                   
-
+                
+    if len(stock_arr) > 0:           
+        for i in stock_arr:
+            print (i)
+    else:
+        print('stock_arr is empty')
+        
     task={
         "stocks" : stock_arr
     }
     response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
+
 
