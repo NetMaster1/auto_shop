@@ -1847,7 +1847,7 @@ def wb_update_prices_ver_1(request):
 
     return redirect ('dashboard')
 
-def synchronize_qnty_wb(request):
+def synchronize_qnty_wb_warehouse(request):
     tdelta=datetime.timedelta(hours=3)
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
     dateTime=dT_utcnow+tdelta
@@ -1855,12 +1855,11 @@ def synchronize_qnty_wb(request):
     warehouseId=1368124
     #one request contains from 1 to 1000 items
     #max 300 requests per minute
-    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
     stock_arr=[]
 
     for product in products:
-        if product.wb_bar_code and product.wb_true == True:
+        if product.wb_bar_code and product.wb_true == True and product.length <= 140:
             article=product.article
             if RemainderHistory.objects.filter(article=article).exists():
                 #rhos=RemainderHistory.objects.filter(article=article)
@@ -1879,6 +1878,46 @@ def synchronize_qnty_wb(request):
     params= {
         "stocks": stock_arr  
     }
+    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+    response = requests.put(url, json=params, headers=headers)
+    #status_code=response.status_code
+    #Status Code: 204 No Content
+    #There is no content to send for this request except for headers.
+                   
+    return redirect ('dashboard')
+
+def synchronize_qnty_SDEK_warehouse(request):
+    tdelta=datetime.timedelta(hours=3)
+    dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+    dateTime=dT_utcnow+tdelta
+    products=Product.objects.all()
+    warehouseId=1512363
+    #one request contains from 1 to 1000 items
+    #max 300 requests per minute
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    stock_arr=[]
+
+    for product in products:
+        if product.wb_bar_code and product.wb_true == True and product.length > 140:
+            article=product.article
+            if RemainderHistory.objects.filter(article=article).exists():
+                #rhos=RemainderHistory.objects.filter(article=article)
+                rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+            
+                wb_bar_code=str(product.wb_bar_code)
+                qnty=rho_latest.current_remainder
+                stock_dict={
+                    "sku": wb_bar_code,#WB Barcode
+                    "amount": qnty,
+                }
+                stock_arr.append(stock_dict)
+
+    for i in stock_arr:
+        print(i)
+    params= {
+        "stocks": stock_arr  
+    }
+    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     response = requests.put(url, json=params, headers=headers)
     #status_code=response.status_code
     #Status Code: 204 No Content
