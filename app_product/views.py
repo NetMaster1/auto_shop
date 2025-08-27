@@ -1912,11 +1912,8 @@ def zero_wb_qnty (request):
                    
     return redirect ('dashboard')
 
-def wb_ozon_sync (request):
-    headers_ozon = {
-        "Client-Id": "1711314",
-        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-        }
+
+def wb_ozon_sync(request):
     doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
     status='initiated by wb'
     stock_arr=[]
@@ -1929,25 +1926,28 @@ def wb_ozon_sync (request):
     status_code=response.status_code
     a=response.json()
     orders_list=a['orders']
+    n=0
     for i in orders_list:
-        #print(f'Order #{n}: {i}')
-        print('======================')
+        print('========================')
+        print(f'Order #{n}: {i}')
+        print('=========================')
         order_id=i['id']
         print(i['id'])
         sku=i['skus']
         sku=sku[0]
+        #print(i['skus'])
         print(sku)
-        print("========================")
+        n+=1
         if RemainderHistory.objects.filter(shipment_id=order_id).exists():
-            print('Error_1. RHO with such shipment_id exists.')
+            print('error')
             continue
-
+            
         else:
             tdelta=datetime.timedelta(hours=3)
             dateTime=datetime.datetime.now()
             dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
             dateTime=dT_utcnow+tdelta
-            #print(dateTime)
+            print(dateTime)
 
             if Product.objects.filter(wb_bar_code=sku).exists():
                 # print('ok')
@@ -1956,9 +1956,8 @@ def wb_ozon_sync (request):
             #     print(product.name)
             #     print(f'wb_bar_code: {product.wb_bar_code}')
             else:
-                print('Error_2. No product with such wb_bar_code')
                 continue
-                
+                # print('error')
          
             if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
                 # print("True")
@@ -1988,24 +1987,24 @@ def wb_ozon_sync (request):
             product.total_sum=rho.current_remainder * product.av_price
             product.save()
 
-            if product.ozon_id:
-                stock_dict={
-                    "offer_id": str(product.article),
-                    "product_id": str(product.ozon_id),
-                    "stock": rho.current_remainder,
-                    #warehouse (Неклюдово)
-                    "warehouse_id": 1020005000113280
-                    }
-                stock_arr.append(stock_dict)
-    if len(stock_arr) > 0:           
-        for i in stock_arr:
-            print (i)
-    else:
-        print('stock_arr is empty')
-        
-    task={
-        "stocks" : stock_arr
-    }
-    response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
+    #         if product.ozon_id:
+    #             headers_ozon = {
+    #                 "Client-Id": "1711314",
+    #                     "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+    #             }
+    #             stock_dict={
+    #                 "offer_id": str(product.article),
+    #                 "product_id": str(product.ozon_id),
+    #                 "stock": rho.current_remainder,
+    #                 #warehouse (Неклюдово)
+    #                 "warehouse_id": 1020005000113280
+    #                 }
+    #             stock_arr.append(stock_dict)
                    
+
+    # task={
+    #     "stocks" : stock_arr
+    # }
+    # response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
+
     return redirect ('dashboard')

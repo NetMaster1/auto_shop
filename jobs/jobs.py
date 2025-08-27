@@ -6,7 +6,7 @@ import pytz
 import requests
 import json
 import random
-from app_product.models import Product, RemainderHistory, DocumentType
+from app_product.models import Product
 
 
 def scheduled_dispatch():
@@ -135,13 +135,3 @@ def wb_synchronize_orders_with_ozon ():
         "stocks" : stock_arr
     }
     response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
-
-
-
-
-
-    
-
-
-
-
