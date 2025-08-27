@@ -73,6 +73,8 @@ class RemainderHistory(models.Model):
     shipment_id = models.CharField(max_length=50, null=True, blank=True)
     ozon_sku = models.CharField(max_length=50, null=True, blank=True)
     ozon_id = models.CharField(max_length=50, null=True, blank=True)
+    wb_id = models.CharField(max_length=50, null=True, blank=True)
+    wb_bar_code = models.CharField(max_length=50, null=True, blank=True)
     article = models.CharField(max_length=50, null=True, blank=True)
     bar_code = models.CharField(max_length=50, null=True, blank=True)
     total_retail_sum = models.IntegerField(default=0)

@@ -1892,7 +1892,6 @@ def synchronize_qnty_wb(request):
                    
     return redirect ('dashboard')
 
-
 def zero_wb_qnty (request):
     products=Product.objects.all()
     warehouseId=1368124
@@ -1917,4 +1916,101 @@ def zero_wb_qnty (request):
     #Status Code: 204 No Content
     #There is no content to send for this request except for headers.
                    
+    return redirect ('dashboard')
+
+
+def wb_ozon_sync(request):
+    doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
+    status='initiated by wb'
+    stock_arr=[]
+	#Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
+	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
+    url=f'https://marketplace-api.wildberries.ru/api/v3/orders/new'
+    headers_wb = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+   
+    response = requests.get(url, headers=headers_wb)
+    status_code=response.status_code
+    a=response.json()
+    orders_list=a['orders']
+    n=0
+    for i in orders_list:
+        print('========================')
+        print(f'Order #{n}: {i}')
+        print('=========================')
+        order_id=i['id']
+        print(i['id'])
+        sku=i['skus']
+        sku=sku[0]
+        #print(i['skus'])
+        print(sku)
+        n+=1
+        if RemainderHistory.objects.filter(shipment_id=order_id).exists():
+            print('error')
+            continue
+            
+        else:
+            tdelta=datetime.timedelta(hours=3)
+            dateTime=datetime.datetime.now()
+            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            dateTime=dT_utcnow+tdelta
+            print(dateTime)
+
+            if Product.objects.filter(wb_bar_code=sku).exists():
+                # print('ok')
+                product=Product.objects.get(wb_bar_code=sku)
+                article=product.article
+            #     print(product.name)
+            #     print(f'wb_bar_code: {product.wb_bar_code}')
+            else:
+                continue
+                # print('error')
+         
+            if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
+                # print("True")
+                rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
+                # print(rho_latest_before)
+                # print(rho_latest_before.current_remainder)
+                pre_remainder=rho_latest_before.current_remainder
+            else:
+                pre_remainder=0
+                # print(pre_remainder)
+            rho = RemainderHistory.objects.create(
+                rho_type=doc_type,
+                created=dateTime,
+                article=product.article,
+                wb_bar_code=sku,
+                name=product.name,
+                status=status,
+                shipment_id=order_id,
+                pre_remainder=pre_remainder,
+                incoming_quantity=0,
+                outgoing_quantity=1,
+                current_remainder=pre_remainder - 1,
+                #retail_price=int(retail_price),
+                # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                )
+            product.quantity=rho.current_remainder
+            product.total_sum=rho.current_remainder * product.av_price
+            product.save()
+
+    #         if product.ozon_id:
+    #             headers_ozon = {
+    #                 "Client-Id": "1711314",
+    #                     "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+    #             }
+    #             stock_dict={
+    #                 "offer_id": str(product.article),
+    #                 "product_id": str(product.ozon_id),
+    #                 "stock": rho.current_remainder,
+    #                 #warehouse (Неклюдово)
+    #                 "warehouse_id": 1020005000113280
+    #                 }
+    #             stock_arr.append(stock_dict)
+                   
+
+    # task={
+    #     "stocks" : stock_arr
+    # }
+    # response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
+
     return redirect ('dashboard')
