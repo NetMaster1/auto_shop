@@ -1852,21 +1852,22 @@ def synchronize_qnty_wb_warehouse(request):
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
     dateTime=dT_utcnow+tdelta
     products=Product.objects.all()
-    warehouseId=1368124
+    warehouseId=1368124#warehouse for items with length under 140
+
     #one request contains from 1 to 1000 items
     #max 300 requests per minute
     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     stock_arr=[]
 
     for product in products:
         if product.wb_bar_code and product.length and product.wb_true == True: #and int(product.length) <= 140:
             if product.length <= 140:
-                print(type(product.length))
+                #print(type(product.length))
                 article=product.article
                 if RemainderHistory.objects.filter(article=article).exists():
                     #rhos=RemainderHistory.objects.filter(article=article)
                     rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-                
                     wb_bar_code=str(product.wb_bar_code)
                     qnty=rho_latest.current_remainder
                     stock_dict={
@@ -1874,17 +1875,27 @@ def synchronize_qnty_wb_warehouse(request):
                         "amount": qnty,
                     }
                     stock_arr.append(stock_dict)
-
+                    # print(stock_dict)
+                    # params= {
+                    #     "stocks": [stock_dict,]
+                    # }
+                                        
+                    # response = requests.put(url, json=params, headers=headers)
+                    # status_code=response.status_code
+                    # #print(status_code)
+                    # print(response)
+                                
     for i in stock_arr:
         print(i)
 
     params= {
         "stocks": stock_arr  
     }
-    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
 
     response = requests.put(url, json=params, headers=headers)
-    #status_code=response.status_code
+    status_code=response.status_code
+    #print(status_code)
+    print(response)
     #Status Code: 204 No Content
     #There is no content to send for this request except for headers.
                    
@@ -1957,7 +1968,6 @@ def zero_wb_qnty (request):
     #There is no content to send for this request except for headers.
                    
     return redirect ('dashboard')
-
 
 def wb_ozon_sync(request):
     doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
