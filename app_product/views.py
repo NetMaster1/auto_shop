@@ -1859,19 +1859,21 @@ def synchronize_qnty_wb_warehouse(request):
     stock_arr=[]
 
     for product in products:
-        if product.wb_bar_code and product.wb_true == True and product.length <= 140:
-            article=product.article
-            if RemainderHistory.objects.filter(article=article).exists():
-                #rhos=RemainderHistory.objects.filter(article=article)
-                rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-            
-                wb_bar_code=str(product.wb_bar_code)
-                qnty=rho_latest.current_remainder
-                stock_dict={
-                    "sku": wb_bar_code,#WB Barcode
-                    "amount": qnty,
-                }
-                stock_arr.append(stock_dict)
+        if product.wb_bar_code and product.length and product.wb_true == True: #and int(product.length) <= 140:
+            if product.length <= 140:
+                print(type(product.length))
+                article=product.article
+                if RemainderHistory.objects.filter(article=article).exists():
+                    #rhos=RemainderHistory.objects.filter(article=article)
+                    rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+                
+                    wb_bar_code=str(product.wb_bar_code)
+                    qnty=rho_latest.current_remainder
+                    stock_dict={
+                        "sku": wb_bar_code,#WB Barcode
+                        "amount": qnty,
+                    }
+                    stock_arr.append(stock_dict)
 
     for i in stock_arr:
         print(i)
@@ -1900,19 +1902,21 @@ def synchronize_qnty_SDEK_warehouse(request):
     stock_arr=[]
 
     for product in products:
-        if product.wb_bar_code and product.wb_true == True and product.length > 140:
-            article=product.article
-            if RemainderHistory.objects.filter(article=article).exists():
-                #rhos=RemainderHistory.objects.filter(article=article)
-                rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-            
-                wb_bar_code=str(product.wb_bar_code)
-                qnty=rho_latest.current_remainder
-                stock_dict={
-                    "sku": wb_bar_code,#WB Barcode
-                    "amount": qnty,
-                }
-                stock_arr.append(stock_dict)
+        if product.wb_bar_code and product.length and product.wb_true == True:# and product.length > 140:
+            print(type(product.length))
+            if product.length > 140:
+                article=product.article
+                if RemainderHistory.objects.filter(article=article).exists():
+                    #rhos=RemainderHistory.objects.filter(article=article)
+                    rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+                
+                    wb_bar_code=str(product.wb_bar_code)
+                    qnty=rho_latest.current_remainder
+                    stock_dict={
+                        "sku": wb_bar_code,#WB Barcode
+                        "amount": qnty,
+                    }
+                    stock_arr.append(stock_dict)
 
     for i in stock_arr:
         print(i)
@@ -1921,7 +1925,8 @@ def synchronize_qnty_SDEK_warehouse(request):
     }
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     response = requests.put(url, json=params, headers=headers)
-    #status_code=response.status_code
+    status_code=response.status_code
+    print(status_code)
     #Status Code: 204 No Content
     #There is no content to send for this request except for headers.
                    
