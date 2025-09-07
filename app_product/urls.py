@@ -10,6 +10,7 @@ urlpatterns = [
     path('delivery_auto', views.delivery_auto, name='delivery_auto'),
     path('zero_ozon_qnty', views.zero_ozon_qnty, name='zero_ozon_qnty'),
     path('synchronize_qnty', views.synchronize_qnty, name='synchronize_qnty'),
+    path('synchronize_qnty_wb_ver_1', views.synchronize_qnty_wb_ver_1, name='synchronize_qnty_wb_ver_1'),
     path('synchronize_qnty_wb_warehouse', views.synchronize_qnty_wb_warehouse, name='synchronize_qnty_wb_warehouse'),
     path('synchronize_qnty_SDEK_warehouse', views.synchronize_qnty_SDEK_warehouse, name='synchronize_qnty_SDEK_warehouse'),
     path('sale', views.sale, name='sale'),

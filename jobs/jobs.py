@@ -26,7 +26,7 @@ def wb_update_prices_auto():
                     "nmID": int(wb_id),
                     # "price": int(retail_price),
                     "price": 2990,
-                    "discount": 0
+                    "discount": 5
                 }
             task_arr.append(task_dict)
   
@@ -165,8 +165,8 @@ def wb_update_prices_auto():
             task_dict={
                     "nmID": int(wb_id),
                     # "price": int(retail_price),
-                    "price": 2990,
-                    "discount": 0
+                    "price": 3990,
+                    "discount": 30
                 }
             task_arr.append(task_dict)
   

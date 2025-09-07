@@ -6,7 +6,7 @@ def start():
 	scheduler = BackgroundScheduler()
 	#scheduler.add_job(scheduled_dispatch, 'interval', seconds=10)
 	#updates prices at wb every 6 hours. Otherwize wb reduces prices on its own
-	scheduler.add_job(wb_update_prices_auto, 'interval', hours=6)
+	#scheduler.add_job(wb_update_prices_auto, 'interval', hours=2)
 	#receives list of orders from wb every hour & synchronizes erms db remainders & remainders at ozon
 	scheduler.add_job(wb_synchronize_orders_with_ozon, 'interval', hours=1)
 	#scheduler.add_job(scheduled_dispatch, 'interval', minutes=10)

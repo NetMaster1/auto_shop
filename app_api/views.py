@@ -293,7 +293,7 @@ def wb_change_qnty (request):
   params= {
     "stocks": [
       {
-        "sku": "447261570",#Артикул WB; Обязательно двойные кавычки
+        "sku": "447261570",# WB_bar_code; Обязательно двойные кавычки
         "amount": 4
       }
     ]
