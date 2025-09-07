@@ -31,4 +31,6 @@ urlpatterns = [
     path('wb_update_prices_ver_1', views.wb_update_prices_ver_1, name='wb_update_prices_ver_1'),
     path('zero_wb_qnty', views.zero_wb_qnty, name='zero_wb_qnty'),
     path('wb_ozon_sync', views.wb_ozon_sync, name='wb_ozon_sync'),
+
+    path('change_site_retail_price', views.change_site_retail_price, name='change_site_retail_price'),
 ]

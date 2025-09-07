@@ -2124,3 +2124,11 @@ def wb_ozon_sync(request):
     # response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
 
     return redirect ('dashboard')
+
+#==================================== My site ===================================
+def change_site_retail_price (request):
+    products=Product.objects.all()
+    for product in products:
+        product.site_retail_price = 2490
+        product.save()
+    return redirect ('shopfront')
