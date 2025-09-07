@@ -2,47 +2,26 @@
 {% load static %}
 {% block content %}
 <div class="container">
-<div class="row mt-3">
+    <div class="row mt-2 ">
     {% for product in products %}
-    <div class="col-sm-3">
-          <!-- <div class="card mb-3" style="border-color: transparent;">
-                <div class="card-header" style='height:5rem'>
-                    <h5>{{product.name}}</h5>
-                </div>
-          </div>
-           <div class="card-body">
-            <a href="#">
-                        <!-- <figure class="image is-4by3"> -->
-                    <figure class="image is-16by9 img_scale ">
-                            <img src="{{product.image_1.url}}" alt="Placeholder image" class='rounded-2 img-fluid'>
-                            <!-- <img src="{{subject.thumbnail_file.url}}" alt="Placeholder image"  class='card-image-top' style='width:18rem; height: 10rem;'> -->
-                    </figure>
-                </a>
-            </div> -->
-
-
-
-            <div class="card" style="width: 18rem;">
-                <img src="{{product.image_1.url}}" class="card-img-top" alt="Placeholder image">
-                <div class="card-body">
-                <h5 class="card-title">{{product.name}}</h5>
-                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-</div>
-
-
-
-
     
-        <!-- {% if product.image_1%}
-      
-        {% else%} -->
-        NO image
-        {%endif%}
-
+    {% if product.image_1%}
+    
+    <div class="col-sm-3 mt-2">
+        <div class="card" style="width: 18rem;">
+                
+            <a href="{% url 'product_page' product.article %}">
+            <img src="{{product.image_1.url}}" class="card-img-top" alt="Placeholder image">
+            </a>
+            <!-- <div class="card-body">
+            <h5 class="card-title">{{product.name}}</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div> -->
     </div>
-
+        </div>
+    {% endif %}
+    
     {% endfor %}
 
 </div>

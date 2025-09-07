@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
     path('create_product', views.create_product, name='create_product'),
+    path('product_page/<str:article>', views.product_page, name='product_page'),
+
     path('getting_ozon_id_and_ozon_sku', views.getting_ozon_id_and_ozon_sku, name='getting_ozon_id_and_ozon_sku'),
 
     path('delivery_auto', views.delivery_auto, name='delivery_auto'),

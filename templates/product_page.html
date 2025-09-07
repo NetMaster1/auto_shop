@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+  
+    <div class="row mt-5">
+
+        <div class="card" style="width: 18rem;">
+            <!-- <div class="card-header" style='min-height:5rem' >
+            <h4>{{product.name}}</h4>
+            </div> -->
+        
+
+
+            <img src="{{product.image_1.url}}" class="card-img-top" alt="Placeholder image">
+            <a href='#collapse-p' data-bs-toggle="collapse" data-target="#collapse-p">
+                    Ознакомиться {{product.article}}
+                    </a>
+            <p class="card-text">{{product.description}}.</p>
+        
+
+
+                <div class="card-body">  
+                <a href="{% url 'add_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
+                </div>
+
+                <div class="card-body">  
+                <a href="{% url 'cart_detail' %}" class="btn btn-primary">Перейти в корзину</a>
+                </div>
+
+                <div class="card-body">  
+                <a href="#"  class="btn btn-primary">Купить одним кликом</a>
+                </div>
+
+        
+
+    <div class="card-body">
+        рейтинг
+            <!-- <div class="row">
+            <div class="col">
+            <strong>Рейтинг: </strong>
+            {{subject.av_rating}}
+            <div class="stars-outer">
+                <div class="stars-inner" style="width: {{subject.percent}}"></div>
+            </div>
+            </div>
+            </div> -->
+
+
+            <div class="row">
+                <div class="col">
+            <strong>Количество покупок</strong> 
+            <!-- ({{subject.transactions}}) -->
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col">
+                        <strong>Стоимость:</strong>  {{product.site_retail_price}} руб.
+                </div>
+            </div>
+        
+            <div class="card-footer"> 
+                sdfsdf
+            </div>
+                
+
+    
+
+    </div>
+        </div>
+
+        <div class="row mt-2 pl-2"> .
+            <h3>Отзывы</h3>
+        </div>
+
+        <!-- <div class="row mt-1 mb-5">
+        <div class="col-11">
+            {% for review in reviews %}
+                <div class="row" style=" height: 6rem;">
+                    <div class="col-2 m-2 border-top">
+                        <strong>{{review.author}}</strong>
+                    </div>
+
+                    <div class="col-7 m-2 border-top">
+                    {{review.content}}
+                    </div>
+                    <div class="col-2 m-2 border-top">
+                        {{review.date_posted}}
+                    </div>
+                </div> -->
+            <!-- {% endfor %}
+            -->
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %}

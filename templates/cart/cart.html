@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+
+          <div class="row mt-4 pt-5">
+            <div class="col-12">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Текущая</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+  <!-- Empty Cart -->
+  <!-- ========================================================== -->
+  {% if not cart_items %}
+  <div class="row bg-light m-1 p-2 align-items-center">
+      <div class="col-8">
+      <h1>
+        Ваша корзина пуста
+      </h1>
+    </div>
+
+    <div class="col-4  ">
+      <a href="{% url 'shopfront' %}" class="btn btn-danger">Продолжить покупки</a>
+    </div>
+  </div>
+  {% else %}
+<!-- Total Sum & quantity
+==================================================================== -->
+<div class="row align-items-center justify-content-right"  style="height:100px">
+  <div class="col-8 justify-content-right">
+    <h4>Всего товаров на сумму: <strong>{{total}}&nbsp;руб.</strong></h4>
+  </div>
+
+  <!-- <div class="row align-items-center justify-content-center bg-light pt-5 mt-5"  style="height:50px"> -->
+    <div class="row mt-3 mb-3">
+    <div class="col-sm-1">
+      <h5 class="text-left">Фото</h5>
+    </div>
+    <div class="col-sm-2">
+      <h5 class="text-center">Наименование</h5>
+    </div>
+    <div class="col-sm-1">
+      <h5 class="text-right">Цена</h5>
+    </div>
+    <div class="col-sm-1">
+      <h5>Кол-во</h5>
+    </div>
+    <div class="col-sm-1">
+      <h5 class="text-right">Сумма</h5>
+    </div>
+    <div class="col-sm-1">
+      <h5 class="text-right">Добавить</h5>
+    </div>
+    <div class="col-sm-1">
+      <h5 class="text-right">Уменьшить</h5>
+    </div>
+    <div class="col-sm-1">
+      <h5 class="text-right">Удалить</h5>
+    </div>
+    <div class="col-sm-1">
+      <h5 class="text-right">К оплате</h5>
+    </div>
+  </div>
+
+<!-- CartItems -->
+<!-- ================================================================ -->
+  <form action="{% url 'purchase_product' %}" method="POST" >
+                {% csrf_token %}
+
+  {% for cart_item in cart_items %}
+  
+   <div class="row mt-3 mb-3">
+      <div class="col-1">
+        <a href="{{cart_item.get_url}}">
+          <img src="{{cart_item.image.url}}" width="50" alt="">
+        </a>
+      </div>
+
+     <div class="col-2">
+      {{cart_item.product}}
+      </div>
+
+     <div class="col-1">
+      
+      {{cart_item.price}} руб.
+      
+      </div>
+      <div class="col-1">
+      {{cart_item.quantity}} 
+      </div>
+      <div class="col-sm-1">
+      {{cart_item.sub_total}}
+        &nbsp; руб.
+      </div>
+
+      <div class="col-sm-1">
+        <a href="{% url 'add_cart_item' cart_item.id %}" class="text-info">
+          <h3><i class="fas fa-cart-plus"></i></h3>
+        </a>
+        </div>
+
+       <div class="col-sm-1">
+        <a href="{% url 'remove_cart_item' cart_item.id %}"class="text-info" >
+          <i class="fas fa-minus-circle"></i>
+        </a>
+       </div>
+
+      <div class="col-sm-1">
+        <a href="{% url 'delete_cart_item' cart_item.id %}"class="text-info" >
+           <i class="fas fa-trash-alt"></i>
+        </a>
+        </div>
+
+        
+        <div class="col-sm-1">
+        <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" value='{{cart_item.id}}' name="checkbox" checked>
+        <!-- <label class="form-check-label" for="switchCheckChecked">Checked switch checkbox input</label> -->
+        </div>
+       </div>
+      
+   </div> 
+	  {% endfor %}
+
+       <div class="col-1">
+                <input type="submit" value="Перейти к оплате" class="btn btn-sm btn-block btn-outline-dark">
+            </div>
+  </form>
+
+
+
+
+   
+
+
+  
+</div>
+{% endif %}
+
+</div>
+{% endblock %}

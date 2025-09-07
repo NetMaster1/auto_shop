@@ -10,6 +10,14 @@ from django.contrib import messages
 import xlwt
 from django.http import HttpResponse, JsonResponse
 
+def product_page(request, article):
+    product = Product.objects.get(article=article)
+  
+    context = {
+        'product': product,
+    }
+    return render(request, 'product_page.html', context)
+
 
 def dashboard(request):
     if request.user.is_authenticated:

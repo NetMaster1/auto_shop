@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+
+          <div class="row mt-4 pt-5">
+            <div class="col-12">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Текущая</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+<div class="row mb-5">Заказ # {{order.id}}</div>
+
+
+{% for item in order_items %}
+<div class="row">
+    <div class="col-2">
+        {{item.product}}
+    </div>
+    <div class="col-2">
+        {{item.quantity}}
+    </div>
+    <div class="col-2">
+        {{item.price}}
+    </div>
+    <div class="col-2">
+        {{item.sub_total}}
+    </div>
+</div>
+{% endfor %}
+<div class="row mt-5">
+Всего к оплате: {{order.sum}} руб.
+</div>
+
+https://www.cdek.ru/ru/offices/
+
+
+
+<form class="row g-3 mt-5">
+  <div class="col-md-4">
+    <label for="inputFirstName" class="form-label">Имя</label>
+    <input type="text" class="form-control" id="inputFirstName">
+  </div>
+  <div class="col-md-4">
+    <label for="inputLastName" class="form-label">Фамилия</label>
+    <input type="text" class="form-control" id="inputLastName">
+  </div>
+  <div class="col-md-3">
+    <label for="inputLastName" class="form-label">Телефон</label>
+    <input type="text" class="form-control" id="inputLastName">
+  </div>
+  <div class="col-12">
+    <label for="inputAddress" class="form-label">Адрес </label>
+    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+  </div>
+  <div class="col-12">
+    <label for="inputAddress2" class="form-label">Address 2</label>
+    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+  </div>
+  <div class="col-md-6">
+    <label for="inputCity" class="form-label">City</label>
+    <input type="text" class="form-control" id="inputCity">
+  </div>
+  <div class="col-md-4">
+    <label for="inputState" class="form-label">State</label>
+    <select id="inputState" class="form-select">
+      <option selected>Choose...</option>
+      <option>...</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label for="inputZip" class="form-label">Zip</label>
+    <input type="text" class="form-control" id="inputZip">
+  </div>
+  <div class="col-12">
+  
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Перейти к оплате</button>
+  </div>
+</form>
+
+</div>
+
+{% endblock %}
