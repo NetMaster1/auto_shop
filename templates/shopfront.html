@@ -2,16 +2,17 @@
 {% load static %}
 {% block content %}
 <div class="container">
-    <div class="row mt-2 ">
+    <div class="row">
     {% for product in products %}
     
     {% if product.image_1%}
     
-    <div class="col-sm-3 mt-2">
+    <div class="col-sm-3 mt-3">
         <div class="card" style="width: 18rem;">
                 
             <a href="{% url 'product_page' product.article %}">
-            <img src="{{product.image_1.url}}" class="card-img-top" alt="Placeholder image">
+         
+            <img src="{{product.image_1.url}}" class='rounded-2 img-fluid img_scale' alt="Placeholder image" >
             </a>
             <!-- <div class="card-body">
             <h5 class="card-title">{{product.name}}</h5>
