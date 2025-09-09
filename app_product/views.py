@@ -1920,16 +1920,16 @@ def synchronize_qnty_wb_warehouse(request):
                         "sku": wb_bar_code,#WB Barcode
                         "amount": qnty,
                     }
-                    # stock_arr.append(stock_dict)
-                    print(stock_dict)
-                    params= {
-                        "stocks": [stock_dict,]
-                    }
+                    stock_arr.append(stock_dict)
+                    # print(stock_dict)
+                    # params= {
+                    #     "stocks": [stock_dict,]
+                    # }
                                         
-                    response = requests.put(url, json=params, headers=headers)
-                    status_code=response.status_code
-                    #print(status_code)
-                    print(response)
+                    # response = requests.put(url, json=params, headers=headers)
+                    # status_code=response.status_code
+                    # #print(status_code)
+                    # print(response)
         #         else:
         #             continue
         #     else:
@@ -1940,14 +1940,14 @@ def synchronize_qnty_wb_warehouse(request):
     # for i in stock_arr:
     #     print(i)
 
-    # params= {
-    #     "stocks": stock_arr,
-    # }
+    params= {
+        "stocks": stock_arr,
+    }
 
-    # response = requests.put(url, json=params, headers=headers)
-    # status_code=response.status_code
-    #print(status_code)
-    # print(response)
+    response = requests.put(url, json=params, headers=headers)
+    status_code=response.status_code
+    print(status_code)
+    print(response)
     #Status Code: 204 No Content
     #There is no content to send for this request except for headers.
                    

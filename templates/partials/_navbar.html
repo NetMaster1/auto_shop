@@ -19,7 +19,27 @@
             Информация
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Контакты</a></li>
+            <li class="contact_modal"><a class="dropdown-item" href="#">Контакты </a></li>
+              <!-- ===========================Modal Body================================= -->
+                <div class="enterContactModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Реквизиты: ИП Винокуров Сергей Николаевич
+                                  ИНН 526013223435 ООО «Банк Точка» БИК 044525104 р.с.40802810420000006198
+
+                                </h5>
+                                <!-- <button type="button" class="btn_close"></button> -->
+                            </div>
+                            <div class="modal-body">
+                              
+                        </div>   
+                    </div>
+                  </div>
+                </div>
+            <!-- =================================End of Modal Body======================================== -->
+
+           
             <li><a class="dropdown-item" href="#">Доставка</a></li>
             <!-- <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li> -->
@@ -36,3 +56,23 @@
     </div>
   </div>
 </nav>
+
+
+
+<script>
+  const contact_modal =document.querySelector('.contact_modal');
+  const enterContactModal =document.querySelector('.enterContactModal');
+  
+
+  contact_modal.addEventListener('mouseover', openModal)
+  contact_modal.addEventListener('mouseout', closeModal)
+
+  function openModal () {
+          enterContactModal.classList.add('openModal')
+      }
+  function closeModal () {
+          enterContactModal.classList.remove('openModal')
+          // window.location.reload()
+      }
+
+</script>

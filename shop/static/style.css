@@ -2,10 +2,21 @@
   --max-width: 56%;
 }
 
-
-
 .img_scale:hover {
   /* opacity: 2; */
   transform: scale(1.1);
   z-index: 1;
+}
+
+/* ===================== Cotacts Modal========================= */
+.enterContactModal {
+    display: none;
+}
+
+.enterContactModal.openModal {
+    background-color: white;
+    display: block;
+    position: fixed;
+    top: 70mm;
+    left: 15rem; */
 }
