@@ -69,7 +69,7 @@ class RemainderHistory(models.Model):
     number = models.IntegerField(default=0, null=True)#service field for enumerating selected rhos in arrays
     #number = models.IntegerField(default=0, required=False, read_only=True)#just an example
     created = models.DateTimeField(default=timezone.now, null=True)
-    document = models.ForeignKey(Document, on_delete=models.DO_NOTHING, null=True)
+    document = models.ForeignKey(Document, on_delete=models.DO_NOTHING, null=True, blank=True)
     #created = models.DateTimeField(format='%Y-%m-%dT%H:%M:%S', default=timezone.now, null=True)
     #created = serializers.DateTimeField(format='iso-8601', required=False, read_only=True)
     rho_type = models.ForeignKey(DocumentType, on_delete=models.DO_NOTHING, null=True)

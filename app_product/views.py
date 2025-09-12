@@ -1419,7 +1419,8 @@ def wb_create_product (request):
                     auto_model=row.Model, 
                     category=category    
                 )
-
+            if product.wb_bar_code:
+                continue
             if category.name=="Дефлектор двери":
                 description_string = f"""Дефлекторы окон - это необходимый аксессуар для любого автомобиля, который помогает защитить ваши окна от грязи и пыли. Они также могут служить дополнительной опцией безопасности, предотвращая попадание мусора внутрь машины.
 
@@ -1435,7 +1436,7 @@ def wb_create_product (request):
                             "vendorCode": article,
                             "title": str(row.Title),
                             "description": description_string,
-                            "brand": "Delta Avto",
+                            "brand": "",
                             "dimensions": 
                             {
                                 "length": 90,
@@ -1578,7 +1579,7 @@ def wb_create_product (request):
                             "vendorCode": article,
                             "title": str(row.Title),
                             "description": description_string,
-                            "brand": "Delta Avto",
+                            "brand": "",
                             "dimensions": 
                             {
                                 "length": 100,
@@ -1636,7 +1637,21 @@ def wb_create_product (request):
                 }
                 
                 params.append(item)
-        print(params)
+            
+            if len(params)==100:
+                #Максимум 10 запросов в минуту на один аккаунт продавца
+                #В одном запросе можно создать максимум 100 карточек. Максимальный размер запроса 10 Мб.
+                response = requests.post(url, json=params, headers=headers)
+                status_code=response.status_code
+                a=response.json()
+                print(f'status_code: {status_code}')
+                print(a)
+                # b=a['data']
+                # for i in b:
+                #   print(i)
+                time.sleep(5)
+                params.clear()#очистка списка
+
         #Максимум 10 запросов в минуту на один аккаунт продавца
         #В одном запросе можно создать максимум 100 карточек. Максимальный размер запроса 10 Мб.
         response = requests.post(url, json=params, headers=headers)
@@ -1670,7 +1685,7 @@ def wb_get_id (request):
               }
         }
   }
-
+  
   response = requests.post(url, json=params, headers=headers)
   status_code=response.status_code
   a=response.json()
@@ -1906,9 +1921,10 @@ def synchronize_qnty_wb_warehouse(request):
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     stock_arr=[]
 
+    # the list should not contain negative quantities. Otherwise WB declines the request & sends status 400 (wrong request)
     for product in products:
         if product.wb_bar_code and product.length and product.wb_true == True: #and int(product.length) <= 140:
-            if product.length <= 140:
+            if product.length <= 120:
                 #print(type(product.length))
                 article=product.article
                 if RemainderHistory.objects.filter(article=article).exists():
@@ -1916,6 +1932,8 @@ def synchronize_qnty_wb_warehouse(request):
                     rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
                     wb_bar_code=str(product.wb_bar_code)
                     qnty=rho_latest.current_remainder
+                    if qnty<=0:
+                        continue
                     stock_dict={
                         "sku": wb_bar_code,#WB Barcode
                         "amount": qnty,
@@ -1939,11 +1957,15 @@ def synchronize_qnty_wb_warehouse(request):
                                 
     # for i in stock_arr:
     #     print(i)
+    
+    for i in stock_arr:
+        print('========================')
+        print(i)
 
     params= {
         "stocks": stock_arr,
     }
-
+    
     response = requests.put(url, json=params, headers=headers)
     status_code=response.status_code
     print(status_code)
@@ -1964,17 +1986,20 @@ def synchronize_qnty_SDEK_warehouse(request):
     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
     stock_arr=[]
 
+    # the list should not contain negative quantities. Otherwise WB declines the request & sends status 400 (wrong request)
     for product in products:
-        if product.wb_bar_code and product.length and product.wb_true == True:# and product.length > 140:
-            print(type(product.length))
-            if product.length > 140:
+        if product.wb_bar_code and product.length and product.wb_true == True:# and product.length > 120:
+            #print(type(product.length))
+            if product.length > 120:
                 article=product.article
                 if RemainderHistory.objects.filter(article=article).exists():
                     #rhos=RemainderHistory.objects.filter(article=article)
                     rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-                
+
                     wb_bar_code=str(product.wb_bar_code)
                     qnty=rho_latest.current_remainder
+                    if qnty<=0:
+                        continue
                     stock_dict={
                         "sku": wb_bar_code,#WB Barcode
                         "amount": qnty,
@@ -1982,20 +2007,22 @@ def synchronize_qnty_SDEK_warehouse(request):
                     stock_arr.append(stock_dict)
 
     for i in stock_arr:
+        print('===================================')
         print(i)
     params= {
-        "stocks": stock_arr  
+        "stocks": stock_arr,
     }
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     response = requests.put(url, json=params, headers=headers)
     status_code=response.status_code
     print(status_code)
+    print(response)
     #Status Code: 204 No Content
     #There is no content to send for this request except for headers.
                    
     return redirect ('dashboard')
 
-def zero_wb_qnty (request):
+def zero_wb_warehouse_qnty (request):
     products=Product.objects.all()
     warehouseId=1368124
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
@@ -2015,12 +2042,12 @@ def zero_wb_qnty (request):
         "stocks": stock_arr  
     }
 
-    params= {
-        "stocks": {
-                "sku": wb_bar_code,#WB Barcode
-                "amount": qnty,
-            } 
-    }
+    # params= {
+    #     "stocks": {
+    #             "sku": wb_bar_code,#WB Barcode
+    #             "amount": qnty,
+    #         } 
+    # }
     response = requests.put(url, json=params, headers=headers)
     # time.sleep(1)
     #status_code=response.status_code
@@ -2028,6 +2055,41 @@ def zero_wb_qnty (request):
     #There is no content to send for this request except for headers.
                    
     return redirect ('dashboard')
+
+def zero_sdek_warehouse_qnty (request):
+    products=Product.objects.all()
+    warehouseId=1512363
+    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    stock_arr=[]
+    for product in products:
+        if product.wb_bar_code:
+            wb_bar_code=str(product.wb_bar_code)
+            qnty=0
+            stock_dict={
+                "sku": wb_bar_code,#WB Barcode
+                "amount": qnty,
+            }
+            stock_arr.append(stock_dict)
+     
+    params= {
+        "stocks": stock_arr  
+    }
+
+    # params= {
+    #     "stocks": {
+    #             "sku": wb_bar_code,#WB Barcode
+    #             "amount": qnty,
+    #         } 
+    # }
+    response = requests.put(url, json=params, headers=headers)
+    # time.sleep(1)
+    #status_code=response.status_code
+    #Status Code: 204 No Content
+    #There is no content to send for this request except for headers.
+                   
+    return redirect ('dashboard')
+
 
 def wb_ozon_sync(request):
     doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
