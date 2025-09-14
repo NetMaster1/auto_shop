@@ -6,6 +6,7 @@ import requests
 import json
 import random
 from app_product.models import Product, DocumentType, RemainderHistory
+import pytz
 
 
 def scheduled_dispatch():
@@ -135,19 +136,6 @@ def wb_synchronize_orders_with_ozon ():
     }
     response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
 
-
-
-from django.conf import settings
-#from app_items.models import Item
-import datetime
-import time
-import pytz
-import requests
-import json
-import random
-from app_product.models import Product, RemainderHistory, DocumentType
-
-
 def scheduled_dispatch():
 	print('updater works')
 
@@ -194,13 +182,14 @@ def wb_synchronize_orders_with_ozon ():
     orders_list=a['orders']
     time.sleep(1)
     for i in orders_list:
+        print (i)
         #print(f'Order #{n}: {i}')
         print('======================')
         order_id=i['id']
-        print(i['id'])
+        #print(i['id'])
         sku=i['skus']
         sku=sku[0]
-        print(sku)
+        #print(sku)
         
         if RemainderHistory.objects.filter(shipment_id=order_id).exists():
             print('Error_1. RHO with such shipment_id exists.')

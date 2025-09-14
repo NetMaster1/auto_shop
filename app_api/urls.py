@@ -20,6 +20,8 @@ urlpatterns = [
     path('wb_warehouse_list', views.wb_warehouse_list, name='wb_warehouse_list'),
     path('wb_create_warehouse', views.wb_create_warehouse, name='wb_create_warehouse'),
     path('wb_seller_warehouse_list', views.wb_seller_warehouse_list, name='wb_seller_warehouse_list'),
+    path('wb_synchronize_orders_with_ozon_ver_1', views.wb_synchronize_orders_with_ozon_ver_1, name='wb_synchronize_orders_with_ozon_ver_1'),
+    path('yandex_category_list', views.yandex_category_list, name='yandex_category_list'),
     
    
 ]
