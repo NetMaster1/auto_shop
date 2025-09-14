@@ -115,7 +115,7 @@ def ozon_push(request):
 
           #changing qnty at WB
           if product.wb_bar_code:
-            if product.length <= 140:
+            if product.length < 120:
               warehouseId=1368124
             else:
               warehouseId=1512363
