@@ -1924,7 +1924,7 @@ def synchronize_qnty_wb_warehouse(request):
     # the list should not contain negative quantities. Otherwise WB declines the request & sends status 400 (wrong request)
     for product in products:
         if product.wb_bar_code and product.length and product.wb_true == True: #and int(product.length) <= 140:
-            if product.length <= 120:
+            if product.length < 120:
                 #print(type(product.length))
                 article=product.article
                 if RemainderHistory.objects.filter(article=article).exists():
@@ -1990,7 +1990,7 @@ def synchronize_qnty_SDEK_warehouse(request):
     for product in products:
         if product.wb_bar_code and product.length and product.wb_true == True:# and product.length > 120:
             #print(type(product.length))
-            if product.length > 120:
+            if product.length >= 120:
                 article=product.article
                 if RemainderHistory.objects.filter(article=article).exists():
                     #rhos=RemainderHistory.objects.filter(article=article)
