@@ -22,6 +22,8 @@ urlpatterns = [
     path('wb_seller_warehouse_list', views.wb_seller_warehouse_list, name='wb_seller_warehouse_list'),
     path('wb_synchronize_orders_with_ozon_ver_1', views.wb_synchronize_orders_with_ozon_ver_1, name='wb_synchronize_orders_with_ozon_ver_1'),
     path('yandex_category_list', views.yandex_category_list, name='yandex_category_list'),
+    path('yandex_id', views.yandex_id, name='yandex_id'),
+    path('yandex_update_prices', views.yandex_update_prices, name='yandex_update_prices'),
     
    
 ]

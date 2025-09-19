@@ -451,6 +451,10 @@ def wb_synchronize_orders_with_ozon_ver_1 (request):
     # }
     # response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
 
+
+#===========================================================
+#Yandex market в качестве sku используеут артикул
+
 def yandex_category_list(request):
   url=f'https://api.partner.market.yandex.ru/v2/categories/tree'
   headers = {"Api-Key": "ACMA:lRqnoRHucSnmiG7kCDWEXVtYe99fBQN2obEHsYCR:21dc8ee9"}
@@ -463,5 +467,61 @@ def yandex_category_list(request):
   status_code=response.status_code
   print(status_code)
   a=response.json()
-  print(f'status_code: {status_code}')
+  a=a['result']
+  # a=a['id']
+  # a=a['name']
+  a=a['children']
+
+  # print(a)
+  
+  # for key, value in a.items():
+    #print(f"{key}")
+  for i in a:
+    for key, value in i.items():
+      print(f"{key}: {value}")
+      print('------------------------------------')
+    print('===========================================')
+
+def yandex_id(request):
+  url=f'https://api.partner.market.yandex.ru/v2/campaigns'
+  headers = {"Api-Key": "ACMA:lRqnoRHucSnmiG7kCDWEXVtYe99fBQN2obEHsYCR:21dc8ee9"}
+  response = requests.get(url, headers=headers)
+  status_code=response.status_code
+  print(status_code)
+  a=response.json()
   print(a)
+
+#Yandex market uses articles as skus
+def yandex_update_prices(request):
+    products=Product.objects.all()
+    businessId='216409363'
+    body_list=[]
+    url=f'https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offer-prices/updates'
+    headers = {"Api-Key": "ACMA:lRqnoRHucSnmiG7kCDWEXVtYe99fBQN2obEHsYCR:21dc8ee9"}
+  
+    for product in products:
+        price_dict ={
+            'offerId' : product.article,
+            'price': {
+                'value' : 2990,
+                'currencyId': "RUR",
+                'discountBase': 3990,
+                "minimumForBestseller": 2800
+            } 
+        }
+        body_list.append(price_dict)
+
+
+
+    params = {'offers': body_list}
+    response = requests.post(url, json=params, headers=headers)
+    status_code=response.status_code
+    print(status_code)
+    print('========================')
+    a=response.json()
+    print(response)
+    print('========================')
+    print(a)
+ 
+
+  

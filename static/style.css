@@ -19,3 +19,20 @@
     /* top: 70mm;
     right: 0mm; */
 }
+
+.hide {
+    /* display: block; */
+    /* display: none; */
+    /*position: fixed;*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /*background-color: red;*/
+    overflow-y: scroll;
+    opacity: 10%;
+    /*visibility: visible;*/
+    /*visibility: hidden;*/
+}

@@ -8,15 +8,56 @@
   z-index: 1;
 }
 
-/* ===================== Cotacts Modal========================= */
-.enterContactModal {
-    display: none;
+
+.outer_modal {
+  display: none;
 }
 
-.enterContactModal.openModal {
+.outer_modal.openModal {
+  display: block;
+}
+/* ===================== Cotacts Modal========================= */
+/* .enterContactModal {
+    display: none;
+} */
+
+.enterContactModal {
+    padding: 3rem;
     background-color: white;
+    width: 50rem;
+    height: 30rem;
     display: block;
     position: fixed;
-    top: 70mm;
-    left: 15rem; */
+    top: 15rem;
+    left: 50rem;
+}
+
+.hide {
+    /* display: block; */
+    /* display: none; */
+    /*position: fixed;*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /*background-color: red;*/
+    overflow-y: scroll;
+    opacity: 100%;
+    /*visibility: visible;*/
+    /*visibility: hidden;*/
+}
+
+.cross {
+  margin: 1rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.cross:hover {
+  /* opacity: 2; */
+  transform: scale(1.1);
+  z-index: 1;
 }

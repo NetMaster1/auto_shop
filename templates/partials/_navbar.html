@@ -1,4 +1,4 @@
-
+{% load static %}
     
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
@@ -19,12 +19,18 @@
             Информация
           </a>
           <ul class="dropdown-menu">
-            <li class="contact_modal"><a class="dropdown-item" href="#">Контакты </a></li>
+            <li class="contact_modal"><a class="dropdown-item" href="#">Контакты </a>
               <!-- ===========================Modal Body================================= -->
+
+              <div class="outer_modal">
+              <div class="hide">
                 <div class="enterContactModal">
+                 <img src="{% static 'images/cross.jpg' %}" alt="Girl in a jacket" style="width:3rem;height:3rem;" class="cross">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
+                            
+                              
                                 <h5 class="modal-title" id="exampleModalLabel">Реквизиты: ИП Винокуров Сергей Николаевич
                                   ИНН 526013223435 ООО «Банк Точка» БИК 044525104 р.с.40802810420000006198
 
@@ -36,7 +42,11 @@
                         </div>   
                     </div>
                   </div>
-                </div>
+              </div>
+              </div>
+              </div>
+
+              </li>
             <!-- =================================End of Modal Body======================================== -->
 
            
@@ -60,6 +70,7 @@
 
 
 <script>
+  const outer_modal =document.querySelector('.outer_modal');
   const contact_modal =document.querySelector('.contact_modal');
   const enterContactModal =document.querySelector('.enterContactModal');
   
@@ -68,11 +79,18 @@
   contact_modal.addEventListener('mouseout', closeModal)
 
   function openModal () {
-          enterContactModal.classList.add('openModal')
+          outer_modal.classList.add('openModal')
       }
   function closeModal () {
-          enterContactModal.classList.remove('openModal')
+          outer_modal.classList.remove('closeModal')
           // window.location.reload()
       }
+  // function openModal () {
+  //         enterContactModal.classList.add('openModal')
+  //     }
+  // function closeModal () {
+  //         enterContactModal.classList.remove('openModal')
+  //         // window.location.reload()
+  //     }
 
 </script>
