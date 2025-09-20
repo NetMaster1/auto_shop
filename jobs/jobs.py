@@ -94,6 +94,7 @@ def wb_synchronize_orders_with_ozon ():
             product.quantity=rho.current_remainder
             product.total_sum=rho.current_remainder * product.av_price
             product.save()
+        time.sleep(1)
     print('')
     print('')
     print('')
