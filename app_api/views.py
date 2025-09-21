@@ -81,9 +81,9 @@ def ozon_push(request):
           print(f'Ozon_id: {product.ozon_id}')
           print(f'Ozon_sku: {product.ozon_sku}')
          
-          if RemainderHistory.objects.filter(ozon_id=product.ozon_id, created__lt=dateTime).exists():
+          if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
             print("True")
-            rho_latest_before = RemainderHistory.objects.filter(ozon_id=product.ozon_id,  created__lt=dateTime).latest('created')
+            rho_latest_before = RemainderHistory.objects.filter(article=product.article,  created__lt=dateTime).latest('created')
             print(rho_latest_before)
             print(rho_latest_before.current_remainder)
             pre_remainder=rho_latest_before.current_remainder

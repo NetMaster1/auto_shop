@@ -26,11 +26,19 @@ def wb_synchronize_orders_with_ozon ():
     headers_wb = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
    
     response = requests.get(url, headers=headers_wb)
+    time.sleep(5)
     status_code=response.status_code
+    print(status_code)
+    # print(response)
     a=response.json()
+    # print(a)
+    print('================')
     orders_list=a['orders']
+    print(orders_list)
+    print('================')
     n=0
     for i in orders_list:
+        print(i)
         order_id=i['id']
         n+=1
         sku=i['skus']
@@ -44,38 +52,49 @@ def wb_synchronize_orders_with_ozon ():
             print(f"Order #{n} shipment_id: {i['id']}; sku: {sku}; name: No Name" )
         
         if RemainderHistory.objects.filter(shipment_id=order_id).exists():
-            print(f'RHO with shipment_id: {i['id']} exists .')
+            print(f"RHO with shipment_id: {i['id']} exists .")
             continue
-
         else:
+            # tdelta=datetime.timedelta(hours=3)
+            # dateTime=datetime.datetime.now()
+            # dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            # dateTime=dT_utcnow+tdelta
+
+            current_dt=datetime.datetime.now()
             tdelta=datetime.timedelta(hours=3)
-            dateTime=datetime.datetime.now()
-            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
-            dateTime=dT_utcnow+tdelta
-            print(f'Order {i['id']} created at {dateTime}')
+            mics=current_dt.microsecond
+            tdelta_1=datetime.timedelta(microseconds=mics)
+            secs=current_dt.second
+            tdelta_2=datetime.timedelta(seconds=secs)
+            tdelta_3=tdelta+tdelta_1+tdelta_2
+            dateTime=current_dt+tdelta_3
+
+            
+            print(f"Order {i['id']} created at {dateTime}")
           
 
-            if Product.objects.filter(wb_bar_code=sku).exists():
-                # print('ok')
-                product=Product.objects.get(wb_bar_code=sku)
-                article=product.article
-            #     print(product.name)
-            #     print(f'wb_bar_code: {product.wb_bar_code}')
-                print(f'RHO for order {i['id']} created')
-            else:
-                print(f'RHO not created due to no WB_BAR_CODE')
-                continue
+            # if Product.objects.filter(wb_bar_code=sku).exists():
+            #     # print('ok')
+            #     product=Product.objects.get(wb_bar_code=sku)
+            #     article=product.article
+            # #     print(product.name)
+            # #     print(f'wb_bar_code: {product.wb_bar_code}')
+            #     print(f"RHO for order {i['id']} created at {dateTime}")
+            # else:
+            #     print(f"RHO not created due to no WB_BAR_CODE")
+            #     continue
                 
          
-            if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
+            if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
                 # print("True")
-                rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
+                rho_latest_before = RemainderHistory.objects.filter(article=product.article,  created__lt=dateTime).latest('created')
                 # print(rho_latest_before)
                 # print(rho_latest_before.current_remainder)
                 pre_remainder=rho_latest_before.current_remainder
             else:
                 pre_remainder=0
-                # print(pre_remainder)
+                print(pre_remainder)
+            time.sleep(1)
             rho = RemainderHistory.objects.create(
                 rho_type=doc_type,
                 created=dateTime,
@@ -87,17 +106,30 @@ def wb_synchronize_orders_with_ozon ():
                 pre_remainder=pre_remainder,
                 incoming_quantity=0,
                 outgoing_quantity=1,
-                current_remainder=pre_remainder - 1,
+                current_remainder=pre_remainder - 1
                 #retail_price=int(retail_price),
                 # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
                 )
+            
             product.quantity=rho.current_remainder
             product.total_sum=rho.current_remainder * product.av_price
             product.save()
-        time.sleep(1)
-    print('')
-    print('')
-    print('')
+            print('++++++++++++++++++++++++++++++++++++++++')
+            print('One cycle made')
+
+
+    print('++++++++++++++++++++++++++++++++++++++++')
+    print('EndFor')
+    time.sleep(5)
+    # for i in orders_list:
+    #     order_id=i['id']
+    #     sku=i['skus']
+    #     sku=sku[0]
+    #     if RemainderHistory.objects.filter(shipment_id=order_id).exists():
+    #         rhos=RemainderHistory.objects.filter(shipment_id=order_id).earliest('created)
+
+
+
     #         if product.ozon_id:
     #             stock_dict={
     #                 "offer_id": str(product.article),
@@ -119,6 +151,7 @@ def wb_synchronize_orders_with_ozon ():
     #     "stocks" : stock_arr
     # }
     # response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
+
 
 def wb_update_prices_auto():
 	#Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.

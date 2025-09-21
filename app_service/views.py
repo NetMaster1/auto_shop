@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from app_product.models import Product, ProductCategory, RemainderHistory
+from app_product.models import Product, ProductCategory, RemainderHistory, DocumentType
 import pandas
 import xlwt
 from django.contrib import messages
@@ -32,13 +32,37 @@ def db_correct(request):
 
 def product_quant_correct(request):
     if request.user.is_authenticated:
+        sale=DocumentType.objects.get(name='Продажа ТМЦ')
+        delivery=DocumentType.objects.get(name='Поступление ТМЦ')
+        recognition=DocumentType.objects.get(name='Оприходование ТМЦ')
+        taking_back=DocumentType.objects.get(name='Возврат ТМЦ')
+        signing_off=DocumentType.objects.get(name='Списание ТМЦ')
         products=Product.objects.all()
         for product in products:
             if RemainderHistory.objects.filter(article=product.article).exists():
-                rho_latest = RemainderHistory.objects.filter(article=product.article).latest('created')
-                product.quantity=rho_latest.current_remainder
+                rhos=RemainderHistory.objects.filter(article=product.article).order_by('created')
+                for rho in rhos:
+                    if rho.shipment_id:
+                        if RemainderHistory.objects.filter(article=product.article, shipment_id=rho.shipment_id, created__lt=rho.created).exists():
+                            rho.delete()
+                    if RemainderHistory.objects.filter(article=product.article, created__lt=rho.created).exists():
+                        rho_latest_before=RemainderHistory.objects.filter(article=product.aritcle, created__lt=rho.created).latest('created')
+                        pre_remainder=rho_latest_before.current_remainder
+                    else:
+                        pre_remainder=0
+                    rho.pre_remainder=pre_remainder               
+                    if rho.rho_type==delivery:
+                        rho.current_remainder=rho.pre_remainder + rho.incoming_quantity
+                    elif rho.rho_type==sale:
+                        rho.current_remainder=rho.pre_remainder - rho.outgoing_quantity
+                    rho.save()
+                
+                rho_latest=RemainderHistory.objects.filter(article=product.article).latest('created')
+                product.quantity=rho.current_remainder
                 product.total_sum=rho_latest.current_remainder*product.av_price
                 product.save()
+
+
         messages.success(request, 'Product table quantity and total_sum changed')   
         return redirect("dashboard")  
     return redirect ('login_page')

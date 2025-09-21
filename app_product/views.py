@@ -1935,7 +1935,7 @@ def synchronize_qnty_wb_warehouse(request):
                     if qnty<=0:
                         continue
                     stock_dict={
-                        "sku": wb_bar_code,#WB Barcode
+                        "sku": wb_bar_code,#WB BarcodeK)
                         "amount": qnty,
                     }
                     stock_arr.append(stock_dict)
