@@ -1854,7 +1854,7 @@ def wb_update_prices_ver_1(request):
                     "nmID": int(wb_id),
                     # "price": int(retail_price),
                     "price": 3990,
-                    "discount": 30
+                    "discount": 0
                 }
             task_arr.append(task_dict)
   

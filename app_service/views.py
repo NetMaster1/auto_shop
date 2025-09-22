@@ -45,8 +45,9 @@ def product_quant_correct(request):
                     if rho.shipment_id:
                         if RemainderHistory.objects.filter(article=product.article, shipment_id=rho.shipment_id, created__lt=rho.created).exists():
                             rho.delete()
+                            continue
                     if RemainderHistory.objects.filter(article=product.article, created__lt=rho.created).exists():
-                        rho_latest_before=RemainderHistory.objects.filter(article=product.aritcle, created__lt=rho.created).latest('created')
+                        rho_latest_before=RemainderHistory.objects.filter(article=product.article, created__lt=rho.created).latest('created')
                         pre_remainder=rho_latest_before.current_remainder
                     else:
                         pre_remainder=0
@@ -58,7 +59,7 @@ def product_quant_correct(request):
                     rho.save()
                 
                 rho_latest=RemainderHistory.objects.filter(article=product.article).latest('created')
-                product.quantity=rho.current_remainder
+                product.quantity=rho_latest.current_remainder
                 product.total_sum=rho_latest.current_remainder*product.av_price
                 product.save()
 

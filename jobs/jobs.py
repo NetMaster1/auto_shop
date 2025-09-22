@@ -50,6 +50,7 @@ def wb_synchronize_orders_with_ozon ():
         else:
             print('==============================')
             print(f"Order #{n} shipment_id: {i['id']}; sku: {sku}; name: No Name" )
+            continue
         
         if RemainderHistory.objects.filter(shipment_id=order_id).exists():
             print(f"RHO with shipment_id: {i['id']} exists .")
@@ -68,23 +69,8 @@ def wb_synchronize_orders_with_ozon ():
             tdelta_2=datetime.timedelta(seconds=secs)
             tdelta_3=tdelta+tdelta_1+tdelta_2
             dateTime=current_dt+tdelta_3
-
-            
             print(f"Order {i['id']} created at {dateTime}")
-          
-
-            # if Product.objects.filter(wb_bar_code=sku).exists():
-            #     # print('ok')
-            #     product=Product.objects.get(wb_bar_code=sku)
-            #     article=product.article
-            # #     print(product.name)
-            # #     print(f'wb_bar_code: {product.wb_bar_code}')
-            #     print(f"RHO for order {i['id']} created at {dateTime}")
-            # else:
-            #     print(f"RHO not created due to no WB_BAR_CODE")
-            #     continue
-                
-         
+            
             if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
                 # print("True")
                 rho_latest_before = RemainderHistory.objects.filter(article=product.article,  created__lt=dateTime).latest('created')
@@ -93,8 +79,8 @@ def wb_synchronize_orders_with_ozon ():
                 pre_remainder=rho_latest_before.current_remainder
             else:
                 pre_remainder=0
-                print(pre_remainder)
-            time.sleep(1)
+                # print(pre_remainder)
+            #time.sleep(1)
             rho = RemainderHistory.objects.create(
                 rho_type=doc_type,
                 created=dateTime,
@@ -114,43 +100,30 @@ def wb_synchronize_orders_with_ozon ():
             product.quantity=rho.current_remainder
             product.total_sum=rho.current_remainder * product.av_price
             product.save()
-            print('++++++++++++++++++++++++++++++++++++++++')
-            print('One cycle made')
+            # print('++++++++++++++++++++++++++++++++++++++++')
+            # print('One cycle made')
 
-
-    print('++++++++++++++++++++++++++++++++++++++++')
-    print('EndFor')
-    time.sleep(5)
-    # for i in orders_list:
-    #     order_id=i['id']
-    #     sku=i['skus']
-    #     sku=sku[0]
-    #     if RemainderHistory.objects.filter(shipment_id=order_id).exists():
-    #         rhos=RemainderHistory.objects.filter(shipment_id=order_id).earliest('created)
-
-
-
-    #         if product.ozon_id:
-    #             stock_dict={
-    #                 "offer_id": str(product.article),
-    #                 "product_id": str(product.ozon_id),
-    #                 "stock": rho.current_remainder,
-    #                 #warehouse (Неклюдово)
-    #                 "warehouse_id": 1020005000113280
-    #                 }
-    #             stock_arr.append(stock_dict)
+            if product.ozon_id:
+                stock_dict={
+                    "offer_id": str(product.article),
+                    "product_id": str(product.ozon_id),
+                    "stock": rho.current_remainder,
+                    #warehouse (Неклюдово)
+                    "warehouse_id": 1020005000113280
+                    }
+                stock_arr.append(stock_dict)
                 
-    # if len(stock_arr) > 0:           
-    #     for i in stock_arr:
-    #         print (i)
-    # else:
-    #     print('stock_arr is empty')
-    # print('')
+        # if len(stock_arr) > 0:           
+        #     for i in stock_arr:
+        #         print (i)
+        # else:
+        #     print('stock_arr is empty')
+        # print('')
         
-    # task={
-    #     "stocks" : stock_arr
-    # }
-    # response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
+    task={
+        "stocks" : stock_arr
+    }
+    response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers_ozon)
 
 
 def wb_update_prices_auto():
