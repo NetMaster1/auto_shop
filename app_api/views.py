@@ -503,10 +503,10 @@ def yandex_update_prices(request):
         price_dict ={
             'offerId' : product.article,
             'price': {
-                'value' : 2990,
+                'value' : 2790,
                 'currencyId': "RUR",
                 'discountBase': 3990,
-                "minimumForBestseller": 2800
+                "minimumForBestseller": 2700
             } 
         }
         body_list.append(price_dict)
@@ -525,3 +525,18 @@ def yandex_update_prices(request):
  
 
   
+def yandex_price_recommendations (request):
+     products=Product.objects.all()
+     businessId='216409363'
+     body_list=[]
+     url=f'https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offers/recommendations'
+     headers = {"Api-Key": "ACMA:lRqnoRHucSnmiG7kCDWEXVtYe99fBQN2obEHsYCR:21dc8ee9"}
+     response = requests.post(url, headers=headers)
+     status_code=response.status_code
+     print(status_code)
+     a=response.json()
+     print(response)
+   
+
+
+
