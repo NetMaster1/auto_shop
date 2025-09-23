@@ -524,19 +524,45 @@ def yandex_update_prices(request):
     print(a)
  
 
-  
+#показывает среднюю цена на площадке на аналогичный товар и кол-во показов за последние 7 дней (параметр "show")
 def yandex_price_recommendations (request):
-     products=Product.objects.all()
-     businessId='216409363'
-     body_list=[]
-     url=f'https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offers/recommendations'
-     headers = {"Api-Key": "ACMA:lRqnoRHucSnmiG7kCDWEXVtYe99fBQN2obEHsYCR:21dc8ee9"}
-     response = requests.post(url, headers=headers)
-     status_code=response.status_code
-     print(status_code)
-     a=response.json()
-     print(response)
+    products=Product.objects.all()
+    businessId='216409363'
+    body_list=[]
+    url=f'https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offers/recommendations'
+    headers = {"Api-Key": "ACMA:lRqnoRHucSnmiG7kCDWEXVtYe99fBQN2obEHsYCR:21dc8ee9"}
+
+    for product in products:
+        body_list.append(product.article)
+
+    params = {
+        "offerIds": body_list,
+        "competitivenessFilter": "AVERAGE"
+    }
+
+    response = requests.post(url, json=params, headers=headers)
+    status_code=response.status_code
+    print(status_code)
+    a=response.json()
+    print(response)
+    # print(a)
+    # print('===========================')
+    a=a['result']
+    # print(a)
+    # print('==============================')
+    a=a['offerRecommendations']
+    # print(a)
+    # print('+++++++++++++++++++++++++++++')
+    n=0
+    for i in a:
+       n+=1
+       item=i['offer']
+       recommendation=i['recommendation']
+       print(n, item)
+       print(recommendation)
+       print()
+    #    print(f"SKU: {item['offerID']}; Price: {item['price']['value']}; Status: {item['price']['value']}")
    
 
-
-
+def yandex_update_quantities(request):
+    pass

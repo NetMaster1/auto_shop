@@ -25,6 +25,7 @@ urlpatterns = [
     path('yandex_id', views.yandex_id, name='yandex_id'),
     path('yandex_update_prices', views.yandex_update_prices, name='yandex_update_prices'),
     path('yandex_price_recommendations', views.yandex_price_recommendations, name='yandex_price_recommendations'),
+    path('yandex_update_quantities', views.yandex_update_quantities, name='yandex_update_quantities'),
     
    
 ]
