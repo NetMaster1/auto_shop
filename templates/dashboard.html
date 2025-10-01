@@ -322,6 +322,26 @@
     </form>
     <br>
     ==================================================================================
+    
+    <label for="file_name">
+        <h5>Введите файл в формате Excel
+            <br>
+            Функция дополняет базу данных названиями марки, модели на английском и русском (для хэштэгов)
+        </h5>
+    </label>
+
+   
+    <form action="{% url 'db_correct_model_names' %}" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+    
+        <input type="file" class='form-control' id="file_name" name="file_name" required>
+   
+            <input type="submit" value="Дополнить"
+                class="btn btn-sm btn-block btn-outline-dark clear_storage">
+    
+    </form>
+    <br>
+    ==================================================================================
      
 </body>
 </html>

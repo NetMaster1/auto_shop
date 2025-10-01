@@ -15,6 +15,10 @@ class Product (models.Model):
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.DO_NOTHING, null=True, blank=True)
     auto_model = models.CharField(max_length=160, null=True, blank=True)
+    brand=models.CharField(max_length=160, null=True, blank=True)#used for hashtags
+    brand_rus=models.CharField(max_length=160, null=True, blank=True)#used for hashtags
+    model_short=models.CharField(max_length=160, null=True, blank=True)#used for hashtags
+    model_short_rus=models.CharField(max_length=160, null=True, blank=True)#used for hashtags
     bar_code = models.CharField(max_length=50, unique=True, null=True, blank=True)
     article = models.CharField(max_length=50, unique=True, null=True, blank=True)
     ozon_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
@@ -23,6 +27,7 @@ class Product (models.Model):
     wb_bar_code = models.CharField(max_length=50, unique=True, null=True, blank=True)
     wb_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with wb
     ozon_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with ozon
+    update_true = models.BooleanField(default=True)#used to block certain items from updating
     ean = models.CharField(max_length=50, null=True, blank=True)
     quantity = models.IntegerField(default=0)
     av_price = models.IntegerField(default=0)

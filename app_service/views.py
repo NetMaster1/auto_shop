@@ -127,3 +127,21 @@ def rename_files(request):
     for i in files:
         os.rename(f'DeflectorsDoor/{i}', f'DeflectorsDoor/Дефлектор двери_{i}')
     return redirect ('dashboard')
+
+def db_correct_model_names(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            file = request.FILES["file_name"]
+            df1 = pandas.read_excel(file)
+            cycle = len(df1)
+            for i in range(cycle):
+                row = df1.iloc[i]#reads each row of the df1 one by one
+                article=row.Article
+                if Product.objects.filter(article=article).exists():
+                    product=Product.objects.get(article=article)
+                    product.brand=row.AutoBrand
+                    product.model_short=row.AutoModel
+                    product.brand_rus=row.Russian_Brand
+                    product.model_short_rus=row.Russian_Model
+                    product.save()   
+            return redirect('dashboard')

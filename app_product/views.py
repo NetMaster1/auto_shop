@@ -18,7 +18,6 @@ def product_page(request, article):
     }
     return render(request, 'product_page.html', context)
 
-
 def dashboard(request):
     if request.user.is_authenticated:
         categories=ProductCategory.objects.all()
@@ -29,6 +28,7 @@ def dashboard(request):
     else:
         return redirect ('login_page')
 
+#За один запрос можно изменить наличие для 100 товаров. 
 def create_product(request):
     if request.method == "POST":
         file = request.FILES["file_name"]
@@ -86,7 +86,7 @@ def create_product(request):
             #Ozon_id и offer_id нужны для дальнейшего редактирования количества товара на стоке озон посредством метода:
             #response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task_3, headers=headers)
             #offer_id это номер товара уникальный в erms. 
-            #В качестве offer_id для аксов мы используем imei. Можно использовать EAN товара. Это удобно в случае с аксами,
+            #В качестве offer_id для дефлекторов используем артикул; для аксов мы используем imei. Можно использовать EAN товара. Это удобно в случае с аксами,
             #но при работе со смартфонами EAN не всегда известен. IMEI использовать не получится, так как один SKU может иметь разные IMEI.
 
             #я пытался создать товар и задать ему количество в одной функции, но Озону нужно время для того, чтобы проверить,
@@ -790,6 +790,111 @@ def create_product(request):
         
         
         return redirect("dashboard")
+    
+#За один запрос можно изменить характеристики для 100 товаров.
+#изменяет только незаполненные характеристики
+def update_ozon_hashtag(request):
+    hood_deflector=ProductCategory.objects.get(name='Дефлектор капота')
+    window_deflector=ProductCategory.objects.get(name='Дефлектор двери')
+    headers = {
+                "Client-Id": "1711314",
+                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+    items_list=[]
+    products=Product.objects.filter(update_true=True)
+    for product in products:
+        if product.category==hood_deflector:
+            
+            hashtag=f"""#дефлектор_капота #дефлектор #дефлекторы #дефлекторкапота #дефлектор_на_капот #мухобойка #мухобойка_на_капот #мухобойка_для_авто #отбойник #обойник_для_авто #отбойник_на_капот"""
+        else:
+            hashtag=f"""#дефлектор #дефлектор_окна #дефлектор_двери #{product.brand_rus} #{product.model_short_rus} #{product.brand_rus}_{product.model_short_rus} #дефлектор_{product.brand_rus} #дефлектор_окна{product.brand_rus} #дефлектор_окна{product.model_short_rus} #дефлектор_двери{product.brand_rus} #дефлектор_двери_{product.model_short_rus}"""
+        hashtag=hashtag.strip()
+        print(hashtag)
+        attributes_dict = { 
+            "attributes": [
+                {
+                    "complex_id": 0,
+                    "id": 23171,
+                    "values": [
+                        {
+                            "dictionary_value_id": 0,
+                            "value": hashtag
+                        }
+                    ]
+                }
+                ],
+                "offer_id": product.article
+        }
+        items_list.append(attributes_dict)
+        #module to cut off the number of items in one request (max = 100)
+        if len(items_list)==100:
+            task={'items' : items_list}
+            response=requests.post('https://api-seller.ozon.ru/v1/product/attributes/update', json=task, headers=headers)
+            time.sleep(1)
+            items_list.clear()
+            json=response.json()
+            print(json)
+
+    if len(items_list) > 0:
+        task={'items' : items_list}
+        response=requests.post('https://api-seller.ozon.ru/v1/product/attributes/update', json=task, headers=headers)
+        json=response.json()
+        print(json)
+
+    return redirect("dashboard")
+
+def update_window_deflector_some_attributes(request):
+    headers = {
+                "Client-Id": "1711314",
+                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+    window_deflector=ProductCategory.objects.get(name='Дефлектор двери')
+    products=Product.objects.filter(category=window_deflector)
+    items_list=[]
+    for product in products:
+        if product.ozon_id:
+            attributes_dict = { 
+            "attributes": [
+                {
+                    "complex_id": 0,
+                    "id": 7202,
+                    "values": [
+                        {
+                            "dictionary_value_id": 0,
+                            "value": 4,
+                        }
+                    ]
+                },
+                {
+                    "complex_id": 0,
+                    "id": 7206,
+                    "values": [
+                        {
+                            "dictionary_value_id": 41233,
+                            "value": "Легковые автомобили",
+                        }
+                    ]
+                }
+                ],
+                "offer_id": product.article
+        }
+        items_list.append(attributes_dict)
+        #module to cut off the number of items in one request (max = 100)
+        if len(items_list)==100:
+            task={'items' : items_list}
+            response=requests.post('https://api-seller.ozon.ru/v1/product/attributes/update', json=task, headers=headers)
+            time.sleep(1)
+            items_list.clear()
+            json=response.json()
+            print(json)
+
+    if len(items_list) > 0:
+        task={'items' : items_list}
+        response=requests.post('https://api-seller.ozon.ru/v1/product/attributes/update', json=task, headers=headers)
+        json=response.json()
+        print(json)
+
+    return redirect("dashboard")
 
 def getting_ozon_id_and_ozon_sku (request):
     if request.user.is_authenticated:
@@ -1213,6 +1318,7 @@ def update_images(request):
         file = request.FILES["file_name"]
         df1 = pandas.read_excel(file)
         cycle = len(df1)
+        # array_list=[]
         for i in range(cycle):
             row = df1.iloc[i]#reads each row of the df1 one by one
             article=row.Article
@@ -1225,25 +1331,33 @@ def update_images(request):
             article=' '.join(article)
             #============================end of block=======================================================  
             product=Product.objects.get(article=row.Article)
+            if product.update_true == False:
+                continue
+            #image_1="https://mp-system.ru/media/" + str(product.image_1)
+            #print(image_1)
             task = {
                 "color_image": "string",
                 "images": [
-                    str(row.Primary_Image),
-                    str(row.Image_1),
-                    str(row.Image_2),
+                    row.Primary_Image,
+                    # str(row.Image_1),
+                    # str(row.Image_2),
                     #str(row.Image_3)
+                   
                 ],
                 "images360": [
                     "string"
                 ],
                 "product_id": product.ozon_id
             }
-            response=requests.post('https://api-seller.ozon.ru/v1/product/pictures/import', json=task, headers=headers) 
+            # array_list.append(task)
+            time.sleep(1)
+            response=requests.post('https://api-seller.ozon.ru/v1/product/pictures/import', json=task, headers=headers)
+            time.sleep(1)
             print(response)
             json=response.json()
             print(json)
+            print(f'{product.ozon_id}: {product.name}')
             print('============================')      
-            time.sleep(1)
         return redirect ('dashboard')
 
 #does not send any info to ozon
@@ -1854,7 +1968,7 @@ def wb_update_prices_ver_1(request):
                     "nmID": int(wb_id),
                     # "price": int(retail_price),
                     "price": 3990,
-                    "discount": 0
+                    "discount": 30
                 }
             task_arr.append(task_dict)
   
