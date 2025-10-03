@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.dashboard, name='dashboard'),
     path('create_product', views.create_product, name='create_product'),
     path('update_ozon_hashtag', views.update_ozon_hashtag, name='update_ozon_hashtag'),
+    path('update_ozon_what_for_brand_field', views.update_ozon_what_for_brand_field, name='update_ozon_what_for_brand_field'),
     path('update_window_deflector_some_attributes', views.update_window_deflector_some_attributes, name='update_window_deflector_some_attributes'),
     path('product_page/<str:article>', views.product_page, name='product_page'),
 

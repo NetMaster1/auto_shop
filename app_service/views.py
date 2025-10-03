@@ -145,3 +145,4 @@ def db_correct_model_names(request):
                     product.model_short_rus=row.Russian_Model
                     product.save()   
             return redirect('dashboard')
+

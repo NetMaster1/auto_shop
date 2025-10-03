@@ -4,6 +4,7 @@ import requests
 import pandas
 import time
 from .models import Product, DocumentType, RemainderHistory, Report, Identifier, ProductCategory
+from app_reference.models import AutoBrand, AutoModel, AutoModification
 import datetime
 import pytz
 from django.contrib import messages
@@ -842,6 +843,101 @@ def update_ozon_hashtag(request):
         print(json)
 
     return redirect("dashboard")
+
+def update_ozon_what_for_brand_field(request):
+    
+    headers = {
+                "Client-Id": "1711314",
+                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+    window_deflector=ProductCategory.objects.get(name='Дефлектор двери')
+    products=Product.objects.filter(update_true=True, category=window_deflector)
+    brand_model_list=[]
+    print('++++++++++++++++++++++++++')
+    for product in products:
+        if product.brand and product.ozon_id:
+            #change brand_name since in our DB brand_names start with lowercase & ozon_attribute_values start iwth uppercase
+            product_brand=product.brand.capitalize()
+            # product_model=product.model_short.capitalize()
+            print(product_brand)
+            if AutoBrand.objects.filter(ozon_attribute_value=product_brand).exists():
+                brand=AutoBrand.objects.get(ozon_attribute_value=product_brand)
+                brand_id=brand.ozon_attribute_id
+                brand_value=brand.ozon_attribute_value
+            else:
+                continue
+            if AutoModel.objects.filter(ozon_attribute_value__icontains=product.model_short):
+                auto_models=AutoModel.objects.filter(ozon_attribute_value__icontains=product.model_short)
+                models_list=[]
+                for i in auto_models:
+                    attributes_list = [
+                        {
+                            "complex_id": 100003,
+                            "id": 22916,
+                            "values": [
+                                {
+                                    "dictionary_value_id": brand_id,
+                                    "value": brand_value,
+                                }
+                            ]
+                        },
+                        {
+                            "complex_id": 100003,
+                            "id": 22917,
+                            "values": [
+                                {
+                                "dictionary_value_id": i.ozon_attribute_id,
+                                "value": i.ozon_attribute_value,
+                                }
+                            ],
+                        }
+                    ]
+                    models_list.append(models_list)
+
+                attributes_dict = { 
+                    "attributes": attributes_list,
+                    "offer_id": product.article
+                    } 
+            
+            else:
+                attributes_dict = { 
+                    "attributes": [
+                        {
+                            "complex_id": 100003,
+                            "id": 22916,
+                            "values": [
+                                {
+                                    "dictionary_value_id": brand_id,
+                                    "value": brand_value,
+                                }
+                            ]
+                        },
+                        ],
+                        "offer_id": product.article
+                    }
+
+
+            brand_model_list.append(attributes_dict)
+            #module to cut off the number of items in one request (max = 100)
+            if len(brand_model_list)==100:
+                task={'items' : brand_model_list}
+                response=requests.post('https://api-seller.ozon.ru/v1/product/attributes/update', json=task, headers=headers)
+                time.sleep(1)
+                brand_model_list.clear()
+                json=response.json()
+                print(json)
+            
+        else:
+            continue  
+    print(brand_model_list)
+    if len(brand_model_list) > 0:
+        task={'items' : brand_model_list}
+        response=requests.post('https://api-seller.ozon.ru/v1/product/attributes/update', json=task, headers=headers)
+        json=response.json()
+        print(json)
+
+    return redirect("dashboard")
+           
 
 def update_window_deflector_some_attributes(request):
     headers = {
