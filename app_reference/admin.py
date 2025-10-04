@@ -12,8 +12,15 @@ class AutoModelAdmin(admin.ModelAdmin):
     ordering = ('-ozon_attribute_value',)
     list_per_page=200
 
+class AutoModificationAdmin(admin.ModelAdmin):
+    list_display = ('ozon_attribute_id', 'ozon_attribute_value', 'ozon_attribute_info')
+    search_fields = ('ozon_attribute_id', 'ozon_attribute_value', 'ozon_attribute_info' )
+    ordering = ('-ozon_attribute_value',)
+    list_per_page=200
+
 
 
 
 admin.site.register(AutoBrand, AutoBrandAdmin)
 admin.site.register(AutoModel, AutoModelAdmin)
+admin.site.register(AutoModification, AutoModificationAdmin)
