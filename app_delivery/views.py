@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 import requests
+from app_reference.models import SDEK_Office
 
 # Create your views here.
 
@@ -31,4 +32,23 @@ def get_list_of_sdek_offices (request):
     #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
     response = requests.get(url, headers=headers)
     json=response.json()
-    print(json)
+    offices=SDEK_Office.objects.all()
+    for i in json:
+        code=i['code']
+        if SDEK_Office.objects.filter(code=code).exists():
+            continue
+        location=i['location']
+        region=location['region']
+        city=location['city']
+        address_full=location['address_full']
+        country_code=location['country_code']
+
+        office =SDEK_Office.objects.create(
+            code=code,
+            address_full = address_full,
+            country_code=country_code,
+            region = region,
+            city = city,
+        )
+
+    return redirect ('shopfront')
