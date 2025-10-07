@@ -27,3 +27,12 @@ class AutoModification (models.Model):
     
     def __int__(self):
         return self.id
+    
+class SDEK_Office (models.Model):
+    address = models.CharField(max_length=50, unique=True, null=True, blank=True)
+ 
+    
+    def __int__(self):
+        return self.id
+    
+
