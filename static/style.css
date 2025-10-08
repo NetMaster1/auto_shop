@@ -35,4 +35,5 @@
     opacity: 10%;
     /*visibility: visible;*/
     /*visibility: hidden;*/
+    z-index: 9999;
 }

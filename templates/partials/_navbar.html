@@ -6,26 +6,50 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li> -->
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li> -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Информация
-          </a>
-          <ul class="dropdown-menu">
-            <li class="contact_modal"><a class="dropdown-item" href="#">Контакты </a>
-              <!-- ===========================Modal Body================================= -->
+        <li class="nav-item delivery_trigger">
+          <a class="nav-link activec rounded-2 img-fluid img_scale" aria-current="page" href="#">Доставка</a>
+        </li>
+         <!-- ===========================Delivery Modal Body================================= -->
+            <div class="outer_modal_delivery">
+              <div class="hide">
+                <div class="enterDeliveryModal">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            
+                              
+                                <h5 class="modal-title" id="exampleModalLabel">Доставка осуществляется до пунктов выдачи СДЕК.
+                                </h5>
+                                <!-- <button type="button" class="btn_close"></button>
+                            </div> -->
+                            <!-- <div class="modal-body">
+                              dfsfsfsdf
+                        </div>    -->
+                    </div>
+                  </div>
+              </div>
+              </div>
+           
+            </div>
+            </div>
+            <!-- =================================End of Modal Body======================================== -->
 
-              <div class="outer_modal">
+
+        <li class="nav-item dropdown contact_trigger ">
+            <a class="nav-link activec rounded-2 img-fluid img_scale" aria-current="page" href="#">Контакты</a>
+         </li>
+
+        <!-- ===========================Modal Body================================= -->
+            <div class="outer_modal_contacts">
               <div class="hide">
                 <div class="enterContactModal">
-                 <img src="{% static 'images/cross.jpg' %}" alt="Girl in a jacket" style="width:3rem;height:3rem;" class="cross">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_contacts">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -33,32 +57,50 @@
                               
                                 <h5 class="modal-title" id="exampleModalLabel">Реквизиты: ИП Винокуров Сергей Николаевич
                                   ИНН 526013223435 ООО «Банк Точка» БИК 044525104 р.с.40802810420000006198
-
                                 </h5>
-                                <!-- <button type="button" class="btn_close"></button> -->
-                            </div>
-                            <div class="modal-body">
-                              
-                        </div>   
+                                <!-- <button type="button" class="btn_close"></button>
+                            </div> -->
+                            <!-- <div class="modal-body">
+                              dfsfsfsdf
+                        </div>    -->
                     </div>
                   </div>
               </div>
               </div>
-              </div>
-
-              </li>
+           
+            </div>
+            </div>
             <!-- =================================End of Modal Body======================================== -->
+       
+        
+
+
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li> -->
+
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Информация
+          </a>
+       -->
+
+
+          <!-- <ul class="dropdown-menu">
+            <li class="contact_trigger"><a class="dropdown-item" href="#">Контакты </a></li> -->
+
 
            
-            <li><a class="dropdown-item" href="#">Доставка</a></li>
+            <!-- <li><a class="dropdown-item" href="#">Доставка</a></li> -->
             <!-- <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li> -->
           </ul>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li> -->
+    
       </ul>
+
+          </li>
+
+
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Введите бренд или модель" aria-label="Search"/>
         <button class="btn btn-outline-success" type="submit">Поиск</button>
@@ -70,27 +112,35 @@
 
 
 <script>
-  const outer_modal =document.querySelector('.outer_modal');
-  const contact_modal =document.querySelector('.contact_modal');
-  const enterContactModal =document.querySelector('.enterContactModal');
+  const outer_modal_contats =document.querySelector('.outer_modal_contacts');
+  const contact_trigger =document.querySelector('.contact_trigger');
+  const outer_modal_delivery =document.querySelector('.outer_modal_delivery');
+  const delivery_trigger =document.querySelector('.delivery_trigger');
+
+  const cross_contacts =document.querySelector('#cross_contacts');
+  const cross =document.querySelector('.cross');
   
 
-  contact_modal.addEventListener('mouseover', openModal)
-  contact_modal.addEventListener('mouseout', closeModal)
+  contact_trigger.addEventListener('click', openModal)
+  cross_contacts.addEventListener('click', closeModal)
 
   function openModal () {
-          outer_modal.classList.add('openModal')
+          outer_modal_contats.classList.add('openModal')
       }
   function closeModal () {
-          outer_modal.classList.remove('closeModal')
-          // window.location.reload()
+          outer_modal_contats.classList.remove('openModal')
+  }
+
+
+  delivery_trigger.addEventListener('click', openDeliveryModal)
+  cross.addEventListener('click', closeDeliveryModal)
+
+  function openDeliveryModal () {
+          outer_modal_delivery.classList.add('openModal')
       }
-  // function openModal () {
-  //         enterContactModal.classList.add('openModal')
-  //     }
-  // function closeModal () {
-  //         enterContactModal.classList.remove('openModal')
-  //         // window.location.reload()
-  //     }
+  function closeDeliveryModal () {
+          outer_modal_delivery.classList.remove('openModal')
+  }
+
 
 </script>

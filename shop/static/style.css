@@ -5,22 +5,23 @@
 .img_scale:hover {
   /* opacity: 2; */
   transform: scale(1.1);
-  z-index: 1;
+  /* z-index:1; */
 }
+  
 
-
-.outer_modal {
+/* ===================== Cotacts Modal========================= */
+.outer_modal_contacts {
   display: none;
 }
-
-.outer_modal.openModal {
+.outer_modal_contacts.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: block;
+  z-index: 9999;
 }
-/* ===================== Cotacts Modal========================= */
-/* .enterContactModal {
-    display: none;
-} */
-
 .enterContactModal {
     padding: 3rem;
     background-color: white;
@@ -29,14 +30,38 @@
     display: block;
     position: fixed;
     top: 15rem;
-    left: 50rem;
+    left: 50rem;  
 }
+/* ===================== Delivery Modal========================= */
+.outer_modal_delivery {
+  display: none;
+}
+.outer_modal_delivery.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.enterDeliveryModal {
+    padding: 3rem;
+    background-color: white;
+    width: 50rem;
+    height: 30rem;
+    display: block;
+    position: fixed;
+    top: 15rem;
+    left: 50rem;  
+}
+/* ===================== End ofDelivery Modal========================= */
 
 .hide {
-    /* display: block; */
+    display: block;
     /* display: none; */
-    /*position: fixed;*/
-    position: fixed;
+    /* position: fixed; */
+    /* position: absolute; */
     top: 0;
     left: 0;
     width: 100%;
@@ -46,8 +71,12 @@
     overflow-y: scroll;
     opacity: 100%;
     /*visibility: visible;*/
-    /*visibility: hidden;*/
+    /*visibility: hidden;*/   
 }
+
+
+
+
 
 .cross {
   margin: 1rem;
@@ -56,8 +85,9 @@
   right: 0;
 }
 
+
 .cross:hover {
   /* opacity: 2; */
   transform: scale(1.1);
-  z-index: 1;
+ 
 }
