@@ -937,7 +937,140 @@ def update_ozon_what_for_brand_field(request):
         print(json)
 
     return redirect("dashboard")
-           
+
+def add_rich_content (request):
+    hood_deflector=ProductCategory.objects.get(name='Дефлектор капота')
+    window_deflector=ProductCategory.objects.get(name='Дефлектор двери')
+    headers = {
+                "Client-Id": "1711314",
+                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+    items_list=[]
+    products=Product.objects.filter(ozon_true=True)
+    for product in products:
+        if product.category==hood_deflector:  
+
+            task= {
+                "content": [
+            
+
+                    {
+                        "widgetName": "raShowcase",
+                        "type": "chess",
+                        "blocks": [
+                            {
+                                "img": {
+                                    "src": "https://disk.yandex.ru/i/8vbIsjSeUocBkQ",
+                                    "srcMobile": "https://cdn1.ozone.ru/s3/rich-content/placeholder/640x640.png",
+                                    "alt": "",
+                                    "position": "to_the_edge",
+                                    "positionMobile": "to_the_edge"
+                                },
+                                "imgLink": "",
+                                "title": {
+                                    "items": [
+                                        {
+                                            "type": "text",
+                                            "content": "Заголовок"
+                                        }
+                                    ],
+                                    "size": "size4",
+                                    "align": "left",
+                                    "color": "color1"
+                                },
+                                "text": {
+                                    "size": "size2",
+                                    "align": "left",
+                                    "color": "color1",
+                                    "items": [
+                                        {
+                                            "type": "text",
+                                            "content": "Дефлектор капота – незаменимый аксессуар для защиты вашего автомобиля от дорожных неприятностей. Этот аэродинамический элемент представляет собой специальную накладку, которая устанавливается на переднюю часть капота. Благодаря продуманной конструкции дефлектор эффективно изменяет траекторию движения воздушных потоков, направляя летящие с дороги камни, насекомых и мусор выше над крышей автомобиля. Таким образом, он надежно защищает лакокрасочное покрытие капота и лобового стекла от повреждений.."
+                                        }
+                                    ]
+                                },
+                                "reverse": False
+                            },
+                            {
+                                "img": {
+                                    "src": "https://disk.yandex.ru/i/eJY4F3g5zsmePw",
+                                    "srcMobile": "https://cdn1.ozone.ru/s3/rich-content/placeholder/640x640.png",
+                                    "alt": "",
+                                    "position": "to_the_edge",
+                                    "positionMobile": "to_the_edge"
+                                },
+                                "imgLink": "",
+                                "title": {
+                                    "items": [
+                                        {
+                                            "type": "text",
+                                            "content": "Заголовок"
+                                        }
+                                    ],
+                                    "size": "size4",
+                                    "align": "left",
+                                    "color": "color1"
+                                },
+                                "text": {
+                                    "size": "size2",
+                                    "align": "left",
+                                    "color": "color1",
+                                    "items": [
+                                        {
+                                            "type": "text",
+                                            "content": "Современные дефлекторы изготавливаются из высококачественного акрилового стекла, которое отличается прочностью, устойчивостью к ударам и перепадам температур. Материал не теряет цвет под воздействием ультрафиолета и абсолютно безопасен для окружающей среды. Установка дефлектора производится быстро и легко с помощью специальных креплений, не требующих сверления дополнительных отверстий. При этом конструкция обеспечивает надежную фиксацию и не допускает контакта с поверхностью капота, что исключает появление царапин."
+                                        }
+                                    ]
+                                },
+                                "reverse": True
+                            },
+                            {
+                                "img": {
+                                    "src": "https://disk.yandex.ru/i/tDR2mTFqGmoxGw",
+                                    "srcMobile": "https://cdn1.ozone.ru/s3/rich-content/placeholder/640x640.png",
+                                    "alt": "",
+                                    "position": "to_the_edge",
+                                    "positionMobile": "to_the_edge"
+                                },
+                                "imgLink": "",
+                                "title": {
+                                    "items": [
+                                        {
+                                            "type": "text",
+                                            "content": "Заголовок"
+                                        }
+                                    ],
+                                    "size": "size4",
+                                    "align": "left",
+                                    "color": "color1"
+                                },
+                                "text": {
+                                    "size": "size2",
+                                    "align": "left",
+                                    "color": "color1",
+                                    "items": [
+                                        {
+                                            "type": "text",
+                                            "content": "Помимо защитной функции, дефлектор капота становится стильным элементом тюнинга автомобиля. Производители предлагают различные варианты исполнения – от классических прозрачных моделей до цветных решений, гармонирующих с оттенком кузова. Правильно подобранный дефлектор не только сохранит привлекательный внешний вид вашего автомобиля, но и станет практичным решением для защиты от дорожных повреждений."
+                                        }
+                                    ]
+                                },
+                                "reverse": false
+                            }
+                        ]
+                    },
+
+                ]
+            }
+
+            response=requests.post('https://api-seller.ozon.ru/v1/product/attributes/update', json=task, headers=headers)
+
+            json=response.json()
+            print(json)
+    
+    return redirect ('dahsboard')
+
+
 
 def update_window_deflector_some_attributes(request):
     headers = {
