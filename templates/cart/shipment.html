@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+
+<form class="row g-3 mt-5">
+  <div class="col-md-4">
+    <label for="inputFirstName" class="form-label">Имя</label>
+    <input type="text" class="form-control" id="inputFirstName">
+  </div>
+  <div class="col-md-4">
+    <label for="inputLastName" class="form-label">Фамилия</label>
+    <input type="text" class="form-control" id="inputLastName">
+  </div>
+  <div class="col-md-3">
+    <label for="inputLastName" class="form-label">Телефон</label>
+    <input type="text" class="form-control" id="inputLastName">
+  </div>
+
+
+
+{{shipment_office}}
+
+
+<div class="row m-auto mt-2 mb-2">
+        <a href="{% url 'create_sdek_delivery_order' order.id %}" class="btn btn-sm btn-outline-dark">
+            Создать заказ на доставау
+        </a>
+    </div>
+
+    
+</div>
+
+
+{% endblock %}

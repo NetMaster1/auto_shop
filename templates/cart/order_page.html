@@ -14,12 +14,40 @@
               </nav>
             </div>
           </div>
-<div class="row mb-5">Заказ # {{order.id}}</div>
 
+<!-- =====================Alert Messages Module=================== -->
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+        <!-- <button class="close" data-dismiss="alert">
+                    <small><sup>x</sup></small>
+                </button> -->
+        {{ message }}
+    </div>
+    {% endfor%}
+    {% endif%}
+</div>
+<!-- ===================End of Alert Messages Module================ -->
+
+
+
+
+<div class="row mb-5">Заказ # {{order.id}}</div>
+<div class="row align-items-center justify-content-right"  style="height:100px">
+  <div class="col-8 justify-content-right">
+    <h4>Всего товаров на сумму: <strong>{{total}}&nbsp;руб.</strong></h4>
+  </div>
 
 {% for item in order_items %}
-<div class="row">
-    <div class="col-2">
+<div class="row mt-2 mb-2">
+     <div class="col-1">
+        <!-- <a href="{{cart_item.get_url}}"> -->
+          <img src="{{item.image.url}}" width="50" alt="">
+        <!-- </a> -->
+      </div>
+
+    <div class="col-4">
         {{item.product}}
     </div>
     <div class="col-2">
@@ -33,82 +61,88 @@
     </div>
 </div>
 {% endfor %}
-<div class="row mt-5">
+<div class="row mt-2">
 Всего к оплате: {{order.sum}} руб.
 </div>
 
 https://www.cdek.ru/ru/offices/
 
 
-  
 
-
-<!-- <form class="row g-3 mt-5">
-  <div class="col-md-4">
-    <label for="inputFirstName" class="form-label">Имя</label>
-    <input type="text" class="form-control" id="inputFirstName">
-  </div>
-  <div class="col-md-4">
-    <label for="inputLastName" class="form-label">Фамилия</label>
-    <input type="text" class="form-control" id="inputLastName">
-  </div>
-  <div class="col-md-3">
-    <label for="inputLastName" class="form-label">Телефон</label>
-    <input type="text" class="form-control" id="inputLastName">
-  </div> -->
-
- <form action="{% url 'sdek_country_choice' order.id %}" method="POST" id="form_to_be_sent">
+<form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent">
           {% csrf_token %}
 
-
-  
-  <div class="col-md-2">
+  <div class="row mt-2 mb-2">
+  <div class="col-md-4">
     <label for="country" class="form-label">Страна</label>
      <select name="country" id="country" class='form-control' required >
-        <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
-        <option value="">Выберите страну</option>
+        <option selected="true" disabled="disabled">Выберите страну</option>
+        <!-- <option value="">Выберите страну</option> -->
         {% for country in countries %}
         <option value="{{country}}">{{country}}</option>
         {% endfor %}
       </select>
     </div>
-
+    </div>
   
+  
+  <div class="row mt-2 mb-2">
   <div class="col-md-4">
     <label for="region" class="form-label">Регион</label>
        <select name="region" id="region" class='form-control'>
-        <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
-        <option value="">Выберите регион</option>
+        <option selected="true" disabled="disabled">Выберите регион</option>
+        <!-- <option value="">Выберите регион</option> -->
         {% for region in regions %}
         <option value="{{region.region}}">{{region.region}}</option>
         {% endfor %}
       </select>
     </div>
+  </div>
 
-
+ <div class="row mt-2 mb-2">
   <div class="col-md-6">
     <label for="city" class="form-label">Населенный пункт</label>
-       <select name="city" id="сity" class='form-control'>
-        <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
-        <option value="">Выберите населенный пункт в пределах вашего региона</option>
+       <select name="city" id="city" class='form-control'>
+        <option selected="true" disabled="disabled">Выберите населенный пункт в пределах вашего региона</option>
+        <!-- <option value="">Выберите населенный пункт в пределах вашего региона</option> -->
         {% for city in cities %}
-        <option value="{{city}}">{{city}}</option>
+        <option value="{{city.city}}">{{city.city}}</option>
         {% endfor %}
       </select>
     </div>
+    </div>
 
 
-  <div class="col-md-4">
-    <label for="inputZip" class="form-label">Пункт выдачи СДЕК в пределах неселенного пунка</label>
-    <input type="text" class="form-control" id="inputZip">
+  <div class="row mt-2 mb-2">
+  <div class="col-md-6">
+    <label for="office" class="form-label">Пункт выдачи</label>
+       <select name="office" id="office" class='form-control'>
+        <option selected="true" disabled="disabled">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option>
+        <!-- <option value="">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option> -->
+        {% for office in offices %}
+        <option value="{{office.address_full}}">{{office.address_full}}</option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
-  <div class="col-12">
-  
-  </div>
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary" >Выбрать</button>
-  </div>
- </form>
+
+</form>
+
+<form action="{% url 'sdek_shipment_address' order.id %}" method="POST" id="shipment_form">
+   {% csrf_token %}
+        <input type="text" id="shipment_office" name="shipment_office" hidden> 
+
+      <div class="row m-auto mt-3">
+          <div class="col-2">
+            <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage">
+          </div>
+      </div>
+</form>
+ 
+      
+
+
+</div>
 
 </div>
 
@@ -117,25 +151,100 @@ https://www.cdek.ru/ru/offices/
 console.log ('Beginning of the script')
 
 const form_to_be_sent=document.querySelector('#form_to_be_sent');
+const shipment_form = document.querySelector('#shipment_form');
+const shipment_office = document.querySelector('#shipment_office');
+const shipment_button = document.querySelector('#shipment_button');
 const country = document.querySelector('#country');
+const region = document.querySelector('#region');
+const city = document.querySelector('#city');
+const office = document.querySelector('#office');
+const clear_storage = document.querySelector('#clear_storage');
 
 
-
-// country.addEventListener('change', function(event) {
-//   console.log('Выбранное значение:', event.target.value);
-// });
-
-
+//====================Country Module=======================
 country.addEventListener('change', e=>{
+        sessionStorage.clear();
         country_value = country.value;
         sessionStorage.setItem('country', country_value);
+        city.value='';
+        region.value='';
+        office.value='';
     }
-  )
+ )
 
 country.addEventListener('change', sendJSForm);
     function sendJSForm() {
         form_to_be_sent.submit();
     };
+//===============Region Module======================
+region.addEventListener('change', e=>{
+        region_value = region.value;
+        sessionStorage.setItem('region', region_value);
+        sessionStorage.removeItem('city');
+        sessionStorage.removeItem('office');
+        city.value='';
+        office.valu=''
+       
+    }
+  )
+region.addEventListener('change', sendJSForm);
+    function sendJSForm() {
+        form_to_be_sent.submit();
+    };
+
+//===============City Module======================
+city.addEventListener('change', e=>{
+        city_value = city.value;
+        sessionStorage.setItem('city', city_value);
+        sessionStorage.removeItem('office');
+        office.value=''
+    }
+)
+city.addEventListener('change', sendJSForm);
+    function sendJSForm() {
+        form_to_be_sent.submit();
+    };
+
+
+//===============Office Module======================
+office.addEventListener('change', e=>{
+        office_value = office.value;
+        sessionStorage.setItem('office', office_value);
+        shipment_office.value = office_value;
+        // sendShipmentForm();
+    }
+)
+
+// function sendShipmentForm() {
+//         shipment_form.submit();
+//         //e.preventDefault()
+//     };
+
+
+// for (let button of buttons) {
+//         button.addEventListener('click', clearStorage);
+//     }
+//     function clearStorage(e) {
+//         sessionStorage.clear();
+//     };
+
+//     save_button.addEventListener('submit', e=> {
+//         sessionStorage.clear();
+//    })
+
+
+
+
+
+// office.addEventListener('change', sendJSForm);
+//     function sendJSForm() {
+//         form_to_be_sent.submit();
+//     };
+
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', e => {
         if (sessionStorage.getItem('country') === null)
@@ -144,17 +253,40 @@ document.addEventListener('DOMContentLoaded', e => {
           country_value = sessionStorage.getItem('country');
           country.value = country_value
         }
+        if (sessionStorage.getItem('region') === null)
+          {console.log ("No region choice")}
+        else {
+          region_value = sessionStorage.getItem('region');
+          region.value = region_value
+        }
+        if (sessionStorage.getItem('city') === null)
+          {console.log ("No city choice")}
+        else {
+          city_value = sessionStorage.getItem('city');
+          city.value = city_value
+        }
+        if (sessionStorage.getItem('office') === null)
+          {console.log ("No office choice")}
+        else {
+          office_value = sessionStorage.getItem('office');
+          office.value = office_value
+        }
 
       });
 
-
-
+clear_storage.addEventListener('click', clearStorage);
+    function clearStorage(e) {
+        sessionStorage.clear();
+    };
 
  //check_imei.value.clear()
   //e.preventDefault()
 
+// country.addEventListener('change', function(event) {
+//   console.log('Выбранное значение:', event.target.value);
+// });
 
-
+console.log (shipment_form)
 console.log ('End of the script')
 </script>
 {% endblock %}

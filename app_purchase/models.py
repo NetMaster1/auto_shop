@@ -2,6 +2,7 @@ from django.db import models
 # import datetime
 from datetime import datetime, date
 from django.utils import timezone
+from app_product.models import Product
 # import pytz
 
 
@@ -55,9 +56,9 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
-    # title = models.ForeignKey(DocumentType, on_delete=models.DO_NOTHING, null=True)
-    sum = models.IntegerField(null=True, blank=True)
+    sum = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     client = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
+    paid=models.BooleanField(default=False)
 
     def __str__(self):
         return self.product
@@ -66,10 +67,14 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, null=True, on_delete=models.DO_NOTHING)
     product = models.CharField(max_length=100, null=True, blank=True)
+    image = models.ImageField(upload_to='uploads', blank=True)
     article = models.CharField(max_length=50,null=True, blank=True )
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     sub_total = models.DecimalField(default=0, max_digits=7, decimal_places=2, null=True, blank=True)
+
+    # def sub_total(self):
+    #     return self.price * self.quantity
 
     def __str__(self):
         return self.product
