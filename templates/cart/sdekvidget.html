@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+  <p class="m-2">Пример установки виджета</p>
+
+
+
+ <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          new window.CDEKWidget({
+                apiKey: 'd7e37c97-979e-49c3-9acf-df793e79c4a1',
+                defaultLocation: 'Новосибирск',
+            });
+      });
+</script>
+
+
+{% endblock %}

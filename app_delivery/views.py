@@ -193,3 +193,6 @@ def sdek_country_choice(request, order_id):
             # 'regions': regions
         }
     return render(request, 'cart/order_page.html', context)
+
+def open_sdek_vidget(request):
+    return render (request, 'cart/sdekvidget_ver_1.html' )
