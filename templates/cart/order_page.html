@@ -40,8 +40,10 @@
 https://www.cdek.ru/ru/offices/
 
 
+  
 
-<form class="row g-3 mt-5">
+
+<!-- <form class="row g-3 mt-5">
   <div class="col-md-4">
     <label for="inputFirstName" class="form-label">Имя</label>
     <input type="text" class="form-control" id="inputFirstName">
@@ -53,38 +55,106 @@ https://www.cdek.ru/ru/offices/
   <div class="col-md-3">
     <label for="inputLastName" class="form-label">Телефон</label>
     <input type="text" class="form-control" id="inputLastName">
-  </div>
-  <div class="col-12">
-    <label for="inputAddress" class="form-label">Адрес </label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-  </div>
-  <div class="col-12">
-    <label for="inputAddress2" class="form-label">Address 2</label>
-    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-  </div>
-  <div class="col-md-6">
-    <label for="inputCity" class="form-label">City</label>
-    <input type="text" class="form-control" id="inputCity">
-  </div>
-  <div class="col-md-4">
-    <label for="inputState" class="form-label">State</label>
-    <select id="inputState" class="form-select">
-      <option selected>Choose...</option>
-      <option>...</option>
-    </select>
-  </div>
+  </div> -->
+
+ <form action="{% url 'sdek_country_choice' order.id %}" method="POST" id="form_to_be_sent">
+          {% csrf_token %}
+
+
+  
   <div class="col-md-2">
-    <label for="inputZip" class="form-label">Zip</label>
+    <label for="country" class="form-label">Страна</label>
+     <select name="country" id="country" class='form-control' required >
+        <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
+        <option value="">Выберите страну</option>
+        {% for country in countries %}
+        <option value="{{country}}">{{country}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+  
+  <div class="col-md-4">
+    <label for="region" class="form-label">Регион</label>
+       <select name="region" id="region" class='form-control'>
+        <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
+        <option value="">Выберите регион</option>
+        {% for region in regions %}
+        <option value="{{region.region}}">{{region.region}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+
+  <div class="col-md-6">
+    <label for="city" class="form-label">Населенный пункт</label>
+       <select name="city" id="сity" class='form-control'>
+        <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
+        <option value="">Выберите населенный пункт в пределах вашего региона</option>
+        {% for city in cities %}
+        <option value="{{city}}">{{city}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+
+  <div class="col-md-4">
+    <label for="inputZip" class="form-label">Пункт выдачи СДЕК в пределах неселенного пунка</label>
     <input type="text" class="form-control" id="inputZip">
   </div>
   <div class="col-12">
   
   </div>
   <div class="col-12">
-    <button type="submit" class="btn btn-primary">Перейти к оплате</button>
+    <button type="submit" class="btn btn-primary" >Выбрать</button>
   </div>
-</form>
+ </form>
 
 </div>
 
+
+<script>
+console.log ('Beginning of the script')
+
+const form_to_be_sent=document.querySelector('#form_to_be_sent');
+const country = document.querySelector('#country');
+
+
+
+// country.addEventListener('change', function(event) {
+//   console.log('Выбранное значение:', event.target.value);
+// });
+
+
+country.addEventListener('change', e=>{
+        country_value = country.value;
+        sessionStorage.setItem('country', country_value);
+    }
+  )
+
+country.addEventListener('change', sendJSForm);
+    function sendJSForm() {
+        form_to_be_sent.submit();
+    };
+
+document.addEventListener('DOMContentLoaded', e => {
+        if (sessionStorage.getItem('country') === null)
+          {console.log ("No country choice")}
+        else {
+          country_value = sessionStorage.getItem('country');
+          country.value = country_value
+        }
+
+      });
+
+
+
+
+ //check_imei.value.clear()
+  //e.preventDefault()
+
+
+
+console.log ('End of the script')
+</script>
 {% endblock %}

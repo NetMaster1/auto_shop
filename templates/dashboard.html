@@ -341,6 +341,25 @@
     
     </form>
     <br>
+    ======================Update Name=================================================
+    <label for="file_name">
+        <h5>Введите файл в формате Excel
+            <br>
+            Функция изменяет название товара
+        </h5>
+    </label>
+
+   
+    <form action="{% url 'update_product_name' %}" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+    
+        <input type="file" class='form-control' id="file_name" name="file_name" required>
+   
+            <input type="submit" value="Изменить"
+                class="btn btn-sm btn-block btn-outline-dark clear_storage">
+    
+    </form>
+    <br>
 
 
      

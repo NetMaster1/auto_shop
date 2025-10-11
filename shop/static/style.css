@@ -14,6 +14,8 @@
   display: none;
 }
 .outer_modal_contacts.openModal {
+  text-align: center;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -21,16 +23,17 @@
   height: 100%;
   display: block;
   z-index: 9999;
+  align-items: center;
 }
 .enterContactModal {
     padding: 3rem;
     background-color: white;
     width: 50rem;
     height: 30rem;
-    display: block;
-    position: fixed;
-    top: 15rem;
-    left: 50rem;  
+    display: inline-block;
+    position: relative;
+    top: 15rem; */ */
+    /* left: 50rem;   */
 }
 /* ===================== Delivery Modal========================= */
 .outer_modal_delivery {
@@ -58,6 +61,8 @@
 /* ===================== End ofDelivery Modal========================= */
 
 .hide {
+    /* display: flex;
+    justify-content: center; */
     display: block;
     /* display: none; */
     /* position: fixed; */
@@ -74,17 +79,12 @@
     /*visibility: hidden;*/   
 }
 
-
-
-
-
 .cross {
   margin: 1rem;
   position: absolute;
   top: 0;
   right: 0;
 }
-
 
 .cross:hover {
   /* opacity: 2; */

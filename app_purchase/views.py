@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from . models import Cart, CartItem, Identifier, OrderItem, Order
 from app_product.models import Product
+from app_reference.models import SDEK_Office
 from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
@@ -106,12 +107,18 @@ def purchase_product(request):
         return redirect ('order',  order.id)
     
 def order(request, order_id):
+    countries=['Россия', 'Казахстан', 'Белоруссия']
+    sdek_offices=SDEK_Office.objects.filter(country_code__in=['KZ', 'RU', 'BY']).order_by('-country_code')
+ 
+
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)
 
     context = {
         'order': order,
         'order_items': order_items,
+        'countries': countries,
+        'sdek_offices': sdek_offices,
     }
 
     return render (request, 'cart/order_page.html', context)

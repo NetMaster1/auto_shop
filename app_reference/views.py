@@ -61,7 +61,6 @@ def load_auto_models(request):
 
     return redirect ('dashboard')
         
-
 def load_auto_modifications(request):
     headers = {
                 "Client-Id": "1711314",

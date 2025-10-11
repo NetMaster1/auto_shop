@@ -9,6 +9,7 @@ urlpatterns = [
     path('update_ozon_what_for_brand_field', views.update_ozon_what_for_brand_field, name='update_ozon_what_for_brand_field'),
     path('update_window_deflector_some_attributes', views.update_window_deflector_some_attributes, name='update_window_deflector_some_attributes'),
     path('add_rich_content', views.add_rich_content, name='add_rich_content'),
+    path('update_product_name', views.update_product_name, name='update_product_name'),
     path('product_page/<str:article>', views.product_page, name='product_page'),
 
     path('getting_ozon_id_and_ozon_sku', views.getting_ozon_id_and_ozon_sku, name='getting_ozon_id_and_ozon_sku'),
