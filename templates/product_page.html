@@ -2,78 +2,118 @@
 
 {% block content %}
 
-<div class="container">
+<!-- <div class="container"> -->
   
     <div class="row mt-5">
+        <div class="col-1 ml-5 mr-5">
+            <div class="card" style="width: 6rem; justify-self: right;">
+                <div class="row mb-3 aligner">
+                   
+                        <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale aligner" alt="Placeholder image">
+              
+                </div>
+                <div class="row mb-3">
+              <img src="{{product.image_2.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card" style="width: 40rem;">
+                <!-- <div class="card-header" style='min-height:5rem' >
+                <h4>{{product.name}}</h4>
+                </div> -->
+                <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
+              
+                <!-- <a href='#collapse-p' data-bs-toggle="collapse" data-target="#collapse-p">
+                        Ознакомиться {{product.article}}
+                        </a>
+                <p class="card-text">{{product.description}}.</p> -->
 
-        <div class="card" style="width: 18rem;">
-            <!-- <div class="card-header" style='min-height:5rem' >
-            <h4>{{product.name}}</h4>
-            </div> -->
+                <div class="card-body">
+                  
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-4 ml-5" style="text-align: left;">
+               <div class="card-body">
+                <div class="row pl-5">
+                    <div style="font-size: 35px; font-weight: 650;">{{product.name}}</div>
+                </div>
+                    <div class="row pl-5">
+                        <div class="col"><strong>Бренд</strong></div>
+                    </div>
+                    <div class="row pl-5">
+                        <div class="col">
+                        <strong>Рейтинг: </strong>
+                        {{product.av_rating}}
+                        <div class="stars-outer">
+                            <div class="stars-inner" style="width: {{product.percent}}"></div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row pl-5">
+                            <div class="col">
+                                <strong>Покупки:</strong> ({{product.transactions}})
+                            </div>
+                    </div>
+                    
+                    <div class="row pl-5">
+                            <div class="col">
+                                <strong>Описание</strong>
+                            </div>
+                    </div>
+                    <div class="row pl-5">
+                            <div class="col">
+                                <strong>Отзывы</strong>
+                            </div>
+                    </div>
+                    
+                </div>
+
+        </div>
+        <div class="col-3" >
+            <div class="card">
+
+               <div class="card-body" style="text-align: center">
+                        <div class="box_price">
+                          <div class="row pl-5">
+                    <div style="font-size: 50px; font-weight: 700; color: white">{{product.site_retail_price}} руб.</div> 
+                        </div>
+                         </div>
+                    </div>
+            
+                    <div class="card-body">
+                        <div class="row m-auto mt-3">
+                    <a href="{% url 'add_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
+                        </div>
+
+                        <div class="row m-auto mt-3">
+                    <a href="{% url 'cart_detail' %}" class="btn btn-primary">Перейти в корзину</a>
+                        </div>
+
+                        <div class="row m-auto mt-3 ">
+                    <a href="#"  class="btn btn-primary">Купить одним кликом</a>
+                        </div>
+
+                        <div class="row m-auto mt-3">
+                    <a href="#"  class="btn btn btn-primary">Узнать стоимость доставки до пункта выдачи СДЕК</a>
+                        </div>
+
+                        <div class="row m-auto mt-3">
+                    <a href="#"  class="btn btn-primary">Узнать стоимость доставки до пункта выдачи ОЗОН</a>
+                        </div>
+
         
+                    
 
-
-            <img src="{{product.image_1.url}}" class="card-img-top" alt="Placeholder image">
-            <a href='#collapse-p' data-bs-toggle="collapse" data-target="#collapse-p">
-                    Ознакомиться {{product.article}}
-                    </a>
-            <p class="card-text">{{product.description}}.</p>
-        
-
-
-                <div class="card-body">  
-                <a href="{% url 'add_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
-                </div>
-
-                <div class="card-body">  
-                <a href="{% url 'cart_detail' %}" class="btn btn-primary">Перейти в корзину</a>
-                </div>
-
-                <div class="card-body">  
-                <a href="#"  class="btn btn-primary">Купить одним кликом</a>
-                </div>
-
-        
-
-    <div class="card-body">
-        рейтинг
-            <!-- <div class="row">
-            <div class="col">
-            <strong>Рейтинг: </strong>
-            {{subject.av_rating}}
-            <div class="stars-outer">
-                <div class="stars-inner" style="width: {{subject.percent}}"></div>
-            </div>
-            </div>
-            </div> -->
-
-
-            <div class="row">
-                <div class="col">
-            <strong>Количество покупок</strong> 
-            <!-- ({{subject.transactions}}) -->
-                </div>
-            </div>
-    
-            <div class="row">
-                <div class="col">
-                        <strong>Стоимость:</strong>  {{product.site_retail_price}} руб.
-                </div>
-            </div>
-        
-            <div class="card-footer"> 
-                sdfsdf
-            </div>
-                
-
-    
+        </div>
+        </div>
 
     </div>
-        </div>
-
-        <div class="row mt-2 pl-2"> .
+      <div class="row mt-2 pl-2"> .
             <h3>Отзывы</h3>
-        </div>
 
         <!-- <div class="row mt-1 mb-5">
         <div class="col-11">
@@ -92,12 +132,10 @@
                 </div> -->
             <!-- {% endfor %}
             -->
-    </div>
+
+
+
+
 </div>
-
-
-
-
-
 
 {% endblock %}

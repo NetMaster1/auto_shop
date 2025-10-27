@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    
+    <div class="row mt-2 mb-2">
+      Заказ # {{order.id}}
+    </div>
+   
+    {% for item in order_items %}
+    <div class="row mt-3 mb-3">
+        <div class="col-1">
+            <!-- <a href="{{cart_item.get_url}}"> -->
+              <img src="{{item.image.url}}" width="150" alt="">
+            <!-- </a> -->
+          </div>
+
+        <div class="col-4">
+            {{item.product}}
+        </div>
+        <div class="col-2">
+            {{item.quantity}}
+        </div>
+        <div class="col-2">
+            {{item.price}}
+        </div>
+        <div class="col-2">
+            {{item.sub_total}}
+        </div>
+    </div>
+    {% endfor %}
+     <div class="row mt-2 mb-2">
+       Всего товаров на сумму: {{total}}&nbsp; руб.
+    </div>
+
+    <div class="row mt-2 mb-2">
+      <div class="row">Стоимость доставки: {{delivery_sum}} руб.</div>
+    </div>
+    <div class="row mt-2 mb-2">
+    Всего к оплате: {{sum_to_pay}} руб.
+    </div>
+
+
+
+
+<div class="row mt-5">
+  <div class="col-md-4">
+    <label for="inputFirstName" class="form-label">Имя</label>
+    <input type="text" class="form-control" id="inputFirstName">
+  </div>
+  <div class="col-md-4">
+    <label for="inputLastName" class="form-label">Фамилия</label>
+    <input type="text" class="form-control" id="inputLastName">
+  </div>
+  <div class="col-md-3">
+    <label for="inputLastName" class="form-label">Телефон</label>
+    <input type="text" class="form-control" id="inputLastName">
+  </div>
+</div>
+
+
+<div class="row mt-3 mb-3">
+  {{shipment_office.address_full}}
+</div>
+
+
+
+<div class="row m-auto mt-2 mb-2">
+  <div class="col-2 clear_storage" style="text-align: left;">
+        <a href="{% url 'create_sdek_delivery_order' order.id %}" class="btn btn-outline-dark clear_storage" >
+            Перейти к оплате
+        </a>
+  </div>
+  <!-- <div class="col-2">
+    <a href="#" class="btn btn-outline-dark">
+            Отменить
+        </a>
+  </div> -->
+        
+    </div>
+
+<script>
+  console.log('script starts')
+  const clear_storage = document.querySelector('.clear_storage')
+
+  clear_storage.addEventListener('click', clearStorage);
+    function clearStorage(e) {
+        sessionStorage.clear();
+    };
+  console.log('script ends')
+</script> 
+
+
+
+{% endblock %}

@@ -43,7 +43,6 @@ def cart_detail(request):
     except Cart.DoesNotExist:
         cart = Cart.objects.create(cart_id=_cart_id(request))
 
-
     cart=Cart.objects.get(cart_id=cart)
     cart_items=CartItem.objects.filter(cart=cart).order_by('product')
     total=0
@@ -90,6 +89,7 @@ def purchase_product(request):
                 order=order,
                 product=cart_item.product,
                 article=cart_item.article,
+                image=cart_item.image,
                 price=cart_item.price,
                 quantity=cart_item.quantity,
                 sub_total=cart_item.price*cart_item.quantity,
@@ -101,14 +101,11 @@ def purchase_product(request):
             sum+=item.sub_total
         order.sum=sum
         order.save()
-
-
-    
         return redirect ('order',  order.id)
     
 def order(request, order_id):
     countries=['Россия', 'Казахстан', 'Белоруссия']
-    sdek_offices=SDEK_Office.objects.filter(country_code__in=['KZ', 'RU', 'BY']).order_by('-country_code')
+    # sdek_offices=SDEK_Office.objects.filter(country_code__in=['KZ', 'RU', 'BY']).order_by('-country_code')
  
 
     order=Order.objects.get(id=order_id)
@@ -118,7 +115,7 @@ def order(request, order_id):
         'order': order,
         'order_items': order_items,
         'countries': countries,
-        'sdek_offices': sdek_offices,
+        # 'sdek_offices': sdek_offices,
     }
 
     return render (request, 'cart/order_page.html', context)

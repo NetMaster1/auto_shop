@@ -39,4 +39,5 @@ urlpatterns = [
     path('wb_ozon_sync', views.wb_ozon_sync, name='wb_ozon_sync'),
 
     path('change_site_retail_price', views.change_site_retail_price, name='change_site_retail_price'),
+    # path('service.php', views.service.php, name='service.php'),
 ]
