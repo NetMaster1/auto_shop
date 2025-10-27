@@ -6,3 +6,4 @@ class LoginCounter (models.Model):
     
     def __int__(self):
         return self.id
+    

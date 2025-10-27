@@ -109,14 +109,16 @@ def change_ozon_qnt_for_short_deflectors (request):
     return redirect ('login_page')
 
 def create_list_of_files(request):
-    files=os.listdir('DeflectorsDoor')
-    category=ProductCategory.objects.get(name='Дефлектор двери')
+    files=os.listdir('DeflectorsHood')
+    category=ProductCategory.objects.get(name='Дефлектор капота')
     products=Product.objects.filter(category=category)
     for i in files:
         a=i.split('.')[0]
+        print(a)
         for product in products:
             if a in product.name:
                 product.image_1=i
+                print('True')
                 product.save()
                 print(product.article)
                 time.sleep(1)

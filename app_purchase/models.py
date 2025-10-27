@@ -59,10 +59,12 @@ class Order(models.Model):
     sum = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     client = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
     paid=models.BooleanField(default=False)
+    shipped=models.BooleanField(default=False)
+    delivery_point = models.CharField(max_length=100, null=True, blank=True)
+    receiver_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.product
-
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, null=True, on_delete=models.DO_NOTHING)
@@ -78,3 +80,11 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return self.product
+
+class ProductPurchased (models.Model):
+    created = models.DateTimeField(auto_now=True)
+    #user_name = models.CharField(max_length=50, null =True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    
+    def __int__(self):
+        return self.id

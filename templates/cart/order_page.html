@@ -72,11 +72,27 @@ https://www.cdek.ru/ru/offices/
 <form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent">
           {% csrf_token %}
 
+  <!-- <div class="row g-3 mt-5">
+  <div class="col-md-4">
+    <label for="inputFirstName" class="form-label">Имя</label>
+    <input type="text" class="form-control" id="firstName">
+  </div>
+  <div class="col-md-4">
+    <label for="inputLastName" class="form-label">Фамилия</label>
+    <input type="text" class="form-control" id="lastName">
+  </div>
+  <div class="col-md-3">
+    <label for="inputLastName" class="form-label">Телефон</label>
+    <input type="text" class="form-control" id="phone">
+  </div>
+</div> -->
+
   <div class="row mt-2 mb-2">
   <div class="col-md-4">
     <label for="country" class="form-label">Страна</label>
-     <select name="country" id="country" class='form-control' required >
-        <option selected="true" disabled="disabled">Выберите страну</option>
+     <select name="country" id="country" class='form-control' required>
+        <!-- <option selected="true" disabled="disabled">Выберите страну</option> -->
+        <option  value="" disabled selected hidden>Выберите страну</option>
         <!-- <option value="">Выберите страну</option> -->
         {% for country in countries %}
         <option value="{{country}}">{{country}}</option>
@@ -90,7 +106,7 @@ https://www.cdek.ru/ru/offices/
   <div class="col-md-4">
     <label for="region" class="form-label">Регион</label>
        <select name="region" id="region" class='form-control'>
-        <option selected="true" disabled="disabled">Выберите регион</option>
+        <option selected="true">Выберите регион</option>
         <!-- <option value="">Выберите регион</option> -->
         {% for region in regions %}
         <option value="{{region.region}}">{{region.region}}</option>
@@ -103,8 +119,9 @@ https://www.cdek.ru/ru/offices/
   <div class="col-md-6">
     <label for="city" class="form-label">Населенный пункт</label>
        <select name="city" id="city" class='form-control'>
-        <option selected="true" disabled="disabled">Выберите населенный пункт в пределах вашего региона</option>
-        <!-- <option value="">Выберите населенный пункт в пределах вашего региона</option> -->
+       <!-- <select name="city" id="city" class='form-control' autocomplete="off"> -->
+        <!-- <option selected="true" disabled="disabled">Выберите населенный пункт в пределах вашего региона</option> -->
+        <option value="">Выберите населенный пункт в пределах вашего региона</option>
         {% for city in cities %}
         <option value="{{city.city}}">{{city.city}}</option>
         {% endfor %}
@@ -116,7 +133,8 @@ https://www.cdek.ru/ru/offices/
   <div class="row mt-2 mb-2">
   <div class="col-md-6">
     <label for="office" class="form-label">Пункт выдачи</label>
-       <select name="office" id="office" class='form-control'>
+       <!-- <select name="office" id="office" class='form-control'> -->
+       <select name="office" id="office" class='form-control' autocomplete="off">
         <option selected="true" disabled="disabled">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option>
         <!-- <option value="">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option> -->
         {% for office in offices %}
@@ -128,17 +146,22 @@ https://www.cdek.ru/ru/offices/
 
 </form>
 
-<form action="{% url 'sdek_shipment_address' order.id %}" method="POST" id="shipment_form">
+<form action="{% url 'order_including_sdek_shipment' order.id %}" method="POST" id="shipment_form">
    {% csrf_token %}
-        <input type="text" id="shipment_office" name="shipment_office" hidden> 
+        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off"> 
+  
+        <!-- <input type="text" id="shipment_city" name="shipment_city" class="form-control"> 
+
+        <input type="text" id="shipment_region" name="shipment_region" class="form-control">  -->
+
 
       <div class="row m-auto mt-3">
           <div class="col-2">
-            <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage">
+            <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
           </div>
       </div>
 </form>
- 
+
       
 
 
@@ -153,19 +176,44 @@ console.log ('Beginning of the script')
 const form_to_be_sent=document.querySelector('#form_to_be_sent');
 const shipment_form = document.querySelector('#shipment_form');
 const shipment_office = document.querySelector('#shipment_office');
-const shipment_button = document.querySelector('#shipment_button');
+//const shipment_city = document.querySelector('#shipment_city');
+//const shipment_region = document.querySelector('#shipment_region');
+const firstName = document.querySelector('#firstName');
+const lastName = document.querySelector('#lastName');
+const phone = document.querySelector('#phone');
 const country = document.querySelector('#country');
 const region = document.querySelector('#region');
 const city = document.querySelector('#city');
 const office = document.querySelector('#office');
-const clear_storage = document.querySelector('#clear_storage');
+//const clear_storage = document.querySelector('#clear_storage').disabled//элемент заблокирован
+
+
+//===========Name/Phone Module=========================
+// firstName.addEventListener('change', e=>{
+//         first_name_value = firstName.value;
+//         sessionStorage.setItem('first_name', first_name_value); 
+//     }
+//   )
+// lastName.addEventListener('change', e=>{
+//         last_name_value = lastName.value;
+//         sessionStorage.setItem('last_name', last_name_value);
+//     }
+//   )
+// phone.addEventListener('change', e=>{
+//         phone_value = phone.value;
+//         sessionStorage.setItem('phone', phone_value);
+//     }
+//   )
 
 
 //====================Country Module=======================
 country.addEventListener('change', e=>{
-        sessionStorage.clear();
+        //sessionStorage.clear();
         country_value = country.value;
         sessionStorage.setItem('country', country_value);
+        sessionStorage.removeItem('city');
+        sessionStorage.removeItem('region');
+        sessionStorage.removeItem('office');
         city.value='';
         region.value='';
         office.value='';
@@ -179,11 +227,14 @@ country.addEventListener('change', sendJSForm);
 //===============Region Module======================
 region.addEventListener('change', e=>{
         region_value = region.value;
+        country_value = country.value;
+        //shipment_region_value = region_value;
         sessionStorage.setItem('region', region_value);
+        sessionStorage.setItem('country', country_value);
         sessionStorage.removeItem('city');
         sessionStorage.removeItem('office');
         city.value='';
-        office.valu=''
+        office.value=''
        
     }
   )
@@ -195,9 +246,14 @@ region.addEventListener('change', sendJSForm);
 //===============City Module======================
 city.addEventListener('change', e=>{
         city_value = city.value;
+        region_value = region.value;
+        country_value = country.value;
+        //shipment_city.value = city_value;
         sessionStorage.setItem('city', city_value);
+        sessionStorage.setItem('region', region_value);
+        sessionStorage.setItem('country', country_value);
         sessionStorage.removeItem('office');
-        office.value=''
+        office.value='';
     }
 )
 city.addEventListener('change', sendJSForm);
@@ -205,12 +261,12 @@ city.addEventListener('change', sendJSForm);
         form_to_be_sent.submit();
     };
 
-
 //===============Office Module======================
 office.addEventListener('change', e=>{
         office_value = office.value;
         sessionStorage.setItem('office', office_value);
         shipment_office.value = office_value;
+        clear_storage.removeAttribute('disabled');
         // sendShipmentForm();
     }
 )
@@ -232,19 +288,10 @@ office.addEventListener('change', e=>{
 //         sessionStorage.clear();
 //    })
 
-
-
-
-
 // office.addEventListener('change', sendJSForm);
 //     function sendJSForm() {
 //         form_to_be_sent.submit();
 //     };
-
-
-
-
-
 
 document.addEventListener('DOMContentLoaded', e => {
         if (sessionStorage.getItem('country') === null)
@@ -258,26 +305,68 @@ document.addEventListener('DOMContentLoaded', e => {
         else {
           region_value = sessionStorage.getItem('region');
           region.value = region_value
+          //shipment_region.value = region_value
         }
         if (sessionStorage.getItem('city') === null)
           {console.log ("No city choice")}
         else {
           city_value = sessionStorage.getItem('city');
-          city.value = city_value
+          city.value = city_value;
+          //shipment_city.value = city_value;
         }
-        if (sessionStorage.getItem('office') === null)
-          {console.log ("No office choice")}
-        else {
-          office_value = sessionStorage.getItem('office');
-          office.value = office_value
-        }
+        // if (sessionStorage.getItem('office') === null)
+        //   {console.log ("No office choice")}
+        // else {
+        //   office_value = sessionStorage.getItem('office');
+        //   office.value = office_value
+        //   shipment_office.value = office_value
+        // }
+        // if (sessionStorage.getItem('first_name') === null)
+        //   {console.log ("No first_name choice")}
+        // else {
+        //   first_name_value = sessionStorage.getItem('first_name');
+        //   firstName.value = first_name_value
+        // }
+        // if (sessionStorage.getItem('last_name') === null)
+        //   {console.log ("No last_name choice")}
+        // else {
+        //   last_name_value = sessionStorage.getItem('last_name');
+        //   lastName.value = last_name_value
+        // }
+        // if (sessionStorage.getItem('phone') === null)
+        //   {console.log ("No phone choice")}
+        // else {
+        //   phone_value = sessionStorage.getItem('phone');
+        //   phone.value = phone_value
+        // }
 
       });
 
-clear_storage.addEventListener('click', clearStorage);
-    function clearStorage(e) {
-        sessionStorage.clear();
-    };
+// office.addEventListener('change', stateHandle);
+// function stateHandle(){
+//     if (shipment_office.value==="") {
+//       clear_storage.disabled = true;
+//     }
+//     else {
+//       clear_storage.disabled=false;
+//     }
+//   }
+
+
+// if (shipment_office.value ==="") {
+//     clear_storage.disabled=true;
+// }
+// else {
+//     clear_storage.enabled=true;
+// }
+
+// if (shipment_office.value!=null)
+//       {clear_storage.removeAttribute('disabled')}
+
+// clear_storage.addEventListener('click', clearStorage);
+//     function clearStorage(e) {
+//         sessionStorage.clear();
+//     };
 
  //check_imei.value.clear()
   //e.preventDefault()

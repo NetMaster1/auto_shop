@@ -2,12 +2,31 @@
   --max-width: 56%;
 }
 
+.aligner {
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+}
+
+
 .img_scale:hover {
   /* opacity: 2; */
   transform: scale(1.1);
   /* z-index:1; */
 }
-  
+
+
+.photo_scale:hover {
+  /* opacity: 2; */
+  transform: scale(1.1);
+  /* z-index:1; */
+}
+ 
+.title_format {
+  color:aquamarine;
+  font-size: 50px;
+
+}
 
 /* ===================== Cotacts Modal========================= */
 .outer_modal_contacts {
@@ -90,4 +109,94 @@
   /* opacity: 2; */
   transform: scale(1.1);
  
+}
+/*==========================Rating Stars Module======================*/
+.rating>input {
+  display: none;
+  /* opacity: 1; */
+}
+
+.rating label {
+  /*display: inline;*/
+  cursor: pointer;
+  width: 30px;
+  padding-left: 1rem;
+  position: relative;
+  right: 4rem;
+  /*background: #ccc;*/
+}
+
+.rating label::before {
+  content: '\f005';
+  font-family: 'Font Awesome 5 free';
+  /* font-weight: 900; */
+  position: relative;
+  /* position: absolute; */
+
+  /* display: block; */
+  font-size: 20px;
+  color: grey;
+}
+
+.rating label::after {
+  content: '\f005';
+  font-family: 'Font Awesome 5 free';
+  font-weight: 00;
+  position: absolute;
+  /* position: relative; */
+  display: block;
+  font-size: 20px;
+  color: yellow;
+  top: 0;
+  opacity: 0;
+  transition: .5s;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+}
+
+.rating label:hover:after,
+.rating input:hover~label:after,
+.rating input:checked~label:after {
+  opacity: 1;
+}
+
+.stars-outer {
+  position: relative;
+  display: inline-block;
+}
+
+.stars-inner {
+  position: absolute;
+  top: 0;
+  /* left: 0; */
+  white-space: nowrap;
+  overflow: hidden;
+  /*color: yellow;*/
+  /* width: var(--max-width);*/
+}
+
+.stars-outer::before {
+  content: '\f005 \f005 \f005 \f005 \f005';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 200;
+  color: grey;
+  font-size: 20px;
+}
+
+.stars-inner::before {
+  content: '\f005 \f005 \f005 \f005 \f005';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  color: yellow;
+  font-size: 20px;
+  transition: all .25s;
+}
+
+/*===================End of Rating Stars Module=========================*/
+.box_price {
+  background-color:cadetblue;
+  width: 20rem;
+  height: 5rem;
+  border-radius: 5vmax;
+  
+
 }

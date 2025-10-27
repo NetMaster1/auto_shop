@@ -11,3 +11,12 @@ class Review (models.Model):
         return self.id
     
 
+class Rating (models.Model):
+    # user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+
+    def __int__(self):
+        return self.id
+    
+

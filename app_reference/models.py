@@ -30,11 +30,13 @@ class AutoModification (models.Model):
     
 class SDEK_Office (models.Model):
     code = models.CharField(max_length=25, unique=True, null=True, blank=True)
+    type = models.CharField(max_length=25, default="PVZ")
     address_full = models.CharField(max_length=250, null=True, blank=True)
     country_code = models.CharField(max_length=10, null=True, blank=True)
     postal_code = models.CharField(max_length=50, null=True, blank=True)
     region = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
+    city_code = models.CharField(max_length=10, null=True, blank=True)
     address = models.CharField(max_length=100, null=True, blank=True)
  
     def __int__(self):

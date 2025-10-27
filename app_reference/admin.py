@@ -19,7 +19,7 @@ class AutoModificationAdmin(admin.ModelAdmin):
     list_per_page=200
 
 class SDEK_OfficeAdmin(admin.ModelAdmin):
-    list_display = ('country_code', 'address_full', 'city',)
+    list_display = ('country_code', 'code', 'address_full', 'city', 'city_code',)
     search_fields = ('address_full', 'country_code')
     ordering = ('-address_full',)
     list_per_page=100

@@ -38,6 +38,13 @@ class Product (models.Model):
     length = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
     width = models.IntegerField(null=True, blank=True)
+    #=================rating module================
+    percent = models.CharField(max_length=50, default='0%')
+    total = models.IntegerField(default=0)  # Общее число баллов
+    quantity = models.IntegerField(default=0)  # Кол-во оценок
+    av_rating = models.DecimalField(max_digits=3, decimal_places=1, default=0)  # average rating
+    #===============================================
+    transactions = models.IntegerField(default=0)#counter
     image_1 = models.FileField(upload_to='uploads', null=True, blank=True)
     image_2 = models.FileField(upload_to='uploads', null=True, blank=True)
     image_3 = models.FileField(upload_to='uploads', null=True, blank=True)
