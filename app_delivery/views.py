@@ -151,7 +151,6 @@ def get_sdek_delivery_cost(request):
         json=response.json()
         print(json)
 
-
 def sdek_country_choice(request, order_id):
     if request.method=="POST":
         order=Order.objects.get(id=order_id)
