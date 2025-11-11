@@ -1287,11 +1287,14 @@ def delivery_auto(request):
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
                 total_qnty = product.quantity + int(row.Qnty)
-                total_sum = row.Wholesale_Price * row.Qnty + product.total_sum
-                av_price=total_sum / total_qnty
+                total_sum = row.Wholesale_Price * int(row.Qnty) + product.total_sum
+                if total_qnty > 0:
+                    av_price=total_sum / total_qnty
+                else:
+                    av_price=0
                 product.total_sum=total_sum
                 product.quantity=total_qnty
-                product.av_price=av_price
+                product.av_price=int(av_price)
                 product.save()
             
                 # checking docs before remainder_history
