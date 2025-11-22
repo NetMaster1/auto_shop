@@ -107,11 +107,7 @@ def create_product(request):
                 # мухобойка, мухобойка для {product.auto_model}, мухобойка {product.auto_model}, отбойник, отбойник для {product.auto_model},
                 # отбойник {product.auto_model},
                 # """
-                key_word=  f"""{row.Russian_Brand}, {row.Russian_Model}, {row.Russian_Brand} {row.Russian_Model} дефлектор, дефлектор {row.AutoModel}, дефлектор для {row.AutoModel}, дефлектор {row.AutoBrand}, дефлектор для {row.AutoBrand}, дефлектор {row.AutoBrand} {row.AutoModel}, дефлектор {row.Russian_Brand}, дефлектор {row.Russian_Model}, дефлектор для {row.AutoBrand} {row.AutoModel}, 
-дефлектор капота, дефлектор капота для {row.AutoBrand}, дефлектор капота {row.AutoBrand}, дефлектор капота для {row.AutoBrand} {row.AutoModel}, дефлектор капота {row.AutoBrand} {row.AutoModel}, дефлектор капота {row.AutoModel}, дефлектор капота для {row.AutoModel},
-мухобойка, мухобойка для {row.AutoBrand}, мухобойка {row.AutoBrand}, мухобойка для {row.AutoBrand} {row.AutoModel}, мухобойка {row.AutoBrand} {row.AutoModel}, мухобойка {row.AutoModel}, мухобойка для {row.AutoModel},
-отбойник, отбойник для {row.AutoBrand}, отбойник {row.AutoBrand}, отбойник для {row.AutoBrand} {row.AutoModel}, отбойник {row.AutoBrand} {row.AutoModel}, отбойник {row.AutoModel}, отбойник для {row.AutoModel},
-{row.AutoModel}, {row.AutoBrand}, {row.AutoBrand} {row.AutoModel}"""
+                hashtag=f"""#дефлектор_капота #дефлектор #дефлекторы #дефлекторкапота #дефлектор_на_капот #мухобойка #мухобойка_на_капот #мухобойка_для_авто #отбойник #обойник_для_авто #отбойник_на_капот #тюнинг #тюнинг_авто #тюнинг_автомобилей"""
                 
                 description_string = f"""Дефлектор капота (мухобойка) разработан специально для {product.auto_model} ({row.Russian_Brand} {row.Russian_Model}), выполнен из гибкого оргстекла, представляет собой тонкую, просчитанную пластину.
 
@@ -202,16 +198,16 @@ def create_product(request):
                                 #"Укажите название модели товара. Не указывайте в этом поле тип и бренд."
                                 #Чтобы объединить две карточки, для каждой передайте 9048 в массиве attributes. 
                                 #Все атрибуты в этих карточках, кроме размера или цвета, должны совпадать.
-                                {
-                                    "complex_id": 0,
-                                    "id": 9048,
-                                    "values": [
-                                        {
-                                            "dictionary_value_id": 0,
-                                            "value": str(row.Model)
-                                        }
-                                    ]
-                                },
+                                # {
+                                #     "complex_id": 0,
+                                #     "id": 9048,
+                                #     "values": [
+                                #         {
+                                #             "dictionary_value_id": 0,
+                                #             "value": str(row.Model)
+                                #         }
+                                #     ]
+                                # },
                                 #=============================================
                                 #is required: false
                                 #Название
@@ -399,19 +395,29 @@ def create_product(request):
                                         }
                                     ]
                                 },
-                                #================================================
-                                #is required : false
-                                #key words
                                 {
                                     "complex_id": 0,
-                                    "id": 22336,
+                                    "id": 11524,
                                     "values": [
                                         {
                                             "dictionary_value_id": 0,
-                                            "value": key_word
+                                            "value": hashtag
                                         }
                                     ]
                                 },
+                                #===========DEPRECATED=====================================
+                                #is required : false
+                                #key words
+                                # {
+                                #     "complex_id": 0,
+                                #     "id": 22336,
+                                #     "values": [
+                                #         {
+                                #             "dictionary_value_id": 0,
+                                #             "value": key_word
+                                #         }
+                                #     ]
+                                # },
                                 #==============================================
                                 # is required : false
                                 # Марка
@@ -467,14 +473,16 @@ def create_product(request):
                             "depth":1000,
                             "dimension_unit": "mm",
                             "height": 30,
-                            "images": [str(row.Image_1), str(row.Image_2), str(row.Image_3) ],
+                            "images": [],
+                            # "images": [str(row.Image_1), str(row.Image_2), str(row.Image_3) ],
                             "images360": [],
                             "name": str(row.Title),
                             "offer_id": str(row.Article),
                             "old_price": str(row.Old_Price),
                             "pdf_list": [],
                             "price": str(row.Retail_Price),
-                            "primary_image":str(row.Primary_Image),
+                            "primary_image": "",
+                            # "primary_image":str(row.Primary_Image),
                             "type_id": 94656,
                             "vat": "0",
                             "weight": 1000,
@@ -786,9 +794,6 @@ def create_product(request):
             # print('============================================================')
             # print('')
             time.sleep(1.0)
-        
-        
-        
         
         return redirect("dashboard")
     
@@ -1112,7 +1117,6 @@ def update_product_name (request):
             print(json)
     
     return redirect ('shopfront')
-
 
 def update_window_deflector_some_attributes(request):
     headers = {

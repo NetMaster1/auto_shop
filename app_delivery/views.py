@@ -322,8 +322,6 @@ def order_including_sdek_shipment (request, order_id):
             messages.error(request,"Вы не ввели полностью необдходимые данные.")
             return redirect ('order', order.id)
         
-
-
 def create_sdek_delivery_order(request, order_id):
     #getting valid bearer token
     url="https://api.cdek.ru/v2/oauth/token"
@@ -386,7 +384,6 @@ def create_sdek_delivery_order(request, order_id):
     #response = requests.get(url, headers=headers, json=params)
     json=response.json()
     print(json)
-
 
 def get_order_status (request):
     #getting valid bearer token

@@ -523,7 +523,6 @@ def yandex_update_prices(request):
     print('========================')
     print(a)
  
-
 #показывает среднюю цена на площадке на аналогичный товар и кол-во показов за последние 7 дней (параметр "show")
 def yandex_price_recommendations (request):
     products=Product.objects.all()
@@ -563,6 +562,5 @@ def yandex_price_recommendations (request):
        print()
     #    print(f"SKU: {item['offerID']}; Price: {item['price']['value']}; Status: {item['price']['value']}")
    
-
 def yandex_update_quantities(request):
     pass

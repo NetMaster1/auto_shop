@@ -27,6 +27,7 @@ class Product (models.Model):
     wb_bar_code = models.CharField(max_length=50, unique=True, null=True, blank=True)
     wb_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with wb
     ozon_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with ozon
+    site_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with site
     update_true = models.BooleanField(default=True)#used to block certain items from updating
     ean = models.CharField(max_length=50, null=True, blank=True)
     quantity = models.IntegerField(default=0)
