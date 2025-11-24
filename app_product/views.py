@@ -198,16 +198,16 @@ def create_product(request):
                                 #"Укажите название модели товара. Не указывайте в этом поле тип и бренд."
                                 #Чтобы объединить две карточки, для каждой передайте 9048 в массиве attributes. 
                                 #Все атрибуты в этих карточках, кроме размера или цвета, должны совпадать.
-                                # {
-                                #     "complex_id": 0,
-                                #     "id": 9048,
-                                #     "values": [
-                                #         {
-                                #             "dictionary_value_id": 0,
-                                #             "value": str(row.Model)
-                                #         }
-                                #     ]
-                                # },
+                                {
+                                    "complex_id": 0,
+                                    "id": 9048,
+                                    "values": [
+                                        {
+                                            "dictionary_value_id": 0,
+                                            "value": str(row.Model)
+                                        }
+                                    ]
+                                },
                                 #=============================================
                                 #is required: false
                                 #Название
@@ -1078,6 +1078,46 @@ def add_rich_content (request):
     
     return redirect ('shopfront')
 
+#adding model name
+def update_hood_deflector_attributes (request):
+    headers = {
+                "Client-Id": "1711314",
+                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+    file = request.FILES["file_name"]
+    df1 = pandas.read_excel(file)
+    cycle = len(df1)
+    for i in range(cycle):
+        row = df1.iloc[i]#reads each row of the df1 one by one
+        article=row.Article
+        model=row.Model
+        task={
+                "items": [
+                    {
+                        "attributes": [
+                            {
+                                "complex_id": 0,
+                                "id": 9048,
+                                "values": [
+                                    {
+                                        "dictionary_value_id": 0,
+                                        "value": model,
+                                    }
+                                ]
+                            }
+                        ],
+                        "offer_id": article
+                    }
+                ]
+            }
+
+        #uploading new or updating existing product
+        response=requests.post('https://api-seller.ozon.ru/v1/product/attributes/update', json=task, headers=headers)
+        status_code=response.status_code
+        json=response.json()
+        print('=========Request Status & Task ID==========================')
+        print(status_code)
+
 def update_product_name (request):
     headers = {
                     "Client-Id": "1711314",
@@ -1392,7 +1432,6 @@ def delivery_auto(request):
             print(str(key) +' : ' +str(value))
 
         return redirect("dashboard")
-
 
 #За один запрос можно изменить наличие для 100 товаров. 
 #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
@@ -2481,7 +2520,6 @@ def zero_sdek_warehouse_qnty (request):
     #There is no content to send for this request except for headers.
                    
     return redirect ('dashboard')
-
 
 def wb_ozon_sync(request):
     doc_type = DocumentType.objects.get(name="Продажа ТМЦ")

@@ -360,6 +360,25 @@
     
     </form>
     <br>
+    ======================Update Model Field=================================================
+    <label for="file_name">
+        <h5>Введите файл в формате Excel
+            <br>
+            Функция изменяет названи модели
+        </h5>
+    </label>
+
+   
+    <form action="{% url 'update_hood_deflector_attributes' %}" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+    
+        <input type="file" class='form-control' id="file_name" name="file_name" required>
+   
+            <input type="submit" value="Изменить"
+                class="btn btn-sm btn-block btn-outline-dark clear_storage">
+    
+    </form>
+    <br>
 
 
      

@@ -24,6 +24,7 @@ urlpatterns = [
     path('recognition', views.recognition, name='recognition'),
     path('update_prices', views.update_prices, name='update_prices'),
     path('update_images', views.update_images, name='update_images'),
+    path('update_hood_deflector_attributes', views.update_hood_deflector_attributes, name='update_hood_deflector_attributes'),
     path('return_product', views.return_product, name='return_product'),
     path('general_report', views.general_report, name='general_report'),
     # path('choice', views.choice, name='choice'),

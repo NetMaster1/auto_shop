@@ -5,7 +5,7 @@ from django.contrib.auth import update_session_auth_hash, authenticate
 from app_product.models import Product
 
 def shopfront(request):
-    products=Product.objects.all().order_by('name')
+    products=Product.objects.filter(site_true=True).order_by('name')
     context = {
         'products': products,
     }
