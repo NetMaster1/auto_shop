@@ -51,7 +51,7 @@
     height: 30rem;
     display: inline-block;
     position: relative;
-    top: 15rem; */ */
+    top: 15rem;
     /* left: 50rem;   */
 }
 /* ===================== Delivery Modal========================= */
@@ -197,6 +197,4 @@
   width: 20rem;
   height: 5rem;
   border-radius: 5vmax;
-  
-
 }
