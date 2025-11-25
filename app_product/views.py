@@ -2619,8 +2619,24 @@ def wb_ozon_sync(request):
 
 #==================================== My site ===================================
 def change_site_retail_price (request):
-    products=Product.objects.all()
-    for product in products:
-        product.site_retail_price = 2490
-        product.save()
+    if request.method == "POST":
+        file = request.FILES["file_name"]
+        df1 = pandas.read_excel(file)
+        cycle = len(df1)
+        dict_new_article={}
+        for i in range(cycle):
+            row = df1.iloc[i]#reads each row of the df1 one by one
+            article=row.Article
+            if '/' in str(article):
+                article=article.replace('/', '_')
+            #====================getting rid of extra spaces in the string==================================
+            #article=article.replace(' ', '')#getting rid of extra spaces
+            #article=article.strip()#getting rid of extra spaces at both sides of the string
+            article=article.split()
+            article=' '.join(article)
+            #============================end of block=======================================================
+            if Product.objects.filter(article=article).exists():
+                product=Product.objects.get(article=article)
+                product.site_retail_price=str(row.Site_Retail_Price)
+                product.save()
     return redirect ('shopfront')

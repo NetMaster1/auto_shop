@@ -99,20 +99,30 @@
             <!-- <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li> -->
           </ul>
-    
       </ul>
-
           </li>
 
 
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Введите бренд или модель" aria-label="Search"/>
+      <form action="{% url 'search' %}" method="POST" class="d-flex" role="search">
+        {% csrf_token %}
+        <!-- <input class="form-control me-2" type="search" placeholder="Введите бренд или модель" aria-label="Search"/> -->
+        <input class="form-control me-2" type="text" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
         <button class="btn btn-outline-success" type="submit">Поиск</button>
       </form>
+  
+
+  
+      <a href="{% url 'shopfront' %}" target="_blank">
+         <input type="button" value="Очистить" class="btn btn-outline-success" > 
+       </a>
+
+
+
     </div>
   </div>
 </nav>
 
+  
 
 
 <script>

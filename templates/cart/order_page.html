@@ -153,7 +153,7 @@ https://www.cdek.ru/ru/offices/
 
 <form action="{% url 'order_including_sdek_shipment' order.id %}" method="POST" id="shipment_form">
    {% csrf_token %}
-        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off"> 
+        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
   
         <!-- <input type="text" id="shipment_city" name="shipment_city" class="form-control"> 
 
