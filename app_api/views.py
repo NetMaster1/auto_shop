@@ -564,3 +564,4 @@ def yandex_price_recommendations (request):
    
 def yandex_update_quantities(request):
     pass
+

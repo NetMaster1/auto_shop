@@ -412,7 +412,6 @@ def get_order_status (request):
     #response = requests.get(url, headers=headers, json=params)
     json=response.json()
     print(json)
-
 #tariffs   
 def get_sdek_delivery_cost(request):
     #getting valid bearer token
@@ -462,6 +461,8 @@ def get_sdek_delivery_cost(request):
         print(i)
         print("=====================")
 
-
 def open_sdek_vidget(request):
     return render (request, 'cart/sdekvidget_ver_1.html' )
+
+
+#======================ozon delivery==========================
