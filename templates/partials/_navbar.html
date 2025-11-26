@@ -1,6 +1,6 @@
 {% load static %}
     
-<nav class="navbar navbar-expand-lg bg-body-tertiary" >
+<nav class="navbar navbar-expand-lg bg-body-tertiary"  style="position: sticky; top: 0; z-index: 1;">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">EvvyAuto</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item delivery_trigger">
-          <a class="nav-link active rounded-2" aria-current="page" href="#">Доставка</a>
+          <a class="nav-link active rounded-2" aria-current="page" href="#">Правила</a>
         </li>
          <!-- ===========================Delivery Modal Body================================= -->
             <div class="outer_modal_delivery">
@@ -24,13 +24,18 @@
                             <div class="modal-header">
                             
                               
-                                <h5 class="modal-title" id="exampleModalLabel">Доставка осуществляется до пунктов выдачи СДЕК.
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  <strong>Правила </strong>
+                                  <br>
+                                  Осуществляя покупку в нашем интернет магазине, покупатель соглашается с данными Правилами.
+                                  В соответствии с данными Правилами доставка товара осуществляется после его оплаты в пункт
+                                  выдачи СДЕК или ОЗОН, указанный покупателем, на ФИО, указанное покупателем при оформлении заказа.
+                                  При оформлении доставки в пункт выдачи СДЕК доставка оплачивается отдельно в пункте выдачи СДЕК.
+                                  Стоимость доставки можно узнать перед оформлением заказа при указании пункта выдачи СДЕК.
+                                  При оформлении доставки в пункт выдачи ОЗОН доставка входит в стоимость товара. Полную стоимость
+                                  товара, включающую доставку можно узнать перед формированием заказа. 
+                                  В остальном взаимодействие между покупателем и продавцом регулируетя Законом РФ о Защите прав потребителей.
                                 </h5>
-                                <!-- <button type="button" class="btn_close"></button>
-                            </div> -->
-                            <!-- <div class="modal-body">
-                              dfsfsfsdf
-                        </div>    -->
                     </div>
                   </div>
               </div>
@@ -56,17 +61,15 @@
                             
                               
                                 <h5 class="modal-title" style="text-align: left;" id="exampleModalLabel">
+                                  e-mail: support@auto-deflector.ru <br>
+                                  <br>
+
                                   Реквизиты: ИП Винокуров Сергей Николаевич <br>
                                   ИНН 526013223435 <br>
                                   ООО «Банк Точка» <br>
                                   БИК 044525104 <br>
                                   р.с.40802810420000006198
                                 </h5>
-                                <!-- <button type="button" class="btn_close"></button>
-                            </div> -->
-                            <!-- <div class="modal-body">
-                              dfsfsfsdf
-                        </div>    -->
                     </div>
                   </div>
               </div>
@@ -102,17 +105,18 @@
       </ul>
           </li>
 
-
+<div class="col-2">
       <form action="{% url 'search' %}" method="POST" class="d-flex" role="search">
         {% csrf_token %}
-        <!-- <input class="form-control me-2" type="search" placeholder="Введите бренд или модель" aria-label="Search"/> -->
         <input class="form-control me-2" type="text" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
+</div>       
+
         <button class="btn btn-outline-success" type="submit">Поиск</button>
       </form>
-  
 
-  
-      <a href="{% url 'shopfront' %}" target="_blank">
+
+
+      <a href="{% url 'shopfront' %}">
          <input type="button" value="Очистить" class="btn btn-outline-success" > 
        </a>
 
