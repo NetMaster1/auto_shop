@@ -1438,8 +1438,9 @@ def delivery_auto(request):
 #В настоящий момент у нас уже более 100 позиций по Дефлектор капота
 def zero_ozon_qnty(request):
     #if request.method == "POST":
-    category=ProductCategory.objects.get(name='Дефлектор капота')
-    products=Product.objects.filter(category=category)
+    #category=ProductCategory.objects.get(name='Дефлектор капота')
+    #products=Product.objects.filter(category=category)
+    products=Product.objects.all()
     headers = {
                 "Client-Id": "1711314",
                 "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
