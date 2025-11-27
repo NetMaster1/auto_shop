@@ -14,5 +14,7 @@ urlpatterns = [
     path('get_order_status', views.get_order_status, name='get_order_status'),
     
     path('open_sdek_vidget', views.open_sdek_vidget, name='open_sdek_vidget'),
+    path('make_payment', views.make_payment, name='make_payment'),
+    path('return_url', views.return_url, name='return_url'),
  
 ]

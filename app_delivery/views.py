@@ -4,6 +4,8 @@ from app_reference.models import SDEK_Office, SDEK_City
 from app_purchase.models import Order, OrderItem
 from django.contrib import messages, auth
 import time
+import uuid
+from yookassa import Configuration, Payment
 
 # Create your views here.
 
@@ -384,6 +386,31 @@ def create_sdek_delivery_order(request, order_id):
     #response = requests.get(url, headers=headers, json=params)
     json=response.json()
     print(json)
+
+    return render (request, 'cart/payment_page.html')
+
+def make_payment(request):
+    Configuration.account_id = '<Идентификатор магазина>'
+    Configuration.secret_key = '<Секретный ключ>'
+
+    payment = Payment.create({
+        "amount": {
+            "value": "100.00",
+            "currency": "RUB"
+        },
+        "confirmation": {
+            "type": "redirect",
+            "return_url": "https://www.auto-deflector.ru/deliveryreturn_url"
+        },
+        "capture": True,
+        "description": "Заказ №1"
+    }, uuid.uuid4())
+
+def return_url (request):
+
+    return render (request, 'cart/payment_confirmation.html')
+
+
 
 def get_order_status (request):
     #getting valid bearer token
