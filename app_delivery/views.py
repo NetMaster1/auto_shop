@@ -390,8 +390,8 @@ def create_sdek_delivery_order(request, order_id):
     return render (request, 'cart/payment_page.html')
 
 def make_payment(request):
-    Configuration.account_id = '<Идентификатор магазина>'
-    Configuration.secret_key = '<Секретный ключ>'
+    Configuration.account_id = '1159072'
+    Configuration.secret_key = 'live_lJQG_JqI1j3k2DicZikQHWd08Pp4YUSDADS7zZo_4i0'
 
     payment = Payment.create({
         "amount": {
@@ -406,6 +406,7 @@ def make_payment(request):
         "description": "Заказ №1"
     }, uuid.uuid4())
 
+ 
 def return_url (request):
 
     return render (request, 'cart/payment_confirmation.html')
