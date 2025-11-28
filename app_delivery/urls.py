@@ -15,6 +15,6 @@ urlpatterns = [
     
     path('open_sdek_vidget', views.open_sdek_vidget, name='open_sdek_vidget'),
     path('make_payment', views.make_payment, name='make_payment'),
-    path('return_url', views.return_url, name='return_url'),
+
  
 ]

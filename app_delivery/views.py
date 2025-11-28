@@ -6,6 +6,8 @@ from django.contrib import messages, auth
 import time
 import uuid
 from yookassa import Configuration, Payment
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+import json
 
 # Create your views here.
 
@@ -389,30 +391,6 @@ def create_sdek_delivery_order(request, order_id):
 
     return render (request, 'cart/payment_page.html')
 
-def make_payment(request):
-    Configuration.account_id = '1159072'
-    Configuration.secret_key = 'live_lJQG_JqI1j3k2DicZikQHWd08Pp4YUSDADS7zZo_4i0'
-
-    payment = Payment.create({
-        "amount": {
-            "value": "100.00",
-            "currency": "RUB"
-        },
-        "confirmation": {
-            "type": "redirect",
-            "return_url": "https://www.auto-deflector.ru/deliveryreturn_url"
-        },
-        "capture": True,
-        "description": "Заказ №1"
-    }, uuid.uuid4())
-
- 
-def return_url (request):
-
-    return render (request, 'cart/payment_confirmation.html')
-
-
-
 def get_order_status (request):
     #getting valid bearer token
     url="https://api.cdek.ru/v2/oauth/token"
@@ -494,3 +472,59 @@ def open_sdek_vidget(request):
 
 
 #======================ozon delivery==========================
+#ю-касса
+def make_payment(request):
+    Configuration.account_id = '1159072'#shop id
+    Configuration.secret_key = 'live_lJQG_JqI1j3k2DicZikQHWd08Pp4YUSDADS7zZo_4i0'#API Key
+    payment = Payment.create({
+        "amount": {
+            "value": "100.00",
+            "currency": "RUB"
+        },
+        "receipt": {
+        "customer": {
+            "email": "79200711112@yandex.ru"
+        },
+        "items": [
+            {
+              "description": "Дефлектор",
+              "quantity": 1.000,
+              "amount": {
+                "value": "100.00",
+                "currency": "RUB"
+              },
+              "vat_code": 1,
+              "payment_mode": "full_prepayment",
+              "payment_subject": "commodity"
+            },
+            # {
+            #     "description": "Топ трикотажный",
+            #     "quantity": 1.000,
+            #     "amount": {
+            #         "value": "500.00",
+            #         "currency": "RUB"
+            #     },
+            #     "vat_code": 4,
+            #     "payment_mode": "full_prepayment",
+            #     "payment_subject": "marked",
+            #     "mark_mode": 0,
+            #     "mark_code_info":
+            #         {
+            #             "gs_1m": "DFGwNDY0MDE1Mzg2NDQ5MjIxNW9vY2tOelDFuUFwJh05MUVFMDYdOTJXK2ZaMy9uTjMvcVdHYzBjSVR3NFNOMWg1U2ZLV0dRMWhHL0UrZi8ydkDvPQ=="
+            #         },
+            #     "measure": "piece"
+            # }
+        ]
+
+        },
+        "confirmation": {
+            "type": "redirect",
+            "return_url": "https://www.auto-deflector.ru"
+        },
+        "capture": True,
+        "description": "Заказ №1"
+    },     
+    uuid.uuid4())
+    #data = json.loads(request.body)
+    #data = json.loads(request.body.decode('utf-8'))
+    return HttpResponseRedirect(payment.confirmation.confirmation_url)
