@@ -1,6 +1,10 @@
 {% load static %}
-    
+ 
+
+  
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary"  style="position: sticky; top: 0; z-index: 1;">
+
   <div class="container-fluid">
     <a class="navbar-brand" href="#">EvvyAuto</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +46,7 @@
             </div>
             </div>
             <!-- =================================End of Modal Body======================================== -->
+
 
 
         <li class="nav-item dropdown contact_trigger ">
@@ -110,20 +115,107 @@
         <input class="form-control me-2" type="text" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
 </div>       
 
-        <button class="btn btn-outline-success" type="submit">Поиск</button>
+        <button class="btn btn-md btn-outline-dark mr-2" type="submit">Поиск</button>
       </form>
 
-
-
       <a href="{% url 'shopfront' %}">
-         <input type="button" value="Очистить" class="btn btn-outline-success" > 
+         <input type="button" value="Очистить" class="btn btn-md btn-outline-dark mr-2" > 
        </a>
 
+<!-- ============================Login Modal Trigger========================== -->
+    <button class="btn btn-md btn-outline-dark login_trigger">Войти</button>
+<!-- ===============================Register Modal===================================== -->
+            <div class="outer_modal_login">
+              <div class="hide">
+                <div class="enterLoginModal rounded-5">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_login">
+                    
+                 <div class="modal-dialog">
+                    <div class="modal-content">
+                          
+            <form action="{% url 'login' %}" method='POST'>
+              {% csrf_token %}
+              <div class="form-group">
+                <!-- <label for="username">Имя пользователя</label>
+                <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required> -->
+                <label for="username">Электронная почта</label>
+                <input type="email" name="username" class="form-control" placeholder="Введите имя пользователя" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" name="password" class="form-control" placeholder='Введите пароль' required>
+              </div>
+              <br>
+              <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
+              <input type="submit" value="Войти" class="btn btn-outline-dark btn-block">
+          </form>
+                  </div>
+              </div>
+              </div>
+            </div>
+            </div>
+    <!-- =========================End of Login Modal=========================== -->
+
+
+
+<!-- ============================Register Modal Trigger========================== -->
+    <button class="btn btn-md btn-outline-dark register_trigger">Регистрация</button>
+<!-- ===============================Register Modal===================================== -->
+            <div class="outer_modal_register">
+              <div class="hide">
+                <div class="enterRegisterModal rounded-5">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_register">
+                    
+                 <div class="modal-dialog">
+                    <div class="modal-content">
+                          
+                    <form action="{% url 'register_user' %}" method='POST'>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="first_name" class="text-black">Имя</label>
+                            <input type="text" name="first_name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name" class="text-black">Фамилия</label>
+                            <input type="text" name="last_name" class="form-control" required>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="username" class="text-black">Логин</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div> -->
+                        <div class="form-group">
+                            <label for="username" class="text-black">Электронная почта</label>
+                            <input type="email" name="username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="text-black">Пароль</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password2" class="text-black">Подтверждение пароля</label>
+                            <input type="password" name="password2" class="form-control" required>
+                        </div>
+                        <br>
+                     
+                            <!-- <input type="submit" value="Submit" class="btn btn-info btn-block"> -->
+                            <input type="submit" value="Отправить" class="btn btn-outline-dark btn-block">
+                       
+                        
+                    </form>
+                  </div>
+              </div>
+              <!-- ================================================================ -->
+              </div>
+            </div>
+            </div>
+    <!-- =========================End of Register Modal=========================== -->
 
 
     </div>
   </div>
 </nav>
+
+
 
   
 
@@ -133,8 +225,14 @@
   const contact_trigger =document.querySelector('.contact_trigger');
   const outer_modal_delivery =document.querySelector('.outer_modal_delivery');
   const delivery_trigger =document.querySelector('.delivery_trigger');
+  const outer_modal_register =document.querySelector('.outer_modal_register');
+  const register_trigger =document.querySelector('.register_trigger');
+  const outer_modal_login =document.querySelector('.outer_modal_login');
+  const login_trigger =document.querySelector('.login_trigger');
 
   const cross_contacts =document.querySelector('#cross_contacts');
+  const cross_register =document.querySelector('#cross_register');
+  const cross_login =document.querySelector('#cross_login');
   const cross =document.querySelector('.cross');
   
 
@@ -157,6 +255,24 @@
       }
   function closeDeliveryModal () {
           outer_modal_delivery.classList.remove('openModal')
+  }
+
+
+  register_trigger.addEventListener('click', openRegisterModal)
+  cross_register.addEventListener('click', closeRegisterModal)
+  function openRegisterModal () {
+          outer_modal_register.classList.add('openModal')
+      }
+   function closeRegisterModal () {
+          outer_modal_register.classList.remove('openModal')
+  }
+  login_trigger.addEventListener('click', openLoginModal)
+  cross_login.addEventListener('click', closeLoginModal)
+  function openLoginModal () {
+          outer_modal_login.classList.add('openModal')
+      }
+   function closeLoginModal () {
+          outer_modal_login.classList.remove('openModal')
   }
 
 
