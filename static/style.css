@@ -77,6 +77,53 @@
     top: 15rem;
     left: 50rem;  
 }
+
+/* ===================== Register Modal========================= */
+.outer_modal_register {
+  display: none;
+}
+.outer_modal_register.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.enterRegisterModal {
+    padding: 3rem;
+    background-color: white;
+    width: 50rem;
+    height: 30rem;
+    display: block;
+    position: fixed;
+    top: 15rem;
+    left: 50rem;  
+}
+/* ===================== Login Modal========================= */
+.outer_modal_login {
+  display: none;
+}
+.outer_modal_login.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.enterLoginModal {
+    padding: 3rem;
+    background-color: white;
+    width: 50rem;
+    height: 30rem;
+    display: block;
+    position: fixed;
+    top: 15rem;
+    left: 50rem;  
+}
 /* ===================== End ofDelivery Modal========================= */
 
 .hide {
