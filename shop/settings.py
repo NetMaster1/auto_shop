@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'app_reference',
     'app_delivery',
     'app_account',
+    'app_email',
 ]
 
 MIDDLEWARE = [
@@ -167,3 +168,19 @@ MEDIA_URL = '/media/'
 
 FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.MemoryFileUploadHandler",
  "django.core.files.uploadhandler.TemporaryFileUploadHandler"]
+
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST ='smtp.mail.ru'
+#EMAIL_HOST ='smtp.yandex.ru'
+#EMAIL_PORT = 387
+#EMAIL_PORT = 587 #yandex TLS port
+#EMAIL_PORT = 465#yandex ssl port
+EMAIL_PORT = 2525#mail.ru TLS port
+EMAIL_HOST_USER = 'support@auto-deflector.ru'
+#EMAIL_HOST_USER = '79200711112@yandex.ru'
+#EMAIL_HOST_PASSWORD = 'zrwyrvxbxywjjnpo'#yandex app password
+EMAIL_HOST_PASSWORD = 'Y7Zg1dLNofauVjAofNHz'#mail.ru app password
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False

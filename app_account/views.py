@@ -2,20 +2,21 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages, auth
 from django.contrib.auth.models import User, Group
+from app_product.models import Product
 
 # Create your views here.
 def register_user(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
-        username = request.POST['username']
-        # email = request.POST['email']
+        username = request.POST['email']
+        email = request.POST['email']
         password = request.POST['password']
         password2 = request.POST['password2']
 
         if password == password2:
             # Check user name
-            if User.objects.filter(username=username).exists():
+            if User.objects.filter(email=email).exists():
                 messages.error(request, 'Пользователь с таким логином уже существует.')
                 return redirect('register_user')
             # else:
@@ -26,8 +27,7 @@ def register_user(request):
                 user = User.objects.create_user(
                     username=username,
                     password=password,
-                    # email=email, 
-                    email=username, 
+                    email=email, 
                     first_name=first_name, 
                     last_name=last_name)
 
@@ -36,16 +36,24 @@ def register_user(request):
                 auth.login(request, user)
 
 
+                context={
+                        'user': user,
+                    }
+                return render(request, 'accounts/account_page.html', context)
+
+
         else:
             messages.error(request, "Пароли не совпадают. Попробуйте еще раз.")
             return redirect('register_user')
-        
-        context={
-            'user':user,
-        }
-
     else:
-        return render(request, 'accounts/account_page.html', context)
+        products=Product.objects.filter(site_true=True).order_by('name')
+        context = {
+            'products': products,
+        }
+        return render (request, 'shopfront.html', context)
+
+        
+        
     
 
 

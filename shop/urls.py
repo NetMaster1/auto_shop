@@ -32,6 +32,7 @@ urlpatterns = [
     path('reference', include ('app_reference.urls')),
     path('delivery', include ('app_delivery.urls')),
     path('account', include ('app_account.urls')),
+    path('email', include ('app_email.urls')),
    
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
