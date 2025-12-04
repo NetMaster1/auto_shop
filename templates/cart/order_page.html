@@ -3,8 +3,7 @@
 {% block content %}
 
 <div class="container">
-
-          <div class="row mt-4 pt-5">
+          <div class="row pt-2">
             <div class="col-12">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -30,17 +29,32 @@
 </div>
 <!-- ===================End of Alert Messages Module================ -->
 
-
-
-
-<div class="row mb-5">Заказ # {{order.id}}</div>
-<div class="row align-items-center justify-content-right"  style="height:100px">
-  <div class="col-8 justify-content-right">
-    <h4>Всего товаров на сумму: <strong>{{total}}&nbsp;руб.</strong></h4>
+<div class="box_client p-3">
+<div class="row p-1">
+  <div class="col-1">
+    <strong>Заказ # {{order.id}}</strong>
+  </div>
+  <div class="col-4">
+    <strong>Наименование товара</strong>
+  </div>
+  <div class="col-2">
+    <strong>Кол-во товара (шт.)</strong>
+  </div>
+  <div class="col-2">
+    <strong>Цена</strong>
+  </div>
+  <div class="col-2">
+    <strong>Всего</strong>
   </div>
 
+</div>
+<!-- <div class="row align-items-center justify-content-right"> -->
+  <!-- <div class="col-8 justify-content-right">
+    <h4>Всего товаров на сумму: <strong>{{total}}&nbsp;руб.</strong></h4>
+  </div> -->
+
 {% for item in order_items %}
-<div class="row mt-2 mb-2">
+<div class="row p-1">
      <div class="col-1">
         <!-- <a href="{{cart_item.get_url}}"> -->
           <img src="{{item.image.url}}" width="50" alt="">
@@ -48,22 +62,21 @@
       </div>
 
     <div class="col-4">
-        {{item.product}}
+    <strong>{{item.product}}</strong> 
     </div>
     <div class="col-2">
-        {{item.quantity}}
+      <strong>{{item.quantity}}</strong>
     </div>
     <div class="col-2">
-        {{item.price}}
+      <strong>{{item.price}}</strong>
+        
     </div>
     <div class="col-2">
-        {{item.sub_total}}
+      <strong>{{item.sub_total}}</strong> 
     </div>
 </div>
 {% endfor %}
 
-<div class="row mt-2">
-Всего к оплате: {{order.sum}} руб.
 </div>
 
 
@@ -71,35 +84,44 @@
 <!-- https://www.cdek.ru/ru/offices/ -->
 
 
-<p>
-    <div class="row m-auto">
-  <div style="font-size: 50px; font-weight: 300; color: black">
-    Рассчитайте стоимость доставку до пункта выдачи СДЕК:
-  </div> 
-</div>
-</p>
-
-
-
 
 <form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent">
           {% csrf_token %}
 
-  <!-- <div class="row g-3 mt-5">
-  <div class="col-md-4">
-    <label for="inputFirstName" class="form-label">Имя</label>
-    <input type="text" class="form-control" id="firstName">
-  </div>
-  <div class="col-md-4">
-    <label for="inputLastName" class="form-label">Фамилия</label>
-    <input type="text" class="form-control" id="lastName">
-  </div>
-  <div class="col-md-3">
-    <label for="inputLastName" class="form-label">Телефон</label>
-    <input type="text" class="form-control" id="phone">
-  </div>
-</div> -->
 
+<strong>Получатель:</strong>
+<div class="box_client p-3">
+ <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
+    <input type="text" class="form-control" id="firstName" placeholder="Имя">
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
+    <input type="text" class="form-control" id="lastName" placeholder="Фамилия">
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="phone" class="form-label">Телефон</label> -->
+    <input type="text" class="form-control" id="phone" placeholder="Телефон">
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="email" class="form-label">Email</label> -->
+    <input type="email" class="form-control" id="email" placeholder="email">
+  </div>
+  </div>
+  </div>
+
+
+<br>
+
+<strong>Пункт доставки</strong>
+<div class="box_client p-3">
   <div class="row mt-2 mb-2">
   <div class="col-md-4">
     <label for="country" class="form-label"> <strong>Страна</strong></label>
@@ -156,6 +178,7 @@
         {% endfor %}
       </select>
     </div>
+  </div>
   </div>
 
 </form>

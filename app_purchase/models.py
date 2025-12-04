@@ -4,6 +4,7 @@ from datetime import datetime, date
 from django.utils import timezone
 from app_product.models import Product
 # import pytz
+from django.contrib.auth.models import User
 
 
 class Identifier(models.Model):
@@ -56,6 +57,7 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
+    user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
     sum = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     client = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
     paid=models.BooleanField(default=False)
