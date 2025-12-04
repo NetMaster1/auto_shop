@@ -60,11 +60,15 @@ class Order(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
     sum = models.DecimalField(default=0, max_digits=7, decimal_places=2)
-    client = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
+    buyer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
     paid=models.BooleanField(default=False)
     shipped=models.BooleanField(default=False)
     delivery_point = models.CharField(max_length=100, null=True, blank=True)
-    receiver_name = models.CharField(max_length=100, null=True, blank=True)
+    receiver_firstName = models.CharField(max_length=100, null=True, blank=True)
+    receiver_lastName = models.CharField(max_length=100, null=True, blank=True)
+    receiver_lastName = models.CharField(max_length=100, null=True, blank=True)
+    receiver_email = models.EmailField(max_length=50, null=True, blank=True)
+    receiver_phone = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return self.product

@@ -88,9 +88,6 @@
 <form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent">
           {% csrf_token %}
 
-
-
-
 <strong>Пункт доставки</strong>
 <div class="box_client p-3">
   <div class="row mt-2 mb-2">
@@ -154,9 +151,9 @@
 
 </form>
 
-<form action="{% url 'order_including_sdek_shipment' order.id %}" method="POST" id="shipment_form">
+<form action="{% url 'make_payment' order.id %}" method="POST" id="shipment_form">
    {% csrf_token %}
-        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off"> 
+        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
   
         <strong>Получатель:</strong>
 <div class="box_client p-3">
