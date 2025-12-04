@@ -89,36 +89,7 @@
           {% csrf_token %}
 
 
-<strong>Получатель:</strong>
-<div class="box_client p-3">
- <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
-    <input type="text" class="form-control" id="firstName" placeholder="Имя">
-  </div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
-    <input type="text" class="form-control" id="lastName" placeholder="Фамилия">
-  </div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="phone" class="form-label">Телефон</label> -->
-    <input type="text" class="form-control" id="phone" placeholder="Телефон">
-  </div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="email" class="form-label">Email</label> -->
-    <input type="email" class="form-control" id="email" placeholder="email">
-  </div>
-  </div>
-  </div>
 
-
-<br>
 
 <strong>Пункт доставки</strong>
 <div class="box_client p-3">
@@ -185,13 +156,35 @@
 
 <form action="{% url 'order_including_sdek_shipment' order.id %}" method="POST" id="shipment_form">
    {% csrf_token %}
-        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
+        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off"> 
   
-        <!-- <input type="text" id="shipment_city" name="shipment_city" class="form-control"> 
-
-        <input type="text" id="shipment_region" name="shipment_region" class="form-control">  -->
-
-
+        <strong>Получатель:</strong>
+<div class="box_client p-3">
+ <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
+    <input type="text" class="form-control" id="firstName" placeholder="Имя" required>
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
+    <input type="text" class="form-control" id="lastName" placeholder="Фамилия" required>
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="phone" class="form-label">Телефон</label> -->
+    <input type="text" class="form-control" id="phone" placeholder="Телефон" required>
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="email" class="form-label">Email</label> -->
+    <input type="email" class="form-control" id="email" placeholder="email" required>
+  </div>
+  </div>
+  </div>
       <div class="row m-auto mt-3">
           <div class="col-2">
             <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
@@ -218,6 +211,7 @@ const shipment_office = document.querySelector('#shipment_office');
 const firstName = document.querySelector('#firstName');
 const lastName = document.querySelector('#lastName');
 const phone = document.querySelector('#phone');
+const email = document.querySelector('#email');
 const country = document.querySelector('#country');
 const region = document.querySelector('#region');
 const city = document.querySelector('#city');
@@ -226,22 +220,35 @@ const office = document.querySelector('#office');
 
 
 //===========Name/Phone Module=========================
-// firstName.addEventListener('change', e=>{
-//         first_name_value = firstName.value;
-//         sessionStorage.setItem('first_name', first_name_value); 
-//     }
-//   )
-// lastName.addEventListener('change', e=>{
-//         last_name_value = lastName.value;
-//         sessionStorage.setItem('last_name', last_name_value);
-//     }
-//   )
-// phone.addEventListener('change', e=>{
-//         phone_value = phone.value;
-//         sessionStorage.setItem('phone', phone_value);
-//     }
-//   )
 
+firstName.addEventListener('change', e=>{
+        //sessionStorage.clear();
+        fistName_value = firstName.value;
+        sessionStorage.setItem('firstName', fistName_value);
+        // sessionStorage.removeItem('city');
+        // sessionStorage.removeItem('region');
+        // sessionStorage.removeItem('office');
+        // city.value='';
+        // region.value='';
+        // office.value='';
+    }
+ )
+lastName.addEventListener('change', e=>{
+        lastName_value = lastName.value;
+        sessionStorage.setItem('lastName',  lastName_value);
+    }
+ )
+
+phone.addEventListener('change', e=>{
+        phone_value = phone.value;
+        sessionStorage.setItem('phone',  phone_value);
+    }
+ )
+email.addEventListener('change', e=>{
+        email_value = email.value;
+        sessionStorage.setItem('email',  email_value);
+    }
+ )
 
 //====================Country Module=======================
 country.addEventListener('change', e=>{
@@ -351,32 +358,30 @@ document.addEventListener('DOMContentLoaded', e => {
           city.value = city_value;
           //shipment_city.value = city_value;
         }
-        // if (sessionStorage.getItem('office') === null)
-        //   {console.log ("No office choice")}
-        // else {
-        //   office_value = sessionStorage.getItem('office');
-        //   office.value = office_value
-        //   shipment_office.value = office_value
-        // }
-        // if (sessionStorage.getItem('first_name') === null)
-        //   {console.log ("No first_name choice")}
-        // else {
-        //   first_name_value = sessionStorage.getItem('first_name');
-        //   firstName.value = first_name_value
-        // }
-        // if (sessionStorage.getItem('last_name') === null)
-        //   {console.log ("No last_name choice")}
-        // else {
-        //   last_name_value = sessionStorage.getItem('last_name');
-        //   lastName.value = last_name_value
-        // }
-        // if (sessionStorage.getItem('phone') === null)
-        //   {console.log ("No phone choice")}
-        // else {
-        //   phone_value = sessionStorage.getItem('phone');
-        //   phone.value = phone_value
-        // }
-
+        if (sessionStorage.getItem('phone') === null)
+          {console.log ("No phone choice")}
+        else {
+          phone_value = sessionStorage.getItem('phone');
+          phone.value = phone_value
+        }
+         if (sessionStorage.getItem('firstName') === null)
+          {console.log ("No first_name choice")}
+        else {
+          firstName_value = sessionStorage.getItem('firstName');
+          firstName.value = firstName_value
+        }
+        if (sessionStorage.getItem('lastName') === null)
+          {console.log ("No last_name choice")}
+        else {
+          lastName_value = sessionStorage.getItem('lastName');
+          lastName.value = lastName_value
+        }
+        if (sessionStorage.getItem('email') === null)
+          {console.log ("No email choice")}
+        else {
+          email_value = sessionStorage.getItem('email');
+          email.value = email_value
+        }
       });
 
 // office.addEventListener('change', stateHandle);

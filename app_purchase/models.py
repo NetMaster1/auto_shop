@@ -16,6 +16,7 @@ class Customer (models.Model):
     f_name = models.CharField(max_length=50)
     l_name = models.CharField(max_length=50)
     phone=models.CharField(max_length=50)
+    email=models.EmailField(max_length=100, blank=True, null=True)
     created = models.DateField(auto_now_add=True)#creation stamp
     
     def __int__(self):
