@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+
+<div class="box_client p-3">
+
+    <div class="row">
+        Заказ № {{order.id}}
+    </div>
+    {% for item in order_items%}
+    <div class="row">
+        {{item.product}}
+    </div>
+    {% endfor%}
+      <div class="row">
+        Cумма заказа: {{order.sum}}
+    </div>
+    <div class="row">
+        Логистическая компания: {{order.delivery_operator}}
+    </div>
+    <div class="row">
+        Адрес доставки: {{order.delivery_point}}
+    </div>
+    <div class="row">
+        Стоимость доставки: {{order.delivery_cost}} (оплачивается отдельно при получении товара)
+    </div>
+    <div class="row">
+        Получатель: {{order.receiver_firstName}} {{order.receiver_lastName}}
+    </div>
+    <div class="row">
+        Телефон получателя: {{order.receiver_phone}} 
+    </div>
+    <div class="row">
+        Email для чека: {{order.email}} 
+    </div>
+    <div class="row mt-2">
+        <div class="col">
+      <a href="{% url 'make_payment' order.id %}" target="_blank">
+         <input type="button" value="Перейти к оплате" class="btn btn-block btn-outline-primary" id="clear_storage"> 
+       </a>
+</div>
+
+    </div>
+</div>
+</div>
+
+<script>
+    const clear_storage=document.querySelector('#clear_storage');
+
+    clear_storage.addEventListener('click', clearStorage);
+    function clearStorage(e) {
+        sessionStorage.clear();
+    };
+
+</script>
+
+
+{% endblock %}

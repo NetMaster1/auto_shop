@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages, auth
 from django.contrib.auth.models import User, Group
 from app_product.models import Product
+from app_purchase.models import Order, OrderItem
 
 # Create your views here.
 def register_user(request):
@@ -18,7 +19,7 @@ def register_user(request):
             # Check user name
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'Пользователь с таким логином уже существует.')
-                return redirect('register_user')
+                return redirect('shopfront')
             # else:
             #     if User.objects.filter(email=email).exists():
             #         messages.error(request, 'Такой адрес электронной почты уже существует.')
@@ -34,29 +35,12 @@ def register_user(request):
                 # saving the request.user
                 user.save()
                 auth.login(request, user)
-
-
-                context={
-                        'user': user,
-                    }
-                return render(request, 'accounts/account_page.html', context)
-
+                return redirect ('account_page', user.id)
 
         else:
             messages.error(request, "Пароли не совпадают. Попробуйте еще раз.")
             return redirect('register_user')
-    else:
-        products=Product.objects.filter(site_true=True).order_by('name')
-        context = {
-            'products': products,
-        }
-        return render (request, 'shopfront.html', context)
-
-        
-        
-    
-
-
+   
 
 def login_user(request):
     if request.method == "POST":
@@ -66,25 +50,37 @@ def login_user(request):
         if user is not None:
             login(request, user)
             #messages.success(request, ('Your have successfully been logged in. Welcome to ruversity.com'))
-            messages.success(request, ('Вы успешно вошли. Добро пожаловать на ruversity.com'))
-            return redirect('main_page')
+            messages.success(request, ('Вы успешно вошли. Добро пожаловать на вашу личную страницу.'))
+            return redirect('account_page', user.id)
         else:
             #messages.error(request, ('Incorrect username or password. Check your credentials & try again'))
             messages.error(request, ('Неправильное имя пользователи или пароль. Проверьте ваше данные и попробуйте еще раз'))
-            return redirect('login')
-    else:
-        return render(request, 'accounts/login.html')
+            return redirect('shopfront')
 
 
 def logout_user(request):
-    logout(request)
+    auth.logout(request)
     #messages.success(request, ('You are now logged out'))
-    messages.success(request, ('Вы вышли из личного кабинета ruversity.com'))
-    return redirect('index')
+    messages.success(request, ('Вы вышли из личного кабинета'))
+    return redirect('shopfront')
+
+def account_page(request, user_id ):
+    user=User.objects.get(id=user_id)
+    orders=Order.objects.filter(user=user)
+    # for order in orders:
+    #     if order.paid==True:
+    #         order_items=OrderItem.objects.filter(order=order)
+    #         for order_item in order_items:
+    #             product=order_item.product
+    #             order_item.product=product
+
+    if request.user.is_authenticated:
+        if request.user.id == user.id:
+            context={
+                'user': user,
+                'orders': orders,
+            }
+        return render(request, 'accounts/account_page.html', context)
 
 
-# def dashboard(request):
-#     if request.user.is_authenticated:
-#         return render(request, 'accounts/dashboard.html')
-#     else:
-#         return redirect('login')
+

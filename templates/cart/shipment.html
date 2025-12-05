@@ -42,25 +42,6 @@
 
 
 <div class="row">
-  Введите имя получателя товара:
-</div>
-
-<div class="row mt-5">
-  <div class="col-md-4">
-    <label for="inputFirstName" class="form-label">Имя</label>
-    <input type="text" class="form-control" id="inputFirstName">
-  </div>
-  <div class="col-md-4">
-    <label for="inputLastName" class="form-label">Фамилия</label>
-    <input type="text" class="form-control" id="inputLastName">
-  </div>
-  <div class="col-md-3">
-    <label for="inputLastName" class="form-label">Телефон</label>
-    <input type="text" class="form-control" id="inputLastName">
-  </div>
-</div>
-
-
 <div class="row mt-3 mb-3">
   {{shipment_office.address_full}}
 </div>
@@ -69,8 +50,9 @@
 
 <div class="row m-auto mt-2 mb-2">
   <div class="col-2 clear_storage" style="text-align: left;">
-        <a href="{% url 'create_sdek_delivery_order' order.id %}" class="btn btn-outline-dark clear_storage" >
-            Перейти к оплате
+       
+        <a href="{% url 'make_payment' order.id %}" class="btn btn-outline-dark clear_storage" >
+            Оплатить
         </a>
   </div>
   <!-- <div class="col-2">
