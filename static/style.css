@@ -245,3 +245,9 @@
   height: 5rem;
   border-radius: 5vmax;
 }
+
+.box_client {
+  background-color: lightblue;
+  border-radius: 1vmax;
+
+}
