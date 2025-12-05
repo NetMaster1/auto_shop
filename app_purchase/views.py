@@ -132,10 +132,26 @@ def order(request, order_id):
     return render (request, 'cart/order_page.html', context)
  
 def create_final_purchase_order(request, order_id):
-       if request.method=='POST': 
-           order=Order.objects.get(id=order_id)
-           order_items=OrderItem.objects.filter(order=order)
-           shipment_office = request.POST["shipment_office"]
+    if request.method=='POST': 
+        order=Order.objects.get(id=order_id)
+        order_items=OrderItem.objects.filter(order=order)
+        shipment_office = request.POST["shipment_office"]
+        f_name = request.POST["f_name"]
+        l_name = request.POST["l_name"]
+        phone = request.POST["phone"]
+        email = request.POST["email"]
+        order.delivery_point=shipment_office
+        order.receiver_firstName=f_name
+        order.receiver_lastName=l_name
+        order.receiver_phone=phone
+        order.receiver_email=email
+        order.save()
+        context ={
+            "order": order,
+            "order_items": order_items,
+        }
+
+        return render (request, 'cart/order_page_final.html', context)
     
 #========================ю-касса====================================
 def make_payment(request, order_id):

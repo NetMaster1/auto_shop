@@ -398,7 +398,7 @@ def sdek_office_choice(request, order_id):
             'order_items': order_items,
             'countries' : countries,
         }
-        return render(request, 'cart/order_page.html', context)
+        return render(request, 'cart/order_page_final.html', context)
 
 def create_sdek_shipment (request, order_id):
     order=Order.objects.get(id=order_id)

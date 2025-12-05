@@ -148,7 +148,6 @@
     </div>
   </div>
   </div>
-
 </form>
 
 <form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form">
@@ -160,25 +159,25 @@
  <div class="row p-1">
   <div class="col-md-4">
     <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
-    <input type="text" class="form-control" id="firstName" placeholder="Имя" required>
+    <input type="text" class="form-control" id="firstName" name="f_name" placeholder="Имя" required >
   </div>
   </div>
   <div class="row p-1">
   <div class="col-md-4">
     <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
-    <input type="text" class="form-control" id="lastName" placeholder="Фамилия" required>
+    <input type="text" class="form-control" id="lastName" name="l_name" placeholder="Фамилия" required >
   </div>
   </div>
   <div class="row p-1">
   <div class="col-md-4">
     <!-- <label for="phone" class="form-label">Телефон</label> -->
-    <input type="text" class="form-control" id="phone" placeholder="Телефон" required>
+    <input type="text" class="form-control" id="phone" name="phone" placeholder="Телефон" required >
   </div>
   </div>
   <div class="row p-1">
   <div class="col-md-4">
     <!-- <label for="email" class="form-label">Email</label> -->
-    <input type="email" class="form-control" id="email" placeholder="email" required>
+    <input type="email" class="form-control" id="email" name="email" placeholder="email" required >
   </div>
   </div>
   </div>

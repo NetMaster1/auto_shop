@@ -3,6 +3,7 @@ from django.db import models
 from datetime import datetime, date
 from django.utils import timezone
 from app_product.models import Product
+from app_delivery.models import DeliveryOperator
 # import pytz
 from django.contrib.auth.models import User
 
@@ -56,6 +57,8 @@ class CartItem(models.Model):
     def __str__(self):
         return self.product
 
+
+
 class Order(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -63,9 +66,10 @@ class Order(models.Model):
     buyer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
     paid=models.BooleanField(default=False)
     shipped=models.BooleanField(default=False)
+    delivery_operator = models.ForeignKey(DeliveryOperator,on_delete=models.DO_NOTHING, null=True, blank=True)
     delivery_point = models.CharField(max_length=100, null=True, blank=True)
+    delivery_cost = models.IntegerField(null=True, blank=True)
     receiver_firstName = models.CharField(max_length=100, null=True, blank=True)
-    receiver_lastName = models.CharField(max_length=100, null=True, blank=True)
     receiver_lastName = models.CharField(max_length=100, null=True, blank=True)
     receiver_email = models.EmailField(max_length=50, null=True, blank=True)
     receiver_phone = models.CharField(max_length=10, null=True, blank=True)
