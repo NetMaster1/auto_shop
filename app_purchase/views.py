@@ -131,78 +131,12 @@ def order(request, order_id):
 
     return render (request, 'cart/order_page.html', context)
  
-def order_including_sdek_shipment (request, order_id):
-    order=Order.objects.get(id=order_id)
-    order_items=OrderItem.objects.filter(order=order)
-
-    if request.method=='POST':
-        shipment_office = request.POST["shipment_office"]
-        if shipment_office:
-            print(shipment_office)
-        else:
-            messages.error(request,"Вы не ввели пункт выдачи сдек")
-            return redirect ('sdek_office_choice', order.id)
-        if SDEK_Office.objects.filter(address_full=shipment_office).exists():
-            shipment_office=SDEK_Office.objects.get(address_full=shipment_office)
-            city_code=shipment_office.city_code
-            
-            url="https://api.cdek.ru/v2/oauth/token"
-
-            headers = {
-                "grant_type": "client_credentials",
-                "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
-                "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
-            }
-            #в качестве параметров (params) передаём заголовки (headers)
-            response = requests.post(url, params=headers, )
-            json=response.json()
-            access_token=json['access_token']
-            headers = {
-                "Authorization": f'Bearer {access_token}',
-            }
-
-            params= {
-                "from_location" : {
-                    'code': 414,
-                    'contragent_type': 'LEGAL_ENTITY'
-                    },
-                "to_location" : {
-                    'code' : city_code,
-                    'contragent_type': 'INDIVIDUAL',
-                    },
-                "packages": [
-                    {   "weight": 1000,
-                        "length": 140,
-                        "width": 30,
-                        "height": 5
-                        },
-                    ]
+def create_final_purchase_order(request, order_id):
+       if request.method=='POST': 
+           order=Order.objects.get(id=order_id)
+           order_items=OrderItem.objects.filter(order=order)
+           shipment_office = request.POST["shipment_office"]
     
-                }
-
-            url="https://api.cdek.ru/v2/calculator/tarifflist"
-            response = requests.post(url, headers=headers, json=params)
-            json=response.json()
-            a=json['tariff_codes']
-            for i in a:
-                if i['tariff_code'] == 136:
-                    print(i)
-                    delivery_sum=i['delivery_sum']
-                    break
-            sum_to_pay= int(delivery_sum) + int(order.sum)
-            context = {
-                'sum_to_pay': sum_to_pay,
-                'delivery_sum': delivery_sum,
-                'shipment_office' : shipment_office,
-                'order': order,
-                'order_items': order_items
-            }
-            return render (request, 'cart/shipment.html' , context)
-        else:
-            messages.error(request,"Вы не ввели полностью необдходимые данные.")
-            return redirect ('order', order.id)
-
-
 #========================ю-касса====================================
 def make_payment(request, order_id):
     order=Order.objects.get(id=order_id)
@@ -212,16 +146,16 @@ def make_payment(request, order_id):
 
     for item in order_items:
         item_dict={
-              "description": item.product,
-              "quantity": item.quantity,
-              "amount": {
-                "value": item.sub_total,
-                "currency": "RUB"
-              },
-              "vat_code": 1,
-              "payment_mode": "full_prepayment",
-              "payment_subject": "commodity"
-            }
+                        "description": item.product,
+                        "quantity": item.quantity,
+                        "amount": {
+                            "value": item.sub_total,
+                            "currency": "RUB"
+                            },
+                        "vat_code": 1,
+                        "payment_mode": "full_prepayment",
+                        "payment_subject": "commodity",
+                    }
         items_arr.append(item_dict)
         
     Configuration.account_id = '1159072'#shop id
@@ -233,28 +167,14 @@ def make_payment(request, order_id):
                 "currency": "RUB"
                 },
 
-         "receipt": {
+        "receipt": {
             "customer": {
                 #"email": order.buyer.f_name,
                 "email": '79200711112@yandex.ru',
                 },
-           
-                "items": [
-                    {
-                        "description": item.product,
-                        "quantity": item.quantity,
-                        "amount": {
-                            "value": item.sub_total,
-                            "currency": "RUB"
-                            },
-                        "vat_code": 1,
-                        "payment_mode": "full_prepayment",
-                        "payment_subject": "commodity",
-                    }
-                ],
+                "items": items_arr,
                 },
           
-
         "confirmation": {
             "type": "redirect",
             "return_url": "https://www.auto-deflector.ru/"

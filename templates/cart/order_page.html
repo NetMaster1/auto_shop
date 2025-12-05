@@ -151,7 +151,7 @@
 
 </form>
 
-<form action="{% url 'make_payment' order.id %}" method="POST" id="shipment_form">
+<form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form">
    {% csrf_token %}
         <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
   

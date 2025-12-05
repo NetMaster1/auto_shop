@@ -302,7 +302,6 @@ def open_sdek_vidget(request):
 
     return render (request, 'cart/payment_page.html')    
 
-
 def sdek_office_choice(request, order_id):
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)
@@ -400,3 +399,74 @@ def sdek_office_choice(request, order_id):
             'countries' : countries,
         }
         return render(request, 'cart/order_page.html', context)
+
+def create_sdek_shipment (request, order_id):
+    order=Order.objects.get(id=order_id)
+    order_items=OrderItem.objects.filter(order=order)
+
+    if request.method=='POST':
+        shipment_office = request.POST["shipment_office"]
+        if shipment_office:
+            print(shipment_office)
+        else:
+            messages.error(request,"Вы не ввели пункт выдачи сдек")
+            return redirect ('sdek_office_choice', order.id)
+        if SDEK_Office.objects.filter(address_full=shipment_office).exists():
+            shipment_office=SDEK_Office.objects.get(address_full=shipment_office)
+            city_code=shipment_office.city_code
+            
+            url="https://api.cdek.ru/v2/oauth/token"
+
+            headers = {
+                "grant_type": "client_credentials",
+                "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+                "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+            }
+            #в качестве параметров (params) передаём заголовки (headers)
+            response = requests.post(url, params=headers, )
+            json=response.json()
+            access_token=json['access_token']
+            headers = {
+                "Authorization": f'Bearer {access_token}',
+            }
+
+            params= {
+                "from_location" : {
+                    'code': 414,
+                    'contragent_type': 'LEGAL_ENTITY'
+                    },
+                "to_location" : {
+                    'code' : city_code,
+                    'contragent_type': 'INDIVIDUAL',
+                    },
+                "packages": [
+                    {   "weight": 1000,
+                        "length": 140,
+                        "width": 30,
+                        "height": 5
+                        },
+                    ]
+    
+                }
+
+            url="https://api.cdek.ru/v2/calculator/tarifflist"
+            response = requests.post(url, headers=headers, json=params)
+            json=response.json()
+            a=json['tariff_codes']
+            for i in a:
+                if i['tariff_code'] == 136:
+                    print(i)
+                    delivery_sum=i['delivery_sum']
+                    break
+            sum_to_pay= int(delivery_sum) + int(order.sum)
+            context = {
+                'sum_to_pay': sum_to_pay,
+                'delivery_sum': delivery_sum,
+                'shipment_office' : shipment_office,
+                'order': order,
+                'order_items': order_items
+            }
+            return render (request, 'cart/shipment.html' , context)
+        else:
+            messages.error(request,"Вы не ввели полностью необдходимые данные.")
+            return redirect ('order', order.id)
