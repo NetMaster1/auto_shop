@@ -215,11 +215,6 @@ def make_payment(request, order_id):
         "description": order.id,
     },
     uuid.uuid4())
-    
-    #data = json.loads(request.body)
-    
-    print(request.body)
-    print(HttpResponse)
 
     #data = json.loads(request.body.decode('utf-8'))
     return HttpResponseRedirect(payment.confirmation.confirmation_url)
