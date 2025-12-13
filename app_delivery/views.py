@@ -157,8 +157,6 @@ def get_list_of_sdek_tariffs(request):
         print('===============')
         print(i)
 
-
-     
 def get_order_status (request):
     #getting valid bearer token
     url="https://api.cdek.ru/v2/oauth/token"
@@ -188,52 +186,71 @@ def get_order_status (request):
     print(json)
 #tariffs   
 def get_sdek_delivery_cost(request):
-    #getting valid bearer token
-    url="https://api.cdek.ru/v2/oauth/token"
+    if request.method == 'POST':
+        shipment_city=request.POST["shipment_city"]
+        shipment_region=request.POST["shipment_region"]
+        print('======================================')
+        print(shipment_region, shipment_city)
+        city=SDEK_City.objects.get(name=shipment_city, region=shipment_region)
 
-    headers = {
-        "grant_type": "client_credentials",
-        "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
-        "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
-    }
-    #в качестве параметров (params) передаём заголовки (headers)
-    response = requests.post(url, params=headers, )
-    json=response.json()
-    print('============================')
-    print(json)
-    access_token=json['access_token']
+        #getting valid bearer token
+        url="https://api.cdek.ru/v2/oauth/token"
 
-    headers = {
-        "Authorization": f'Bearer {access_token}',
-    }
+        headers = {
+            "grant_type": "client_credentials",
+            "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+            "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+        }
+        #в качестве параметров (params) передаём заголовки (headers)
+        response = requests.post(url, params=headers, )
+        json=response.json()
+        print('============================')
+        print(json)
+        access_token=json['access_token']
 
-    params= {
-                "from_location" : {
-                    'code': 414,
-                    'contragent_type': 'LEGAL_ENTITY'
-                    },
-                "to_location" : {
-                    'code' : 506,
-                    'contragent_type': 'INDIVIDUAL',
-                    },
-                "packages": [
-                    {   "weight": 1000,
-                        "length": 140,
-                        "width": 30,
-                        "height": 5
+        headers = {
+            "Authorization": f'Bearer {access_token}',
+        }
+
+        params= {
+                    "from_location" : {
+                        'code': 414,
+                        'contragent_type': 'LEGAL_ENTITY'
                         },
-                    ]
-    
-    }
-    url="https://api.cdek.ru/v2/calculator/tarifflist"
-    #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-    response = requests.post(url, headers=headers, json=params)
-    json=response.json()
-    print('=======================')
-    a=json['tariff_codes']
-    for i in a:
-        print(i)
-        print("=====================")
+                    "to_location" : {
+                        'code' : city.code,
+                        'contragent_type': 'INDIVIDUAL',
+                        },
+                    "packages": [
+                        {   "weight": 1000,
+                            "length": 140,
+                            "width": 30,
+                            "height": 5
+                            },
+                        ]
+        
+        }
+        url="https://api.cdek.ru/v2/calculator/tarifflist"
+        #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+        response = requests.post(url, headers=headers, json=params)
+        json=response.json()
+        print('=======================')
+        a=json['tariff_codes']
+        json=response.json()
+        a=json['tariff_codes']
+        for i in a:
+            if i['tariff_code'] == 136:
+                print(i)
+                delivery_sum=i['delivery_sum']
+                break
+        delivery_cost= int(delivery_sum)
+        
+        context = {
+            'delivery_cost': delivery_cost,
+            'shipment_city' : shipment_city,
+            # 'order': order,
+        }
+        return render (request, 'delivery/delivery_cost.html' , context)
 
 def open_sdek_vidget(request):
     return render (request, 'cart/sdekvidget_ver_1.html' )
@@ -302,6 +319,59 @@ def open_sdek_vidget(request):
 
     return render (request, 'cart/payment_page.html')    
 
+def delivery_city_choice(request):
+    if request.method=="POST":
+        country=request.POST.get('country', False)
+        region=request.POST.get('region', False)
+        city=request.POST.get('city', False)
+        countries=['Россия', 'Казахстан', 'Белоруссия']
+        if country and region:
+            # print(country, region, city)
+            if country=="Россия":
+                country_code="RU"
+            elif country=="Казахстан":
+                country_code='KZ'
+            else:
+                country_code="BY"
+            regions=SDEK_Office.objects.filter(country_code=country_code)
+            regions=regions.distinct('region')
+            cities=SDEK_Office.objects.filter(region=region)
+            cities=cities.distinct('city')
+            context = {
+                'countries': countries,
+                'regions': regions,
+                'cities': cities
+            }
+            
+            return render (request, 'delivery/delivery_city_choice.html', context )
+        
+        elif country:
+            # print(country)
+            if country=="Россия":
+                country_code="RU"
+            elif country=="Казахстан":
+                country_code='KZ'
+            else:
+                country_code="BY"
+            
+            regions=SDEK_Office.objects.filter(country_code=country_code)
+            regions=regions.distinct('region')
+          
+            context = {
+                'countries': countries,
+                'regions': regions,
+                #'cities': cities,
+            }
+            return render(request, 'delivery/delivery_city_choice.html', context)
+
+    else:
+        countries=['Россия', 'Казахстан', 'Белоруссия']
+        # sdek_offices=SDEK_Office.objects.filter(country_code__in=['KZ', 'RU', 'BY']).order_by('-country_code')
+        context = {
+            'countries': countries,
+        }
+        return render (request, 'delivery/delivery_city_choice.html', context )
+
 def sdek_office_choice(request, order_id):
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)
@@ -318,29 +388,36 @@ def sdek_office_choice(request, order_id):
                 country_code='KZ'
             else:
                 country_code="BY"
-            # if SDEK_Office.objects.filter(country_code=country_code, region=region, city=city).exists():
-            
-            # else:
-                #messages.error(request,"Пункт выдачи СДЕК, город, регион или страна не соответсвуют друг другу.")
-                #regions=SDEK_Office.objects.filter(country_code=country_code)
-                # #cities=SDEK_Office.objects.filter(region=region)
-                # offices=[]
-                # cities=[]
             regions=SDEK_Office.objects.filter(country_code=country_code)
             regions=regions.distinct('region')
             cities=SDEK_Office.objects.filter(region=region)
             cities=cities.distinct('city')
 
             offices=SDEK_Office.objects.filter(country_code=country_code, region=region, city=city, type='PVZ').order_by('address_full')
-            context = {
-                'order': order,
-                'order_items': order_items,
-                'countries': countries,
-                'regions': regions,
-                'cities' : cities,
-                'offices': offices
-            }
-            return render(request, 'cart/order_page.html', context)    
+            if request.user.is_authenticated:
+                context = {
+                    'order': order,
+                    'order_items': order_items,
+                    'countries': countries,
+                    'regions': regions,
+                    'cities' : cities,
+                    'offices': offices,
+                    'f_name': order.user.first_name,
+                    'l_name': order.user.last_name,
+                    'email': order.user.email,
+                }
+                return render(request, 'cart/order_page.html', context)
+            else:
+                context = {
+                    'order': order,
+                    'order_items': order_items,
+                    'countries': countries,
+                    'regions': regions,
+                    'cities' : cities,
+                    'offices': offices,
+                }
+                return render(request, 'cart/order_page.html', context)
+
         elif country and region:
             print(country, region)
             if country=="Россия":
@@ -353,15 +430,27 @@ def sdek_office_choice(request, order_id):
             regions=regions.distinct('region')
             cities=SDEK_Office.objects.filter(region=region)
             cities=cities.distinct('city')
-
-            context = {
+            if request.user.is_authenticated:
+                context = {
                 'order': order,
                 'order_items': order_items,
-                'countries': countries,
+                'countries' : countries,
                 'regions': regions,
                 'cities' : cities,
-            }
-            return render(request, 'cart/order_page.html', context)
+                'f_name': order.user.first_name,
+                'l_name': order.user.last_name,
+                'email': order.user.email,
+                }
+                return render(request, 'cart/order_page.html', context)
+            else:
+                context = {
+                    'order': order,
+                    'order_items': order_items,
+                    'countries': countries,
+                    'regions': regions,
+                    'cities' : cities,
+                }
+                return render(request, 'cart/order_page.html', context)
         elif country:
             print(country)
             if country=="Россия":
@@ -373,32 +462,65 @@ def sdek_office_choice(request, order_id):
             
             regions=SDEK_Office.objects.filter(country_code=country_code)
             regions=regions.distinct('region')
-          
-            context = {
-                'countries': countries,
+
+            if request.user.is_authenticated:
+                context = {
                 'order': order,
                 'order_items': order_items,
                 'regions': regions,
-                #'cities': cities,
-            }
-            return render(request, 'cart/order_page.html', context)
+                'countries' : countries,
+                'f_name': order.user.first_name,
+                'l_name': order.user.last_name,
+                'email': order.user.email,
+                }
+                return render(request, 'cart/order_page.html', context)
+            else:
+                context = {
+                    'countries': countries,
+                    'order': order,
+                    'order_items': order_items,
+                    'regions': regions,
+                    #'cities': cities,
+                }
+                return render(request, 'cart/order_page.html', context)
         else:
             countries=['Россия', 'Казахстан', 'Белоруссия']
+            if request.user.is_authenticated:
+                context = {
+                    'order': order,
+                    'order_items': order_items,
+                    'countries' : countries,
+                    'f_name': order.user.first_name,
+                    'l_name': order.user.last_name,
+                }
+                return render(request, 'cart/order_page.html', context)
+            else:
+                context = {
+                    'order': order,
+                    'order_items': order_items,
+                    'countries' : countries,
+                    'order_id' : order_id,
+                }
+            return render(request, 'cart/order_page.html', context)
+    else:
+        countries=['Россия', 'Казахстан', 'Белоруссия']
+        if request.user.is_authenticated:
             context = {
                 'order': order,
                 'order_items': order_items,
                 'countries' : countries,
-                'order_id' : order_id,
+                'f_name': order.user.first_name,
+                'l_name': order.user.last_name,
+                'email': order.user.email,
             }
-        return render(request, 'cart/order_page.html', context)
-    else:
-        countries=['Россия', 'Казахстан', 'Белоруссия']
-        context = {
-            'order': order,
-            'order_items': order_items,
-            'countries' : countries,
-        }
-        return render(request, 'cart/order_page_final.html', context)
+            return render(request, 'cart/order_page_final.html', context)
+        else:
+            context = {
+                'order': order,
+                'order_items': order_items,
+                'countries' : countries,
+            }
+            return render(request, 'cart/order_page_final.html', context)
 
 def create_sdek_shipment (request, order_id):
     order=Order.objects.get(id=order_id)

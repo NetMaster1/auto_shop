@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from . models import Cart, CartItem, Identifier, OrderItem, Order
+from . models import Cart, CartItem, Identifier, OrderItem, Order, Customer
 from app_product.models import Product
 from app_reference.models import SDEK_Office
 from django.core.exceptions import ObjectDoesNotExist
@@ -92,7 +92,7 @@ def purchase_product(request):
         identifier=Identifier.objects.create()
         order=Order.objects.create()
         if request.user.is_authenticated:
-            order.buyer=request.user
+            order.user=request.user
             order.save()
         for value in check_boxes:
             cart_item=CartItem.objects.get(id=value)
@@ -121,15 +121,31 @@ def order(request, order_id):
 
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)
+    if request.user.is_authenticated:
+        f_name=order.user.first_name
+        l_name=order.user.last_name
+        email=order.user.email
 
-    context = {
-        'order': order,
-        'order_items': order_items,
-        'countries': countries,
-        # 'sdek_offices': sdek_offices,
-    }
+        context = {
+            'order': order,
+            'order_items': order_items,
+            'countries': countries,
+            'f_name': f_name,
+            'l_name': l_name,
+            'email': email,
+            # 'sdek_offices': sdek_offices,
+            }
+        return render (request, 'cart/order_page.html', context)
+    
+    else:
+        context = {
+            'order': order,
+            'order_items': order_items,
+            'countries': countries,
+            # 'sdek_offices': sdek_offices,
+        }
 
-    return render (request, 'cart/order_page.html', context)
+        return render (request, 'cart/order_page.html', context)
  
 def create_final_purchase_order(request, order_id):
     if request.method=='POST': 
@@ -193,7 +209,7 @@ def make_payment(request, order_id):
           
         "confirmation": {
             "type": "redirect",
-            "return_url": "https://www.auto-deflector.ru/"
+            "return_url": "https://www.auto-deflector.ru/purchasepayment_status"
             },
         "capture": True,
         "description": order.id,
@@ -201,5 +217,15 @@ def make_payment(request, order_id):
     uuid.uuid4())
     
     #data = json.loads(request.body)
+    
+    print(request.body)
+    print(HttpResponse)
+
     #data = json.loads(request.body.decode('utf-8'))
     return HttpResponseRedirect(payment.confirmation.confirmation_url)
+    
+
+def payment_status(request):
+    data = json.loads(request.body)
+    print(data)
+    return redirect ('shopfront')
