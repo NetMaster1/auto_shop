@@ -150,6 +150,46 @@
   </div>
 </form>
 
+
+{% if request.user.is_authenticated %}
+<form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form">
+   {% csrf_token %}
+        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
+  
+        <strong>Получатель:</strong>
+<div class="box_client p-3">
+ <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
+    <input type="text" class="form-control" id="firstName" name="f_name" value="{{f_name}}" required >
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
+    <input type="text" class="form-control" id="lastName" name="l_name" value="{{l_name}}" required >
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="phone" class="form-label">Телефон</label> -->
+    <input type="text" class="form-control" id="phone" name="phone" placeholder="Телефон" required >
+  </div>
+  </div>
+  <div class="row p-1">
+  <div class="col-md-4">
+    <!-- <label for="email" class="form-label">Email</label> -->
+    <input type="email" class="form-control" id="email" name="email" value="{{email}}" required >
+  </div>
+  </div>
+  </div>
+      <div class="row m-auto mt-3">
+          <div class="col-2">
+            <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
+          </div>
+      </div>
+</form>
+{% else %}
 <form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form">
    {% csrf_token %}
         <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
@@ -187,6 +227,7 @@
           </div>
       </div>
 </form>
+{% endif %}
 
       
 

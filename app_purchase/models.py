@@ -57,8 +57,6 @@ class CartItem(models.Model):
     def __str__(self):
         return self.product
 
-
-
 class Order(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -72,7 +70,7 @@ class Order(models.Model):
     receiver_firstName = models.CharField(max_length=100, null=True, blank=True)
     receiver_lastName = models.CharField(max_length=100, null=True, blank=True)
     receiver_email = models.EmailField(max_length=50, null=True, blank=True)
-    receiver_phone = models.CharField(max_length=10, null=True, blank=True)
+    receiver_phone = models.CharField(max_length=15, null=True, blank=True)
 
     def __str__(self):
         return self.product

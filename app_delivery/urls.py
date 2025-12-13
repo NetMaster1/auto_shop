@@ -12,6 +12,7 @@ urlpatterns = [
     path('open_sdek_vidget', views.open_sdek_vidget, name='open_sdek_vidget'),
     path('sdek_office_choice/<int:order_id>/', views.sdek_office_choice, name='sdek_office_choice'),
     path('create_sdek_shipment/<int:order_id>/', views.create_sdek_shipment, name='create_sdek_shipment'),
+    path('delivery_city_choice', views.delivery_city_choice, name='delivery_city_choice'),
     
  
 ]

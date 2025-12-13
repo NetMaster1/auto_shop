@@ -1,0 +1,164 @@
+<div class="hide">
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container">
+<div class="box_city_choice">
+
+
+  
+
+  <div class="row">
+        <form action="{% url 'delivery_city_choice' %}" method="POST" id="form_to_be_sent" >
+          {% csrf_token %}
+
+    <div class="row mt-2 mb-2">
+    <div class="col-md-4">
+      <label for="country" class="form-label"> <strong>Страна</strong></label>
+      <select name="country" id="country" class='form-control' required>
+          <!-- <option selected="true" disabled="disabled">Выберите страну</option> -->
+          <option  value="" disabled selected hidden>Выберите страну</option>
+          <!-- <option value="">Выберите страну</option> -->
+          {% for country in countries %}
+          <option value="{{country}}">{{country}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      </div>
+  
+  
+    <div class="row mt-2 mb-2">
+    <div class="col-md-4">
+      <label for="region" class="form-label"> <strong>Регион</strong>
+        </label>
+        <select name="region" id="region" class='form-control' required>
+          <option selected="true">Выберите регион</option>
+          <!-- <option value="">Выберите регион</option> -->
+          {% for region in regions %}
+          <option value="{{region.region}}">{{region.region}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+      <div class="row mt-2 mb-2">
+        <div class="col-md-6">
+          <label for="city" class="form-label"> <strong>Населенный пункт</strong> </label>
+            <select name="city" id="city" class='form-control'>
+            <!-- <select name="city" id="city" class='form-control' autocomplete="off"> -->
+              <!-- <option selected="true" disabled="disabled">Выберите населенный пункт в пределах вашего региона</option> -->
+              <option value="">Выберите населенный пункт в пределах вашего региона</option>
+              {% for city in cities %}
+              <option value="{{city.city}}">{{city.city}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          </div>
+
+        </form>
+    <form action="{% url 'get_sdek_delivery_cost' %}" method="POST" id="shipment_form" target="_parent">
+   {% csrf_token %}
+        <input type="text" id="shipment_city" name="shipment_city" class='form-control' autocomplete="off" hidden> 
+        <input type="text" id="shipment_region" name="shipment_region" class='form-control' autocomplete="off" hidden> 
+  
+      <div class="row m-auto mt-3">
+          <div class="col-2">
+            <input type="submit" value="Рассчитать" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
+          </div>
+      </div>
+    </form>
+    
+    
+  </div>
+
+</div>
+</div>
+</div>
+
+
+<script>
+    const form_to_be_sent=document.querySelector('#form_to_be_sent');
+    const country = document.querySelector('#country');
+    const region = document.querySelector('#region');
+    const city = document.querySelector('#city');
+    const clear_storage = document.querySelector('#clear_storage');
+
+
+  //====================Country Module=======================
+country.addEventListener('change', e=>{
+        //sessionStorage.clear();
+        country_value = country.value;
+        sessionStorage.setItem('country', country_value);
+        sessionStorage.removeItem('city');
+        sessionStorage.removeItem('region');
+        city.value='';
+        region.value='';
+    }
+ )
+country.addEventListener('change', sendJSForm);
+    function sendJSForm() {
+        form_to_be_sent.submit();
+    };
+
+//===============Region Module======================
+region.addEventListener('change', e=>{
+        region_value = region.value;
+        shipment_region.value = region_value;
+        sessionStorage.setItem('region', region_value);
+        sessionStorage.setItem('country', country_value);
+        sessionStorage.removeItem('city');
+        city.value='';
+       
+    }
+  )
+region.addEventListener('change', sendJSForm);
+    function sendJSForm() {
+        form_to_be_sent.submit();
+    };
+
+
+//===============Office Module======================
+city.addEventListener('change', e=>{
+        city_value = city.value;
+        shipment_city.value = city_value;
+        sessionStorage.setItem('city', city_value);
+        clear_storage.removeAttribute('disabled');
+
+    }
+)
+
+//===============================================
+document.addEventListener('DOMContentLoaded', e => {
+        if (sessionStorage.getItem('country') === null)
+          {console.log ("No country choice")}
+        else {
+          country_value = sessionStorage.getItem('country');
+          country.value = country_value
+        }
+        if (sessionStorage.getItem('region') === null)
+          {console.log ("No region choice")}
+        else {
+          region_value = sessionStorage.getItem('region');
+          region.value = region_value
+          shipment_region.value = region_value
+        }
+        if (sessionStorage.getItem('city') === null)
+          {console.log ("No city choice")}
+        else {
+          city_value = sessionStorage.getItem('city');
+          city.value = city_value;
+          shipment_city.value = city_value;
+        }
+      });
+
+clear_storage.addEventListener('click', clearStorage);
+     function clearStorage(e) {
+         sessionStorage.clear();
+     };
+
+
+</script>
+
+{% endblock %}

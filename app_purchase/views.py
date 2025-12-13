@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from . models import Cart, CartItem, Identifier, OrderItem, Order
+from . models import Cart, CartItem, Identifier, OrderItem, Order, Customer
 from app_product.models import Product
 from app_reference.models import SDEK_Office
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import uuid
 from yookassa import Configuration, Payment
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 import json
 from django.contrib import messages, auth
@@ -92,7 +93,7 @@ def purchase_product(request):
         identifier=Identifier.objects.create()
         order=Order.objects.create()
         if request.user.is_authenticated:
-            order.buyer=request.user
+            order.user=request.user
             order.save()
         for value in check_boxes:
             cart_item=CartItem.objects.get(id=value)
@@ -121,15 +122,31 @@ def order(request, order_id):
 
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)
+    if request.user.is_authenticated:
+        f_name=order.user.first_name
+        l_name=order.user.last_name
+        email=order.user.email
 
-    context = {
-        'order': order,
-        'order_items': order_items,
-        'countries': countries,
-        # 'sdek_offices': sdek_offices,
-    }
+        context = {
+            'order': order,
+            'order_items': order_items,
+            'countries': countries,
+            'f_name': f_name,
+            'l_name': l_name,
+            'email': email,
+            # 'sdek_offices': sdek_offices,
+            }
+        return render (request, 'cart/order_page.html', context)
+    
+    else:
+        context = {
+            'order': order,
+            'order_items': order_items,
+            'countries': countries,
+            # 'sdek_offices': sdek_offices,
+        }
 
-    return render (request, 'cart/order_page.html', context)
+        return render (request, 'cart/order_page.html', context)
  
 def create_final_purchase_order(request, order_id):
     if request.method=='POST': 
@@ -177,29 +194,36 @@ def make_payment(request, order_id):
     Configuration.account_id = '1159072'#shop id
     Configuration.secret_key = 'live_lJQG_JqI1j3k2DicZikQHWd08Pp4YUSDADS7zZo_4i0'#API Key
     payment = Payment.create({
-
         "amount": {
                 "value": order.sum,
                 "currency": "RUB"
                 },
-
         "receipt": {
             "customer": {
                 #"email": order.buyer.f_name,
                 "email": '79200711112@yandex.ru',
                 },
                 "items": items_arr,
-                },
-          
+                },          
         "confirmation": {
             "type": "redirect",
-            "return_url": "https://www.auto-deflector.ru/"
+            "return_url": "https://www.auto-deflector.ru"
             },
         "capture": True,
         "description": order.id,
     },
     uuid.uuid4())
-    
-    #data = json.loads(request.body)
-    #data = json.loads(request.body.decode('utf-8'))
     return HttpResponseRedirect(payment.confirmation.confirmation_url)
+
+@csrf_exempt #отключает защиту csrf
+def payment_status(request):
+     if request.method == 'POST':
+        try:
+            #получение данных запроса POST от стороннего сайта в формате json и преобразование данных в формат словаря Python
+            data = json.loads(request.body)
+            print ('=========================')
+            print(data)
+        except:
+            print('some error')
+  
+   

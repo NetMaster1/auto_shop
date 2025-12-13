@@ -14,10 +14,21 @@
     </div>
     {% endfor%}
       <div class="row">
-        Cумма заказа: {{order.sum}}
+        Cумма заказа: {{order.sum}} руб.
     </div>
+    {% if request.user.is_authenticated %}
+     <div class="row">
+        Покупатель: {{order.user.first_name}} {{order.user.last_name}}
+    </div>
+    {% else %}
+       <div class="row">
+        Покупатель: нет данных (розничная продажа)
+       </div>
+    {% endif %}
+
     <div class="row">
-        Логистическая компания: {{order.delivery_operator}}
+        <!-- Логистическая компания: {{order.delivery_operator}} -->
+        Логистическая компания: СДЕК
     </div>
     <div class="row">
         Адрес доставки: {{order.delivery_point}}
@@ -25,6 +36,8 @@
     <div class="row">
         Стоимость доставки: {{order.delivery_cost}} (оплачивается отдельно при получении товара)
     </div>
+
+
     <div class="row">
         Получатель: {{order.receiver_firstName}} {{order.receiver_lastName}}
     </div>
@@ -32,7 +45,7 @@
         Телефон получателя: {{order.receiver_phone}} 
     </div>
     <div class="row">
-        Email для чека: {{order.email}} 
+        Email для чека: {{order.receiver_email}} 
     </div>
     <div class="row mt-2">
         <div class="col">

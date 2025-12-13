@@ -132,7 +132,7 @@
     display: block;
     /* display: none; */
     /* position: fixed; */
-    /* position: absolute; */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -251,3 +251,18 @@
   border-radius: 1vmax;
 
 }
+
+.box_city_choice {
+  background-color: white;
+  border-radius: 1vmax;
+  padding:1rem;
+  position: absolute;
+  /* position: relative; */
+  top: 15rem;
+  left: 30rem;
+  display: block;
+  z-index: 1;
+  /* align-items: center;
+  justify-content: center; */
+}
+
