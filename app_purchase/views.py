@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import uuid
 from yookassa import Configuration, Payment
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 import json
 from django.contrib import messages, auth
@@ -193,34 +194,36 @@ def make_payment(request, order_id):
     Configuration.account_id = '1159072'#shop id
     Configuration.secret_key = 'live_lJQG_JqI1j3k2DicZikQHWd08Pp4YUSDADS7zZo_4i0'#API Key
     payment = Payment.create({
-
         "amount": {
                 "value": order.sum,
                 "currency": "RUB"
                 },
-
         "receipt": {
             "customer": {
                 #"email": order.buyer.f_name,
                 "email": '79200711112@yandex.ru',
                 },
                 "items": items_arr,
-                },
-          
+                },          
         "confirmation": {
             "type": "redirect",
-            "return_url": "https://www.auto-deflector.ru/purchasepayment_status"
+            "return_url": "https://www.auto-deflector.ru"
             },
         "capture": True,
         "description": order.id,
     },
     uuid.uuid4())
-
-    #data = json.loads(request.body.decode('utf-8'))
     return HttpResponseRedirect(payment.confirmation.confirmation_url)
-    
 
+@csrf_exempt #отключает защиту csrf
 def payment_status(request):
-    data = json.loads(request.body)
-    print(data)
-    return redirect ('shopfront')
+     if request.method == 'POST':
+        try:
+            #получение данных запроса POST от стороннего сайта в формате json и преобразование данных в формат словаря Python
+            data = json.loads(request.body)
+            print ('=========================')
+            print(data)
+        except:
+            print('some error')
+  
+   
