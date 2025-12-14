@@ -9,6 +9,7 @@ router.register('api', views.ServerResponseView)
 urlpatterns = [
     path('', include(router.urls)),
     path('ozon_push', views.ozon_push, name='ozon_push'),
+    path('payment_status', views.payment_status, name='payment_status'),
     path('wb_test', views.wb_test, name='wb_test'),
     path('wb_categories', views.wb_categories, name='wb_categories'),
     path('wb_subjects', views.wb_subjects, name='wb_subjects'),

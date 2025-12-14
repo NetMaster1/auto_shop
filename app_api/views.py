@@ -2,13 +2,14 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import ServerResponse
 from app_product.models import Product, RemainderHistory, DocumentType
+from app_purchase.models import Order, OrderItem
+from app_reference.models import SDEK_Office
 from .serializers import ServerResponseSerializer
 import json
 import requests
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 import datetime
 import pytz
 import pandas
@@ -24,7 +25,7 @@ class ServerResponseView(viewsets.ModelViewSet):
 
 #url, куда приходит post request from ozon ( push уведомление) в формате json on поступившем заказе 
 @csrf_exempt #отключает защиту csrf
-def ozon_push(request):
+def ozon_push(request):#receives a notification from ozon on a new order
     if request.method == 'POST':
       try:
         #получение данных запроса POST от стороннего сайта в формате json и преобразование данных в формат словаря Python
@@ -176,6 +177,115 @@ def ozon_push(request):
 
       #messages.success(request, data)   
       #return redirect("dashboard")
+
+@csrf_exempt #отключает защиту csrf
+def payment_status(request):#receives an http notice from Y-kassa on a successful payment
+	import json
+	if request.method == 'POST':
+		try:
+			data = json.loads(request.body)
+      		#data = json.loads(request.body.decode('utf-8'))
+			print(data)
+			
+
+			object=data.get('object')
+			order_id=object.get('description')
+			status=object.get('status')
+			order=Order.objects.get(id=order_id)
+			order.status=status
+			order.save()
+			if order.status=='succeeded':
+				delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
+				print('========================')
+				print(delivery_point.code)
+				order_items=OrderItem.objects.filter(order=order)
+				order_items=[]
+				for item in order_items:
+					order_item_dict={
+						'name': item.product.name,
+						'ware_key': item.product.article,
+						'payment': {
+								"value": 0.1,
+								"vat_sum": 0.1,
+								"vat_rate": 0
+								},
+						"weight": 800,
+						"amount": 1,
+						"cost": 1,
+					}
+					order_items.append(order_item_dict)
+				
+				sdek_order={
+					"type": 1,
+					# "additional_order_types": [],
+					"number": order.id,
+					# "accompanying_number": "string",
+					"tariff_code": 136,
+					# "comment": "string",
+					"shipment_point": "414",
+					"delivery_point": delivery_point.code,
+					# "date_invoice": "2019-08-24",
+					# "shipper_name": "string",
+					# "shipper_address": "string",
+					"delivery_recipient_cost": {},
+					"delivery_recipient_cost_adv": [],
+					# "sender": {},
+					# "seller": {},
+					"recipient":{
+						# "company": "string",
+						"name": order.receiver_firstName,
+						# "contragent_type": "INDIVIDUAL",
+						# "passport_series": "string",
+						# "passport_number": "string",
+						# "passport_date_of_issue": "2019-08-24",
+						# "passport_organization": "string",
+						# "tin": "string",
+						# "passport_date_of_birth": "2019-08-24",
+						"email": "string",
+						"phones": [order.receiver_phone,]
+						},
+					# "from_location": {},
+					# "to_location": {},
+					# "services": [],
+					"packages": [
+							{
+							"number": order.id,
+							"weight": 1000,
+							"length": 100,
+							"width": 30,
+							"height": 5,
+							"comment": "Хрупкое, обращаться осторожно",
+							"items":  order_items,
+							}
+						],
+					# "is_client_return": true,
+					# "has_reverse_order": true,
+					# "developer_key": "string",
+					# "print": "WAYBILL",
+					# "widget_token": "string"
+					}
+				url="https://api.cdek.ru/v2/oauth/token"
+
+				headers = {
+					"grant_type": "client_credentials",
+					"client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+					"client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+				}
+				response = requests.post(url, params=headers,)
+				json=response.json()
+				access_token=json['access_token']
+				headers = {
+					"Authorization": f'Bearer {access_token}',
+				}
+				url="https://api.cdek.ru/v2/orders"
+				response = requests.post(url, headers=headers, json=sdek_order)
+				json=response.json()
+				print(json)
+		
+		except Exception as error:
+		    print(error)
+  
+
 #===================================WB Reference Data===========================================
 def wb_test(request):
   #url = "https://common-api.wildberries.ru/ping"
