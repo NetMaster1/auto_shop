@@ -62,7 +62,7 @@ class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
     sum = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     buyer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
-    paid=models.BooleanField(default=False)
+    status=models.CharField(max_length=50, null=True, blank=True)
     shipped=models.BooleanField(default=False)
     delivery_operator = models.ForeignKey(DeliveryOperator,on_delete=models.DO_NOTHING, null=True, blank=True)
     delivery_point = models.CharField(max_length=100, null=True, blank=True)
@@ -72,8 +72,8 @@ class Order(models.Model):
     receiver_email = models.EmailField(max_length=50, null=True, blank=True)
     receiver_phone = models.CharField(max_length=15, null=True, blank=True)
 
-    def __str__(self):
-        return self.product
+    def __int__(self):
+        return self.id
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, null=True, on_delete=models.DO_NOTHING)
