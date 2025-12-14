@@ -313,8 +313,9 @@ def payment_status(request):
                 url="https://api.cdek.ru/v2/orders"
                 response = requests.post(url, headers=headers, json=sdek_order)
                 json=response.json()
+                print(json)
         
         except:
-            print('some error')
+            print(request.body)
   
-   
+    
