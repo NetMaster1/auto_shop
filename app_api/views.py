@@ -322,25 +322,19 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
       
     except Exception as e:
       print(e)
-      
-
-
-
-  
 
 #===================================WB Reference Data===========================================
 def wb_test(request):
-  #url = "https://common-api.wildberries.ru/ping"
-	url = "https://common-api.wildberries.ru/api/v1/seller-info"
-	headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
-	response = requests.get(url, headers=headers)
-	status_code=response.status_code
-	a=response.json()
-	print(f'status_code: {status_code}')
-	print(a)
-
-  messages.error(request,f'WB Response: {a}')
-  return redirect ('dashboard')
+    #url = "https://common-api.wildberries.ru/ping"
+    url = "https://common-api.wildberries.ru/api/v1/seller-info"
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+    response = requests.get(url, headers=headers)
+    status_code=response.status_code
+    a=response.json()
+    print(f'status_code: {status_code}')
+    print(a)
+    messages.error(request,f'WB Response: {a}')
+    return redirect ('dashboard')
 
 def wb_categories (request):
   url="https://content-api.wildberries.ru/content/v2/object/parent/all"
