@@ -264,7 +264,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               # "accompanying_number": "string",
               "tariff_code": 136,
               # "comment": "string",
-              "shipment_point": "414",
+              "shipment_point": "NN8",
               "delivery_point": delivery_point.code,
               # "date_invoice": "2019-08-24",
               # "shipper_name": "string",
