@@ -105,7 +105,7 @@ class RemainderHistory(models.Model):
     outgoing_quantity = models.IntegerField(null=True)
     current_remainder = models.BigIntegerField(default=0)
     update_check = models.BooleanField(default=False)
-
+    
     class Meta:
         ordering = ('-created',)  # sorting by date
 

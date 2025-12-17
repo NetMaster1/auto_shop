@@ -159,6 +159,8 @@ def get_list_of_sdek_tariffs(request):
 
 def get_order_status (request):
     #getting valid bearer token
+    if request.method=="POST":
+        uuid=request.POST["uuid"]
     url="https://api.cdek.ru/v2/oauth/token"
 
     headers = {
@@ -174,7 +176,6 @@ def get_order_status (request):
         "Authorization": f'Bearer {access_token}',
     }
 
-    uuid='8edb3c38-167a-443c-8802-5c504c23310a'
     #uuid='02d1c0f4-d1af-445c-82bb-7f24a2854f1d'
     # params= {
     #     'uuid': uuid
@@ -592,3 +593,4 @@ def create_sdek_shipment (request, order_id):
         else:
             messages.error(request,"Вы не ввели полностью необдходимые данные.")
             return redirect ('order', order.id)
+        

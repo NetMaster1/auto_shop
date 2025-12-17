@@ -414,6 +414,26 @@
     <br>
 
 
+    ======================Check SDEK Order Status =================================================
+    <label for="file_name">
+        <h5>
+            Узнать статус заказа СДЕК
+        </h5>
+    </label>
+
+   
+    <form action="{% url 'get_order_status' %}" method="POST" >
+        {% csrf_token %}
+    
+        <input type="text" class='form-control' id="uuid" name="uuid" required>
+   
+            <input type="submit" value="Check"
+                class="btn btn-sm btn-block btn-outline-dark clear_storage">
+    
+    </form>
+    <br>
+
+
      
 </body>
 </html>

@@ -71,6 +71,8 @@ class Order(models.Model):
     receiver_lastName = models.CharField(max_length=100, null=True, blank=True)
     receiver_email = models.EmailField(max_length=50, null=True, blank=True)
     receiver_phone = models.CharField(max_length=15, null=True, blank=True)
+    #somehow ykassa sends http note a few times. In order to avoid duplicate rhos & cdek orders this field is used
+    corresponding_rhos_created = models.BooleanField(default=False)
 
     def __int__(self):
         return self.id
