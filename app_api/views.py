@@ -207,23 +207,25 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
           delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
           print('========================')
           print(delivery_point.code)
+          contragent_full_name=[order.receiver_firstName, order.receiver_lastName]
+          contragent_full_name = ' '.join(contragent_full_name)
           order_items=OrderItem.objects.filter(order=order)
           order_item_array=[]
           for item in order_items:
             product=Product.objects.get(article=item.article)
             sku=product.ozon_sku
             order_item_dict={
-              'name': item.product,
-              'ware_key': item.article,
-              'payment': {
-                  "value": float(item.price),
-                  "vat_sum": 0,
-                  "vat_rate": 0
-                  },
-              "weight": 800,
-              "amount": 1,
-              "cost": 1,
-            }
+                    'name': item.product,
+                    'ware_key': item.article,
+                    'payment': {
+                        "value": 0,
+                        "vat_sum": 0,
+                        "vat_rate": 0,
+                        },
+                    "weight": 800,
+                    "amount": 1,
+                    "cost": 1,
+                  }
             order_item_array.append(order_item_dict)
               
             if RemainderHistory.objects.filter(article=item.article, created__lt=dateTime).exists():
@@ -269,17 +271,17 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               # "date_invoice": "2019-08-24",
               # "shipper_name": "string",
               # "shipper_address": "string",
-              "delivery_recipient_cost":{
-                  "value": float(item.price),
-                  "vat_sum": 4.76,
-                  "vat_rate": 5,
-                  },
-              "delivery_recipient_cost_adv": [],
+              # "delivery_recipient_cost":{
+              #     "value": 500,
+              #     "vat_sum": 23.81,
+              #     "vat_rate": 5,
+              #     },
+              # "delivery_recipient_cost_adv": [],
               # "sender": {},
               # "seller": {},
               "recipient":{
                 # "company": "string",
-                "name": order.receiver_firstName,
+                "name": contragent_full_name,
                 # "contragent_type": "INDIVIDUAL",
                 # "passport_series": "string",
                 # "passport_number": "string",
@@ -287,7 +289,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
                 # "passport_organization": "string",
                 # "tin": "string",
                 # "passport_date_of_birth": "2019-08-24",
-                "email": "string",
+                "email": order.receiver_email,
                 "phones": [
                    {'number': order.receiver_phone, },]
                 },
