@@ -217,8 +217,8 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               'ware_key': item.article,
               'payment': {
                   "value": float(item.price),
-                  "vat_sum": 4.76,
-                  "vat_rate": 5
+                  "vat_sum": 0,
+                  "vat_rate": 0
                   },
               "weight": 800,
               "amount": 1,
@@ -270,8 +270,8 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               # "shipper_name": "string",
               # "shipper_address": "string",
               "delivery_recipient_cost":{
-                  "value": 500.0,
-                  "vat_sum": 23.8,
+                  "value": float(item.price),
+                  "vat_sum": 4.76,
                   "vat_rate": 5,
                   },
               "delivery_recipient_cost_adv": [],
