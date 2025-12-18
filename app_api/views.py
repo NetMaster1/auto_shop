@@ -216,9 +216,9 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               'name': item.product,
               'ware_key': item.article,
               'payment': {
-                  "value": 0.1,
-                  "vat_sum": 0.1,
-                  "vat_rate": 0
+                  "value": float(item.price),
+                  "vat_sum": 4.76,
+                  "vat_rate": 5
                   },
               "weight": 800,
               "amount": 1,
