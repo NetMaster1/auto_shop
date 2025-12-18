@@ -270,9 +270,9 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               # "shipper_name": "string",
               # "shipper_address": "string",
               "delivery_recipient_cost":{
-                  "value": 0.1,
-                  "vat_sum": 0.1,
-                  "vat_rate": 0
+                  "value": 500.0,
+                  "vat_sum": 23.8,
+                  "vat_rate": 5,
                   },
               "delivery_recipient_cost_adv": [],
               # "sender": {},
