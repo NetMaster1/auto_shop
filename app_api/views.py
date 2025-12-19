@@ -192,6 +192,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
     import json  
     try: 
       data = json.loads(request.body)
+      print(data)
       #data = json.loads(request.body.decode('utf-8'))
       object=data.get('object')
       order_id=object.get('description')
@@ -205,13 +206,13 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
         order.save()
         if order.status=='succeeded':
           delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
-          city_code=delivery_point.city_code
           print('========================')
           print(delivery_point.code)
           contragent_full_name=[order.receiver_firstName, order.receiver_lastName]
           contragent_full_name = ' '.join(contragent_full_name)
           order_items=OrderItem.objects.filter(order=order)
           order_item_array=[]
+          
           for item in order_items:
             product=Product.objects.get(article=item.article)
             sku=product.ozon_sku
@@ -257,56 +258,9 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
             product.quantity=rho.current_remainder
             product.total_sum=rho.current_remainder * product.av_price
             product.save()
-            
-            #===============================getting sdek delivery cost===========================
-            url="https://api.cdek.ru/v2/oauth/token"#getting valid bearer token
-
-            headers = {
-                "grant_type": "client_credentials",
-                "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
-                "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
-            }
-            #в качестве параметров (params) передаём заголовки (headers)
-            response = requests.post(url, params=headers, )
-            json=response.json()
-            print('============================')
-            print(json)
-            access_token=json['access_token']
-            headers = {
-                "Authorization": f'Bearer {access_token}',
-            }
-
-            params= {
-                    "date": dateTime,
-                    "type": 1,
-                    "tariff_code": 136            ,   
-                    
-                    "from_location" : {
-                        'code': 414,
-                        'contragent_type': 'LEGAL_ENTITY'
-                        },
-                    "to_location" : {
-                        'code' : city_code,
-                        'contragent_type': 'INDIVIDUAL',
-                        },
-                    "packages": [
-                        {   "weight": 1000,
-                            "length": 100,
-                            "width": 30,
-                            "height": 5
-                            },
-                        ]
-                }
-            url="https://api.cdek.ru/v2/calculator/tariff"
-            response = requests.post(url, headers=headers, json=params)
           
-            json=response.json()
-            print('=======================')
-            delivery_cost=json['delivery_sum']
-
-
-            #creating sdek shipment order		
-            sdek_order={
+          #creating sdek shipment order		
+          sdek_order={
               "type": 1,
               # "additional_order_types": [],
               "number": order.id,
@@ -318,11 +272,11 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               # "date_invoice": "2019-08-24",
               # "shipper_name": "string",
               # "shipper_address": "string",
-              "delivery_recipient_cost":{
-                  "value": delivery_cost,
-                  "vat_sum": delivery_cost/105*5,
-                  "vat_rate": 5,
-                  },
+              # "delivery_recipient_cost":{
+              #     "value": delivery_cost,
+              #     "vat_sum": 0,
+              #     "vat_rate": 0,
+              #     },
               # "delivery_recipient_cost_adv": [],
               # "sender": {},
               # "seller": {},
@@ -360,22 +314,22 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               # "print": "WAYBILL",
               # "widget_token": "string"
               }
-            url="https://api.cdek.ru/v2/oauth/token"
-            headers = {
-              "grant_type": "client_credentials",
-              "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
-              "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
-            }
-            response = requests.post(url, params=headers,)
-            json=response.json()
-            access_token=json['access_token']
-            headers = {
-              "Authorization": f'Bearer {access_token}',
-            }
-            url="https://api.cdek.ru/v2/orders"
-            response = requests.post(url, headers=headers, json=sdek_order)
-            json=response.json()
-            print(json)
+          url="https://api.cdek.ru/v2/oauth/token"
+          headers = {
+            "grant_type": "client_credentials",
+            "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+            "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+          }
+          response = requests.post(url, params=headers,)
+          json=response.json()
+          access_token=json['access_token']
+          headers = {
+            "Authorization": f'Bearer {access_token}',
+          }
+          url="https://api.cdek.ru/v2/orders"
+          response = requests.post(url, headers=headers, json=sdek_order)
+          json=response.json()
+          print(json)
       
     except Exception as e:
       print(e)
