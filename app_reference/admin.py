@@ -25,8 +25,8 @@ class SDEK_OfficeAdmin(admin.ModelAdmin):
     list_per_page=100
 
 class SDEK_CityAdmin(admin.ModelAdmin):
-    list_display = ('country_code', 'region', 'name',)
-    search_fields = ('name', 'region')
+    list_display = ('country_code', 'region', 'code', 'name',)
+    search_fields = ('name', 'region', 'code')
     ordering = ('name',)
     list_per_page=100
 

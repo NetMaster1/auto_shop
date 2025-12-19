@@ -157,34 +157,8 @@ def get_list_of_sdek_tariffs(request):
         print('===============')
         print(i)
 
-def get_order_status (request):
-    #getting valid bearer token
-    if request.method=="POST":
-        uuid=request.POST["uuid"]
-    url="https://api.cdek.ru/v2/oauth/token"
+#========================================================
 
-    headers = {
-        "grant_type": "client_credentials",
-		"client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
-		"client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
-    }
-    #в качестве параметров (params) передаём заголовки (headers)
-    response = requests.post(url, params=headers, )
-    json=response.json()
-    access_token=json['access_token']
-    headers = {
-        "Authorization": f'Bearer {access_token}',
-    }
-
-    #uuid='02d1c0f4-d1af-445c-82bb-7f24a2854f1d'
-    # params= {
-    #     'uuid': uuid
-    # }
-    url=f'https://api.cdek.ru/v2/orders/{uuid}'
-    response = requests.get(url, headers=headers,)
-    #response = requests.get(url, headers=headers, json=params)
-    json=response.json()
-    print(json)
 #tariffs   
 def get_sdek_delivery_cost(request):
     if request.method == 'POST':
@@ -230,7 +204,7 @@ def get_sdek_delivery_cost(request):
                             },
                         ]
         
-        }
+                }
         url="https://api.cdek.ru/v2/calculator/tarifflist"
         #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
         response = requests.post(url, headers=headers, json=params)
@@ -252,74 +226,7 @@ def get_sdek_delivery_cost(request):
             # 'order': order,
         }
         return render (request, 'delivery/delivery_cost.html' , context)
-
-def open_sdek_vidget(request):
-    return render (request, 'cart/sdekvidget_ver_1.html' )
-
-    #getting valid bearer token
-    url="https://api.cdek.ru/v2/oauth/token"
-
-    headers = {
-        "grant_type": "client_credentials",
-		"client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
-		"client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
-    }
-    #в качестве параметров (params) передаём заголовки (headers)
-    response = requests.post(url, params=headers, )
-    json=response.json()
-    access_token=json['access_token']
-    headers = {
-        "Authorization": f'Bearer {access_token}',
-    }
-    params = {
-        "type": 1, 
-        "number": '2561',
-        "tariff_code": 136,
-        "shipment_point": 'NN8',
-        "delivery_point": 'PKR1',
-        "recipient": {'name': "Винокуров Сергей Николаевич",
-                      'contragent_type': 'INDIVIDUAL',
-                      'phones': [{'number': '+79506204465'}],
-                    },  
-        "packages": [{
-                        "number": "1225",
-                        "weight": 1000,
-                        "length": 140,
-                        "width": 30,
-                        "height": 5,
-                        "items":[{
-                            "name": "Deflector Chevrolet Lacetti",
-                            'ware_key': 'DK-IN-00025',
-                            "payment": {
-                                "value": 0,
-                                "vat_sum": 0,
-                                "vat_rate": 'null'
-                                },
-                            'weight': 1000,
-                            'amount': 1,
-                            'cost': 1
-                             
-                        }],
-                    }]
-    }                  
-
-    url="https://api.cdek.ru/v2/orders"
-    response = requests.post(url, headers=headers, json=params)
-    json=response.json()
-    print(json)
-    uuid=json['entity']['uuid']
-    print(uuid)
-    time.sleep(3)
-
-    print('===========================')
-    url=f'https://api.cdek.ru/v2/orders/{uuid}'
-    response = requests.get(url, headers=headers,)
-    #response = requests.get(url, headers=headers, json=params)
-    json=response.json()
-    print(json)
-
-    return render (request, 'cart/payment_page.html')    
-
+#======================================================
 def delivery_city_choice(request):
     if request.method=="POST":
         country=request.POST.get('country', False)
@@ -522,7 +429,7 @@ def sdek_office_choice(request, order_id):
                 'countries' : countries,
             }
             return render(request, 'cart/order_page_final.html', context)
-
+#======================================================
 def create_sdek_shipment (request, order_id):
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)
@@ -594,3 +501,98 @@ def create_sdek_shipment (request, order_id):
             messages.error(request,"Вы не ввели полностью необдходимые данные.")
             return redirect ('order', order.id)
         
+def get_order_status (request):
+    #getting valid bearer token
+    if request.method=="POST":
+        uuid=request.POST["uuid"]
+    url="https://api.cdek.ru/v2/oauth/token"
+
+    headers = {
+        "grant_type": "client_credentials",
+		"client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+		"client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+    }
+    #в качестве параметров (params) передаём заголовки (headers)
+    response = requests.post(url, params=headers, )
+    json=response.json()
+    access_token=json['access_token']
+    headers = {
+        "Authorization": f'Bearer {access_token}',
+    }
+
+    #uuid='02d1c0f4-d1af-445c-82bb-7f24a2854f1d'
+    # params= {
+    #     'uuid': uuid
+    # }
+    url=f'https://api.cdek.ru/v2/orders/{uuid}'
+    response = requests.get(url, headers=headers,)
+    #response = requests.get(url, headers=headers, json=params)
+    json=response.json()
+    print(json)
+#=======================================================
+def open_sdek_vidget(request):
+    return render (request, 'cart/sdekvidget_ver_1.html' )
+
+    #getting valid bearer token
+    url="https://api.cdek.ru/v2/oauth/token"
+
+    headers = {
+        "grant_type": "client_credentials",
+		"client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+		"client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+    }
+    #в качестве параметров (params) передаём заголовки (headers)
+    response = requests.post(url, params=headers, )
+    json=response.json()
+    access_token=json['access_token']
+    headers = {
+        "Authorization": f'Bearer {access_token}',
+    }
+    params = {
+        "type": 1, 
+        "number": '2561',
+        "tariff_code": 136,
+        "shipment_point": 'NN8',
+        "delivery_point": 'PKR1',
+        "recipient": {'name': "Винокуров Сергей Николаевич",
+                      'contragent_type': 'INDIVIDUAL',
+                      'phones': [{'number': '+79506204465'}],
+                    },  
+        "packages": [{
+                        "number": "1225",
+                        "weight": 1000,
+                        "length": 140,
+                        "width": 30,
+                        "height": 5,
+                        "items":[{
+                            "name": "Deflector Chevrolet Lacetti",
+                            'ware_key': 'DK-IN-00025',
+                            "payment": {
+                                "value": 0,
+                                "vat_sum": 0,
+                                "vat_rate": 'null'
+                                },
+                            'weight': 1000,
+                            'amount': 1,
+                            'cost': 1
+                             
+                        }],
+                    }]
+    }                  
+
+    url="https://api.cdek.ru/v2/orders"
+    response = requests.post(url, headers=headers, json=params)
+    json=response.json()
+    print(json)
+    uuid=json['entity']['uuid']
+    print(uuid)
+    time.sleep(3)
+
+    print('===========================')
+    url=f'https://api.cdek.ru/v2/orders/{uuid}'
+    response = requests.get(url, headers=headers,)
+    #response = requests.get(url, headers=headers, json=params)
+    json=response.json()
+    print(json)
+
+    return render (request, 'cart/payment_page.html')    

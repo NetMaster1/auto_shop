@@ -54,5 +54,8 @@ class SDEK_City (models.Model):
  
     def __int__(self):
         return self.id
+
+
+
     
 
