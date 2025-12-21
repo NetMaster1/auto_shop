@@ -180,7 +180,7 @@ def get_sdek_delivery_cost(request):
         response = requests.post(url, params=headers, )
         json=response.json()
         print('============================')
-        print(json)
+        # print(json)
         access_token=json['access_token']
 
         headers = {
@@ -198,7 +198,7 @@ def get_sdek_delivery_cost(request):
                         },
                     "packages": [
                         {   "weight": 1000,
-                            "length": 140,
+                            "length": 100,
                             "width": 30,
                             "height": 5
                             },
@@ -210,9 +210,8 @@ def get_sdek_delivery_cost(request):
         response = requests.post(url, headers=headers, json=params)
         json=response.json()
         print('=======================')
-        a=json['tariff_codes']
-        json=response.json()
-        a=json['tariff_codes']
+        data=response.json()
+        a=data['tariff_codes']
         for i in a:
             if i['tariff_code'] == 136:
                 print(i)
