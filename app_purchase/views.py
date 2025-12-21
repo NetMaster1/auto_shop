@@ -158,12 +158,62 @@ def create_final_purchase_order(request, order_id):
         l_name = request.POST["l_name"]
         phone = request.POST["phone"]
         email = request.POST["email"]
+        
+    #=================Getting Delivery Cost====================
+        office=SDEK_Office.objects.get(address_full=shipment_office)
+        city_code=office.city_code
+        #getting valid bearer token
+        url="https://api.cdek.ru/v2/oauth/token"
+        headers = {
+            "grant_type": "client_credentials",
+            "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+            "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+        }
+        #в качестве параметров (params) передаём заголовки (headers)
+        response = requests.post(url, params=headers, )
+        json=response.json()
+        print('============================')
+        # print(json)
+        access_token=json['access_token']
+        headers = {
+            "Authorization": f'Bearer {access_token}',
+        }
+        params= {
+            
+                    "tariff_code": 136,
+                    "from_location" : {
+                        'code': 414,
+                        'contragent_type': 'LEGAL_ENTITY'
+                        },
+                    "to_location" : {
+                        'code' : city_code,
+                        'contragent_type': 'INDIVIDUAL',
+                        },
+                    "packages": [
+                        {   "weight": 1000,
+                            "length": 100,
+                            "width": 30,
+                            "height": 5
+                            },
+                        ]
+        
+                }
+        url="https://api.cdek.ru/v2/calculator/tariff"
+        #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+        response = requests.post(url, headers=headers, json=params)
+        json=response.json()
+        print('=======================')
+        delivery_cost= json['delivery_sum']
+#=======================End of getting delivery cost====================
+
         order.delivery_point=shipment_office
         order.receiver_firstName=f_name
         order.receiver_lastName=l_name
         order.receiver_phone=phone
         order.receiver_email=email
+        order.delivery_cost=delivery_cost
         order.save()
+        
         context ={
             "order": order,
             "order_items": order_items,

@@ -170,7 +170,6 @@ def get_sdek_delivery_cost(request):
 
         #getting valid bearer token
         url="https://api.cdek.ru/v2/oauth/token"
-
         headers = {
             "grant_type": "client_credentials",
             "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
@@ -182,12 +181,12 @@ def get_sdek_delivery_cost(request):
         print('============================')
         # print(json)
         access_token=json['access_token']
-
         headers = {
             "Authorization": f'Bearer {access_token}',
         }
-
         params= {
+            
+                    "tariff_code": 136,
                     "from_location" : {
                         'code': 414,
                         'contragent_type': 'LEGAL_ENTITY'
@@ -205,19 +204,21 @@ def get_sdek_delivery_cost(request):
                         ]
         
                 }
-        url="https://api.cdek.ru/v2/calculator/tarifflist"
+        url="https://api.cdek.ru/v2/calculator/tariff"
+        #url="https://api.cdek.ru/v2/calculator/tarifflist"
         #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
         response = requests.post(url, headers=headers, json=params)
         json=response.json()
-        print('=======================')
-        data=response.json()
-        a=data['tariff_codes']
-        for i in a:
-            if i['tariff_code'] == 136:
-                print(i)
-                delivery_sum=i['delivery_sum']
-                break
-        delivery_cost= int(delivery_sum)
+        delivery_cost=json['delivery_sum']
+        # print('=======================')
+        # data=response.json()
+        # a=data['tariff_codes']
+        # for i in a:
+        #     if i['tariff_code'] == 136:
+        #         print(i)
+        #         delivery_sum=i['delivery_sum']
+        #         break
+        # delivery_cost= int(delivery_sum)
         
         context = {
             'delivery_cost': delivery_cost,

@@ -16,6 +16,9 @@
       <div class="row">
         Cумма заказа: {{order.sum}} руб.
     </div>
+      <div class="row">
+        Стоимость доставки: {{order.delivery_cost}} руб.
+    </div>
     {% if request.user.is_authenticated %}
      <div class="row">
         Покупатель: {{order.user.first_name}} {{order.user.last_name}}
