@@ -12,6 +12,7 @@ from django.contrib import messages, auth
 import time
 import requests
 import json
+from decimal import Decimal
 
 
 # Create your views here.
@@ -202,8 +203,11 @@ def create_final_purchase_order(request, order_id):
         #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
         response = requests.post(url, headers=headers, json=params)
         json=response.json()
-        print('=======================')
         delivery_cost= json['delivery_sum']
+        #converting float to string for further converting the string to decimal since python does not support float. It supports decimal.
+        #and ykassa API uses float
+        delivery_cost=str(delivery_cost)
+        delivery_cost=Decimal(delivery_cost)
 #=======================End of getting delivery cost====================
 
         order.delivery_point=shipment_office
@@ -212,7 +216,14 @@ def create_final_purchase_order(request, order_id):
         order.receiver_phone=phone
         order.receiver_email=email
         order.delivery_cost=delivery_cost
+        order.full_sum=delivery_cost + order.sum
         order.save()
+        print (order.sum)
+        print(order.delivery_cost)
+        print(order.full_sum)
+        print (type(order.sum))
+        print (type(order.full_sum))
+        print (type(order.delivery_cost))
         
         context ={
             "order": order,
@@ -228,25 +239,42 @@ def make_payment(request, order_id):
     items_arr=[]
     item_dict={}
 
+    item_cost=0
     for item in order_items:
+        item_cost+=item.sub_total
         item_dict={
-                        "description": item.product,
-                        "quantity": item.quantity,
-                        "amount": {
-                            "value": item.sub_total,
-                            "currency": "RUB"
-                            },
-                        "vat_code": 1,
-                        "payment_mode": "full_prepayment",
-                        "payment_subject": "commodity",
-                    }
+            "description": item.product,
+            "quantity": item.quantity,
+            "amount": {
+                "value": item.price,
+                # "value": str(order.full_sum),
+                "currency": "RUB"
+                },
+            "vat_code": 1,
+            "payment_mode": "full_prepayment",
+            "payment_subject": "commodity",
+        }
         items_arr.append(item_dict)
-        
+   
+    item_dict={
+            "description": 'delivery',
+            "quantity": 1,
+            "amount": {
+                "value": order.delivery_cost,
+                # "value": str(order.full_sum),
+                "currency": "RUB"
+                },
+            "vat_code": 1,
+            "payment_mode": "full_prepayment",
+            "payment_subject": "commodity",
+        }
+    items_arr.append(item_dict)
     Configuration.account_id = '1159072'#shop id
     Configuration.secret_key = 'live_lJQG_JqI1j3k2DicZikQHWd08Pp4YUSDADS7zZo_4i0'#API Key
     payment = Payment.create({
         "amount": {
-                "value": order.sum,
+                "value": order.full_sum,
+                #"value": str(item_cost),
                 "currency": "RUB"
                 },
         "receipt": {

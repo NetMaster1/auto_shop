@@ -1,6 +1,6 @@
 from django.contrib import admin
 from app_product.models import Product
-from . models import Cart, CartItem, Customer, Order
+from . models import Cart, CartItem, Customer, Order, OrderItem
 
 class CartAdmin(admin.ModelAdmin):
     list_display = ('id', 'cart_id', )
@@ -13,10 +13,14 @@ class CustomerAdmin(admin.ModelAdmin):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'created', 'status',)
+    
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('id', 'order', 'product',)
 
 
 admin.site.register(Cart, CartAdmin)
 admin.site.register(CartItem, CartItemAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderItem, OrderItemAdmin)
 

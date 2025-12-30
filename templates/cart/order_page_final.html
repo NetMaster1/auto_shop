@@ -3,61 +3,59 @@
 {% block content %}
 <div class="container">
 
-<div class="box_client p-3">
+<div class="row">
+    <div class="col-8">
+        <div class="box_client p-3 mt-5">
+            <div class="row m-auto">
+                Заказ № {{order.id}}
+            </div>
+            {% for item in order_items%}
+            <div class="row m-auto">
+                {{item.product}}
+            </div>
+            {% endfor%}
+            <div class="row m-auto">
+                Cумма заказа: {{order.sum}} руб.
+            </div>
+        </div>
+        <br>
+        <div class="box_client p-3">
+            <div class="row m-auto">
+            <!-- Логистическая компания: {{order.delivery_operator}} -->
+            Логистическая компания: СДЕК
+            </div>
+            <div class="row m-auto">
+            Адрес доставки: пункт выдчи СДЕК по адресу: {{order.delivery_point}}
+            </div>
+            <div class="row m-auto">
+            Стоимость доставки: {{order.delivery_cost}} руб.
+            </div>
+        </div>
+        <br>
+        <div class="box_client p-3">
+        <div class="row m-auto">
+            Получатель: {{order.receiver_firstName}} {{order.receiver_lastName}}
+        </div>
+        <div class="row m-auto">
+            Телефон получателя: {{order.receiver_phone}} 
+        </div>
+            <div class="row m-auto">
+                Email для чека: {{order.receiver_email}} 
+            </div>
+        </div>   
+    </div>
 
-    <div class="row">
-        Заказ № {{order.id}}
-    </div>
-    {% for item in order_items%}
-    <div class="row">
-        {{item.product}}
-    </div>
-    {% endfor%}
-      <div class="row">
-        Cумма заказа: {{order.sum}} руб.
-    </div>
-      <div class="row">
-        Стоимость доставки: {{order.delivery_cost}} руб.
-    </div>
-    {% if request.user.is_authenticated %}
-     <div class="row">
-        Покупатель: {{order.user.first_name}} {{order.user.last_name}}
-    </div>
-    {% else %}
-       <div class="row">
-        Покупатель: нет данных (розничная продажа)
-       </div>
-    {% endif %}
-
-    <div class="row">
-        <!-- Логистическая компания: {{order.delivery_operator}} -->
-        Логистическая компания: СДЕК
-    </div>
-    <div class="row">
-        Адрес доставки: {{order.delivery_point}}
-    </div>
-    <div class="row">
-        Стоимость доставки: {{order.delivery_cost}} (оплачивается отдельно при получении товара)
+    <div class="col-4">
+        <div class="row mt-5 p-3">
+            <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">Всего к оплате {{order.full_sum}} руб.</a>
+      
+        </div>
+        </div> 
     </div>
 
 
-    <div class="row">
-        Получатель: {{order.receiver_firstName}} {{order.receiver_lastName}}
-    </div>
-    <div class="row">
-        Телефон получателя: {{order.receiver_phone}} 
-    </div>
-    <div class="row">
-        Email для чека: {{order.receiver_email}} 
-    </div>
-    <div class="row mt-2">
-        <div class="col">
-      <a href="{% url 'make_payment' order.id %}" target="_blank">
-         <input type="button" value="Перейти к оплате" class="btn btn-block btn-outline-primary" id="clear_storage"> 
-       </a>
-</div>
 
-    </div>
+
 </div>
 </div>
 

@@ -15,7 +15,16 @@
     {% endfor%}
     {% endif%}
   </div>
-
+          <div class="row mt-4 pt-5">
+            <div class="col-12">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Текущая</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
 
 
   <div class="accordion" id="accordionExample">
@@ -67,8 +76,19 @@
         </h2>
         <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
           <div class="accordion-body">
+            <!-- {% for key, value in orders_dict.items%}
+            <p>{{key.created}}: {{value}}</p> 
+            {% endfor %} -->
+
             {% for order in orders %}
-            {{order}}
+            Заказ# {{order.id}} от {{order.created}}
+              <br>
+
+              {% for item in order.orderitem_set.all %}
+                  <div class="row ml-5 pl-5">
+                  {{item}}
+                  </div>
+                {% endfor %}
             {% endfor %}
           </div>
         </div>
@@ -82,7 +102,7 @@
         </h2>
         <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
           <div class="accordion-body">
-          
+           <a href="{% url 'cart_detail' %}" target="_blank"> Перейти </a>
           </div>
         </div>
       </div>

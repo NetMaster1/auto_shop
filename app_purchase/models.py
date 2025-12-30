@@ -60,7 +60,8 @@ class CartItem(models.Model):
 class Order(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
-    sum = models.DecimalField(default=0, max_digits=7, decimal_places=2)
+    sum = models.DecimalField(default=0, max_digits=8, decimal_places=2)
+    full_sum = models.DecimalField(default=0, max_digits=8, decimal_places=2)#including delivery cost
     buyer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
     status=models.CharField(max_length=50, null=True, blank=True)
     shipped=models.BooleanField(default=False)
@@ -83,8 +84,8 @@ class OrderItem(models.Model):
     image = models.ImageField(upload_to='uploads', blank=True)
     article = models.CharField(max_length=50,null=True, blank=True )
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
-    sub_total = models.DecimalField(default=0, max_digits=7, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
+    sub_total = models.DecimalField(default=0, max_digits=8, decimal_places=2, null=True, blank=True)
 
     # def sub_total(self):
     #     return self.price * self.quantity

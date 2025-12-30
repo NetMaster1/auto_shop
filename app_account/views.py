@@ -4,6 +4,8 @@ from django.contrib import messages, auth
 from django.contrib.auth.models import User, Group
 from app_product.models import Product
 from app_purchase.models import Order, OrderItem
+from django.core.mail import send_mail
+import random
 
 # Create your views here.
 def register_user(request):
@@ -35,12 +37,34 @@ def register_user(request):
                 # saving the request.user
                 user.save()
                 auth.login(request, user)
+                
+                security_code = []
+                for i in range(4):
+                    a = random.randint(0, 9)
+                    security_code.append(a)
+                    #transforming every integer into string
+                    code_string = "".join(str(i) for i in security_code)  
+                    #print(code_string)
+                
+                send_mail(
+                    'Подтверждение e-mail для auto-deflector.ru',
+                    f"""Здравствуйте, вы получили данный код для подтверждения вашей эл. почты на сайте auto-deflector.ru.
+                    Если вы не регистрировались на данном сайте, пожалуйста, удалите данное сообщение.
+                    Код для подтверждения: {code_string}""",
+                    'support@auto-deflector.ru',
+                    ['Sergei_Vinokurov@rambler.ru',],
+                    fail_silently=False
+                )
+                    
+                messages.error(request, "Вам необходимо подтвердить свою электронную почту. Нажмите email > подтвердить > введите код полученный в письме.")
                 return redirect ('account_page', user.id)
 
         else:
             messages.error(request, "Пароли не совпадают. Попробуйте еще раз.")
             return redirect('register_user')
-   
+
+def email_confirm(request):
+    pass
 
 def login_user(request):
     if request.method == "POST":
@@ -50,13 +74,12 @@ def login_user(request):
         if user is not None:
             login(request, user)
             #messages.success(request, ('Your have successfully been logged in. Welcome to ruversity.com'))
-            messages.success(request, ('Вы успешно вошли. Добро пожаловать на вашу личную страницу.'))
-            return redirect('account_page', user.id)
+            messages.success(request, ('Добро пожаловать. Вы успешно вошли в свой профиль.'))
+            return redirect('shopfront')
         else:
             #messages.error(request, ('Incorrect username or password. Check your credentials & try again'))
             messages.error(request, ('Неправильное имя пользователи или пароль. Проверьте ваше данные и попробуйте еще раз'))
             return redirect('shopfront')
-
 
 def logout_user(request):
     auth.logout(request)
@@ -65,22 +88,28 @@ def logout_user(request):
     return redirect('shopfront')
 
 def account_page(request, user_id ):
-    user=User.objects.get(id=user_id)
-    orders=Order.objects.filter(user=user)
-    # for order in orders:
-    #     if order.paid==True:
-    #         order_items=OrderItem.objects.filter(order=order)
-    #         for order_item in order_items:
-    #             product=order_item.product
-    #             order_item.product=product
-
     if request.user.is_authenticated:
+        user=User.objects.get(id=user_id)
+        orders=Order.objects.filter(user=user, status='succeeded')
+        # orders_dict={}
+        # for order in orders:
+        #     order_items=OrderItem.objects.filter(order=order)
+        #     for order_item in order_items:
+        #         order_items_arr=[]
+        #         product=order_item.product
+        #         order_items_arr.append(product)
+        #     orders_dict[order]=order_items_arr
+
         if request.user.id == user.id:
             context={
                 'user': user,
                 'orders': orders,
+                # 'orders_dict': orders_dict
             }
-        return render(request, 'accounts/account_page.html', context)
+            return render(request, 'accounts/account_page.html', context)
+    else:
+        return redirect ('shopfront')
+        
 
 
 
