@@ -1,9 +1,19 @@
 from django.db import models
 from datetime import datetime, date
 from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import User
+#from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 # Create your models here.
+class ExtendedUser (models.Model):
+    user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
+    phone=models.CharField(max_length=50)
+    email_confirm = models.BooleanField(default=False)
+    phone_confirm = models.BooleanField(default=False)
+    
+    def __int__(self):
+        return self.id
+
 
 # class CustomAccountManager(BaseUserManager):
     

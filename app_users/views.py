@@ -3,8 +3,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth import update_session_auth_hash, authenticate
 
-def login_page(request):
-    return render(request, 'users/login_page.html')
 
 def login(request):
     if request.method == 'POST':
@@ -25,8 +23,11 @@ def login(request):
         return redirect('login_page')
 
 def logout(request):
-        auth.logout(request)
-        # messages.success(request, 'Вы вышли из системы')
-        return redirect('login')
+    auth.logout(request)
+    # messages.success(request, 'Вы вышли из системы')
+    return redirect('login')
+
+def login_page(request):
+    pass
 
 
