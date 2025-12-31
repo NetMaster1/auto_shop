@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mp-system.ru', 'www.mp-system.ru', '
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,8 +49,10 @@ INSTALLED_APPS = [
     'app_reviews',
     'app_reference',
     'app_delivery',
-    'app_account',
     'app_email',
+    'app_account',
+    
+
 ]
 
 MIDDLEWARE = [
@@ -184,3 +185,6 @@ EMAIL_HOST_USER = 'support@auto-deflector.ru'
 EMAIL_HOST_PASSWORD = 'Y7Zg1dLNofauVjAofNHz'#mail.ru app password
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+
+# AUTH_USER_MODEL = 'app_account.NewUser'

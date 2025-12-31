@@ -4,6 +4,7 @@ from datetime import datetime, date
 from django.utils import timezone
 from app_product.models import Product
 from app_delivery.models import DeliveryOperator
+# from app_account.models import NewUser
 # import pytz
 from django.contrib.auth.models import User
 
