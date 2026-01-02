@@ -338,17 +338,18 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
           response = requests.post(url, headers=headers, json=sdek_order)
           print(response.status_code)
           json=response.json()
-          #two ways to get dict key value
-          entity=json[entity]
-          #entity=json.get(entity)
-          uuid=entity[uuid]
-          #uuid=entity.get(uuid)
-          order.delivery_order_uuid=uuid
-          order.save()
-          
           print("Respone from SDEK API: ")
           print(json)
           print('=====================Successfull Creation of SDEK order===========================')
+          #two ways to get dict key value
+          entity=json['entity']
+          #entity=json.get('entity')
+          uuid=entity['uuid']
+          #uuid=entity.get('uuid')
+          order.delivery_order_uuid=uuid
+          order.save()
+          
+          
       
     except Exception as e:
       print(e)
