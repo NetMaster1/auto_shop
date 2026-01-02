@@ -12,7 +12,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ('id', 'f_name', 'l_name','email',)
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created', 'status',)
+    list_display = ('id', 'created', 'status', 'delivery_order_uuid')
     
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'order', 'product',)

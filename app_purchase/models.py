@@ -63,6 +63,7 @@ class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
     sum = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     buyer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
+    #is filled after status is received from y-kassa
     status=models.CharField(max_length=50, null=True, blank=True)
     shipped=models.BooleanField(default=False)
     delivery_operator = models.ForeignKey(DeliveryOperator,on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -75,6 +76,8 @@ class Order(models.Model):
     #somehow ykassa sends http note a few times. In order to avoid duplicate rhos & cdek orders this field is used
     corresponding_rhos_created = models.BooleanField(default=False)
     bill=models.DecimalField(default=0, max_digits=8, decimal_places=2)#including deliver
+    #is filled after sdek order is crated
+    delivery_order_uuid=models.UUIDField(null=True, blank=True)
 
     def __int__(self):
         return self.id
