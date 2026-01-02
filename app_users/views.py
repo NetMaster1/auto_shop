@@ -28,6 +28,6 @@ def logout(request):
     return redirect('login')
 
 def login_page(request):
-    pass
+    return render (request, 'users/login_page.html')
 
 

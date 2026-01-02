@@ -194,8 +194,6 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
     import json  
     try: 
       data = json.loads(request.body)
-      print('response from Y-kassa: ')
-      print(data)
       #data = json.loads(request.body.decode('utf-8'))
       object=data.get('object')
       order_id=object.get('description')
@@ -204,6 +202,8 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
       if order.corresponding_rhos_created == True and order.status=='succeeded':
          print ('rho has been previously created')
       else:
+        print('response from Y-kassa: ')
+        print(data)
         order.status=status
         order.corresponding_rhos_created=True
         order.save()
@@ -318,6 +318,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               # "print": "WAYBILL",
               # "widget_token": "string"
               }
+          print('===================Getting Auth Token for SDEK========================')
           url="https://api.cdek.ru/v2/oauth/token"
           headers = {
             "grant_type": "client_credentials",
@@ -327,14 +328,19 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
           response = requests.post(url, params=headers,)
           json=response.json()
           access_token=json['access_token']
+          print(access_token)
+          print('=================Successfull Getting of Auth Token for SDEK========================')
           headers = {
             "Authorization": f'Bearer {access_token}',
           }
+          print('=========================Creating SDEK Order========================')
           url="https://api.cdek.ru/v2/orders"
           response = requests.post(url, headers=headers, json=sdek_order)
+          print(response.status_code)
           json=response.json()
           print("Respone from SDEK API: ")
           print(json)
+          print('=====================Successfull Creation of SDEK order===========================')
       
     except Exception as e:
       print(e)
