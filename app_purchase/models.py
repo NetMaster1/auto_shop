@@ -62,7 +62,6 @@ class Order(models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
     sum = models.DecimalField(default=0, max_digits=8, decimal_places=2)
-    full_sum = models.DecimalField(default=0, max_digits=8, decimal_places=2)#including delivery cost
     buyer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
     status=models.CharField(max_length=50, null=True, blank=True)
     shipped=models.BooleanField(default=False)
@@ -75,6 +74,7 @@ class Order(models.Model):
     receiver_phone = models.CharField(max_length=15, null=True, blank=True)
     #somehow ykassa sends http note a few times. In order to avoid duplicate rhos & cdek orders this field is used
     corresponding_rhos_created = models.BooleanField(default=False)
+    bill=models.DecimalField(default=0, max_digits=8, decimal_places=2)#including deliver
 
     def __int__(self):
         return self.id

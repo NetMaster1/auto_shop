@@ -178,6 +178,8 @@ def ozon_push(request):#receives a notification from ozon on a new order
       #messages.success(request, data)   
       #return redirect("dashboard")
 
+#url, куда приходит уведомление от ю-касса. Используется для изменения статуса заказа на "succeeded"
+#и формирования заказа на отпрвку в СДЕК
 @csrf_exempt #отключает защиту csrf
 def payment_status(request):#receives an http notice from Y-kassa on a successful payment
   if request.method=='POST':
@@ -192,6 +194,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
     import json  
     try: 
       data = json.loads(request.body)
+      print('response from Y-kassa: ')
       print(data)
       #data = json.loads(request.body.decode('utf-8'))
       object=data.get('object')
@@ -207,7 +210,8 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
         if order.status=='succeeded':
           delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
           print('========================')
-          print(delivery_point.code)
+          print(f'Код пункта выдачи СДЕК: {delivery_point.code}')
+          print('========================')
           contragent_full_name=[order.receiver_firstName, order.receiver_lastName]
           contragent_full_name = ' '.join(contragent_full_name)
           order_items=OrderItem.objects.filter(order=order)
@@ -236,7 +240,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
               pre_remainder=rho_latest.current_remainder
             else:
               pre_remainder=0
-              print(pre_remainder)
+              #rint(pre_remainder)
             rho=RemainderHistory.objects.create(
               rho_type=doc_type,
               created=dateTime,
@@ -329,6 +333,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
           url="https://api.cdek.ru/v2/orders"
           response = requests.post(url, headers=headers, json=sdek_order)
           json=response.json()
+          print("Respone from SDEK API: ")
           print(json)
       
     except Exception as e:

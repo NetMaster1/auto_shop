@@ -38,23 +38,23 @@ def register_user(request):
                 user.save()
                 auth.login(request, user)
                 
-                security_code = []
-                for i in range(4):
-                    a = random.randint(0, 9)
-                    security_code.append(a)
-                    #transforming every integer into string
-                    code_string = "".join(str(i) for i in security_code)  
-                    #print(code_string)
+                # security_code = []
+                # for i in range(4):
+                #     a = random.randint(0, 9)
+                #     security_code.append(a)
+                #     #transforming every integer into string
+                #     code_string = "".join(str(i) for i in security_code)  
+                #     #print(code_string)
                 
-                send_mail(
-                    'Подтверждение e-mail для auto-deflector.ru',
-                    f"""Здравствуйте, вы получили данный код для подтверждения вашей эл. почты на сайте auto-deflector.ru.
-                    Если вы не регистрировались на данном сайте, пожалуйста, удалите данное сообщение.
-                    Код для подтверждения: {code_string}""",
-                    'support@auto-deflector.ru',
-                    ['Sergei_Vinokurov@rambler.ru',],
-                    fail_silently=False
-                )
+                # send_mail(
+                #     'Подтверждение e-mail для auto-deflector.ru',
+                #     f"""Здравствуйте, вы получили данный код для подтверждения вашей эл. почты на сайте auto-deflector.ru.
+                #     Если вы не регистрировались на данном сайте, пожалуйста, удалите данное сообщение.
+                #     Код для подтверждения: {code_string}""",
+                #     'support@auto-deflector.ru',
+                #     ['Sergei_Vinokurov@rambler.ru',],
+                #     fail_silently=False
+                # )
                     
                 messages.error(request, "Вам необходимо подтвердить свою электронную почту. Нажмите email > подтвердить > введите код полученный в письме.")
                 return redirect ('account_page', user.id)
