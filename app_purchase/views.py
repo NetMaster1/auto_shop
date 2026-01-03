@@ -252,7 +252,6 @@ def make_payment(request, order_id):
             "quantity": item.quantity,
             "amount": {
                 "value": item.price,
-                # "value": str(order.full_sum),
                 "currency": "RUB"
                 },
             "vat_code": 1,
@@ -278,7 +277,6 @@ def make_payment(request, order_id):
     payment = Payment.create({
         "amount": {
                 "value": order.bill,
-                # "value": order.full_sum,
                 #"value": str(item_cost),
                 "currency": "RUB"
                 },
