@@ -60,7 +60,7 @@ def register_user(request):
                 return redirect ('email_confirmation', extended_user.id)         
         else:
             messages.error(request, "Пароли не совпадают. Попробуйте еще раз.")
-            return redirect('register_user')
+            return redirect('shopfront')
         
 def email_confirmation(request, extended_user_id):
     extended_user=ExtendedUser.objects.get(id=extended_user_id)
