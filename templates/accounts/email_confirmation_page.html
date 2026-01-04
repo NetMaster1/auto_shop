@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ===============================Login Modal===================================== -->
+       
+              <div class="hide">
+                <div class="enterLoginModal rounded-5">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_login">
+                    
+                 <div class="modal-dialog">
+                    <div class="modal-content">
+                          
+            <form action="{% url 'confirm_email' extended_user.id %}" method='POST'>
+              {% csrf_token %}
+              <div class="form-group">
+                <!-- <label for="username">Имя пользователя</label>
+                <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required> -->
+                <label for="security_string">Электронная почта</label>
+                <input type="" name="security_string" class="form-control" placeholder="Введите код из вашей почты" required>
+              </div>
+           
+              <br>
+              <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
+              <input type="submit" value="Отправить" class="btn btn-outline-dark btn-block">
+          </form>
+                  </div>
+              </div>
+              </div>
+            </div>
+      
+    <!-- =========================End of Login Modal=========================== -->
+
+{% endblock %}

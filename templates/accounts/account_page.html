@@ -51,7 +51,14 @@
         <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
           <div class="accordion-body">
             {{user.email}}
-          </div>
+            <!-- <div class="row">
+              <div class="col-4"></div>
+                <div class="col-6">     
+                <input type="button" value="Подтвердить email" class="btn btn-lg btn-block btn-outline-danger">
+                <form action="{% url 'confirm_email' user.id %}" method="POST" id="shipment_form">
+                </form>
+              </div>
+          </div> -->
         </div>
       </div>
 
@@ -151,6 +158,11 @@
 
   </div>
 </div>
+
+
+<script>
+
+</script>
 
 
 {% endblock %}
