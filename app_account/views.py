@@ -7,6 +7,7 @@ from app_purchase.models import Order, OrderItem
 from . models import ExtendedUser
 from django.core.mail import send_mail
 import random
+from django.http import HttpResponse
 
 # Create your views here.
 def register_user(request):
@@ -95,8 +96,6 @@ def confirm_email(request, extended_user_id):
             messages.error(request, "Неверный код подтверждения. Попробуйте еще раз.")
             return redirect ('email_confirmation', extended_user.id)
             
-
-
 def login_user(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -140,9 +139,61 @@ def account_page(request, user_id ):
             return render(request, 'accounts/account_page.html', context)
     else:
         return redirect ('shopfront')
-    
+
 def change_password(request, user_id):
-    pass
+    if request.user.is_authenticated:
+        user=User.objects.get(id=user_id)
+        if request.method == 'POST':
+            password = request.POST['password']
+            code = request.POST['code']
+            extended_user=ExtendedUser.objects.get(user=user)
+            if code == extended_user.email_confirm_code:
+                # if password == extended_user.password:
+                #     messages.error(request, "Новый пароль не должен совпадать с текущим паролем")
+                #     return redirect ('pass_change_page', user.id)
+                # else:
+                user.password=password
+                user.save()
+            return redirect ('account_page', user.id)
+    else:
+        return redirect ('shopfront')
+
+def send_random_code(request, user_id):
+    if request.user.is_authenticated:
+        user=User.objects.get(id=user_id)
+        security_code = []
+        for i in range(4):
+            a = random.randint(0, 9)
+            security_code.append(a)
+            #transforming every integer into string
+            code_string = "".join(str(i) for i in security_code)  
+            #print(code_string)
+        extended_user=ExtendedUser.objects.get(user=user)
+        extended_user.email_confirm_code=code_string
+        extended_user.save()
+        send_mail(
+            'Проверочный код для изменения пароля',
+            f"""Здравствуйте, вы получили данный код для подтверждения изменения пароля на сайте auto-deflector.ru.
+            Если вы не пытались изменить пароль на данном сайте, пожалуйста, удалите данное сообщение.
+            Код для подтверждения: {code_string}.
+            Введите его на сайте""",
+            'support@auto-deflector.ru',
+            [user.email,],
+            fail_silently=False
+            )
+        return redirect ('pass_change_page', user.id)
+    else:
+        return redirect ('shopfront')
+    
+def pass_change_page(request, user_id):
+    if request.user.is_authenticated:
+        user=User.objects.get(id=user_id)
+        context={
+            'user': user
+            }
+        return render(request, 'accounts/pass_change_page.html', context)
+    else:
+        return redirect ('shopfront')
 
 
 

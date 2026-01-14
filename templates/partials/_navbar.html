@@ -130,7 +130,6 @@
         </a>
 
 {% else %}
-
 <!-- ============================Login Modal Trigger========================== -->
     <button class="btn btn-md btn-outline-dark login_trigger">Войти</button>
 <!-- ===============================Login Modal===================================== -->
@@ -164,8 +163,6 @@
             </div>
             </div>
     <!-- =========================End of Login Modal=========================== -->
-
-
 
 <!-- ============================Register Modal Trigger========================== -->
     <button class="btn btn-md btn-outline-dark register_trigger">Регистрация</button>
@@ -273,6 +270,7 @@
 
   register_trigger.addEventListener('click', openRegisterModal)
   cross_register.addEventListener('click', closeRegisterModal)
+
   function openRegisterModal () {
           outer_modal_register.classList.add('openModal')
       }

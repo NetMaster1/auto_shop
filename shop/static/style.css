@@ -124,6 +124,21 @@
 }
 /* ===================== End ofDelivery Modal========================= */
 
+
+.change_pass_window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+
+
+
+
+
 .hide {
     /* display: flex;
     justify-content: center; */

@@ -68,21 +68,22 @@
             <strong>Пароль</strong>
           </button>
         </h2>
+
         <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
           <div class="accordion-body">
-            {{user.password}}
+            <div class="row">
+              <div class="col-10">
+                {{user.password}}  
+              </div>
+              <div class="col-2">
+                
+              <a href="{% url 'send_random_code' user.id %}" id="a_send_code" >
+        <input type="button" value="Изменить пароль" class="btn btn-sm btn-block btn-outline-primary" id="send_code_button" > 
+              </a>
+              </div>
+            </div>
           </div>
         </div>
-          
-
-        <div class="col">
-      <a href="{% url 'change_password' %}" target="_blank">
-         <input type="button" value="Изменить пароль" class="btn btn-lg btn-block btn-outline-danger"> 
-       </a>
-        </div>
-
-
-
       </div>
 
       <div class="accordion-item">
@@ -137,7 +138,6 @@
         </div>
       </div>
 
-
       <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
@@ -169,10 +169,22 @@
   </div>
 </div>
 
-
 <script>
 
+//======================Removing a link after clicking on it once============================
+const send_code_button = document.querySelector('#send_code_button')
+const a_send_code = document.querySelector('#a_send_code')
+
+send_code_button.addEventListener('click', removeLink)
+
+function removeLink() {
+    console.log('clicked');
+    a_send_code.remove()
+}
+//======================End of Removing a Link after clicking on it once============================
+
 </script>
+
 
 
 {% endblock %}

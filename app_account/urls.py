@@ -10,6 +10,8 @@ urlpatterns = [
     path('confirm_email/<int:extended_user_id>', views.confirm_email, name='confirm_email'),
     path('email_cofirmation/<int:extended_user_id>', views.email_confirmation, name='email_confirmation'),
     path('chage_password/<int:user_id>', views.change_password, name='change_password'),
+    path('send_random_code/<int:user_id>', views.send_random_code, name='send_random_code'),
+    path('pass_change_page/<int:user_id>', views.pass_change_page, name='pass_change_page'),
   
  
 ]
