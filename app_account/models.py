@@ -6,11 +6,11 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class ExtendedUser (models.Model):
-    first_name = models.CharField(max_length=50, null=True, blank=True)
-    last_name = models.CharField(max_length=50, null=True, blank=True)
-    password = models.CharField(max_length=50, null=True, blank=True)
+    # first_name = models.CharField(max_length=50, null=True, blank=True)
+    # last_name = models.CharField(max_length=50, null=True, blank=True)
+    # password = models.CharField(max_length=50, null=True, blank=True)
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
-    email=models.EmailField(max_length=100, blank=True, null=True)
+    # email=models.EmailField(max_length=100, blank=True, null=True)
     phone=models.CharField(max_length=50)
     email_confirm = models.BooleanField(default=False)
     email_confirm_code = models.CharField(max_length=50, null=True, blank=True)
