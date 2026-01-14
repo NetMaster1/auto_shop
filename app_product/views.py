@@ -11,6 +11,8 @@ from django.contrib import messages
 import xlwt
 from django.http import HttpResponse, JsonResponse
 
+
+
 def product_page(request, article):
     product = Product.objects.get(article=article)
   
@@ -1507,10 +1509,13 @@ def synchronize_qnty(request):
                 if RemainderHistory.objects.filter(article=article).exists():
                     #rhos=RemainderHistory.objects.filter(article=article)
                     rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+                    current_remainder=rho_latest.current_remainder
+                    if current_remainder < 0:
+                        current_remainder=0
                     stock_dict={
                         "offer_id": str(product.article),
                         "product_id": str(product.ozon_id),
-                        "stock": rho_latest.current_remainder,
+                        "stock": current_remainder,
                         #warehouse (Неклюдово)
                         "warehouse_id": 1020005000113280
                     }
