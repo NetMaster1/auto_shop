@@ -140,6 +140,9 @@ def account_page(request, user_id ):
             return render(request, 'accounts/account_page.html', context)
     else:
         return redirect ('shopfront')
+    
+def change_password(request, user_id):
+    pass
 
 
 
