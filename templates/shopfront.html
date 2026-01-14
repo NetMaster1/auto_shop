@@ -21,6 +21,7 @@
 
     <div class="row">
     
+
     {% for product in queryset_list %} 
         {% if product.image_1%}
         <div class="col-sm-3 mt-3">
@@ -28,11 +29,6 @@
                 <a href="{% url 'product_page' product.article %}">
                 <img src="{{product.image_1.url}}" class='rounded-2 img-fluid img_scale' alt="Placeholder image" >
                 </a>
-                <!-- <div class="card-body">
-                <h5 class="card-title">{{product.name}}</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div> -->
             </div>
         </div>
         {% endif %}
