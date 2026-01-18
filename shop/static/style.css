@@ -124,7 +124,6 @@
 }
 /* ===================== End ofDelivery Modal========================= */
 
-
 .change_pass_window {
   position: fixed;
   top: 0;
@@ -133,6 +132,11 @@
   height: 100%;
   display: block;
   z-index: 9999;
+}
+
+
+.message_window {
+ z-index: 9999;
 }
 
 

@@ -8,6 +8,8 @@ from . models import ExtendedUser
 from django.core.mail import send_mail
 import random
 from django.http import HttpResponse
+import secrets 
+import string
 
 # Create your views here.
 def register_user(request):
@@ -137,18 +139,23 @@ def change_password(request, user_id):
         username=user.username
         if request.method == 'POST':
             password = request.POST['password']
+            check_password = request.POST['check_password']
             code = request.POST['code']
-            extended_user=ExtendedUser.objects.get(user=user)
-            if code == extended_user.email_confirm_code:
-                user.set_password(password)
-                #user.password=password
-                user.save()
-                user = authenticate(request, username=username, password=password)
-                login(request, user)
-                return redirect ('account_page', user.id)
+            if password == check_password:
+                extended_user=ExtendedUser.objects.get(user=user)
+                if code == extended_user.email_confirm_code:
+                    user.set_password(password)
+                    #user.password=password
+                    user.save()
+                    user = authenticate(request, username=username, password=password)
+                    login(request, user)
+                    return redirect ('account_page', user.id)
+                else:
+                    messages.error(request, "Неправильный код из письма. Попробуйте еще раз.")
+                    return redirect ('account_page', user.id)
             else:
-                messages.error(request, "Неправильный код из письма. Попробуйте еще раз.")
-                return redirect ('account_page', user.id)
+                messages.error(request, "Пароли не совпадают. Попробуйте еще раз. ")
+                return redirect ('password_change_page', user.id)
     else:
         return redirect ('shopfront')
 
@@ -175,19 +182,54 @@ def send_random_code(request, user_id):
             [user.email,],
             fail_silently=False
             )
-        return redirect ('pass_change_page', user.id)
+        return redirect ('password_change_page', user.id)
     else:
         return redirect ('shopfront')
     
-def pass_change_page(request, user_id):
+def password_change_page(request, user_id):
     if request.user.is_authenticated:
         user=User.objects.get(id=user_id)
         context={
             'user': user
             }
-        return render(request, 'accounts/pass_change_page.html', context)
+        return render(request, 'accounts/password_change_page.html', context)
     else:
         return redirect ('shopfront')
 
+def password_recovery_page(request):
+    return render(request, 'accounts/password_recovery_page.html')
 
+def recover_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        print(email)
+        if User.objects.filter(email=email).exists():
+            user=User.objects.get(email=email)
+            print('True')
+            #characters = string.ascii_letters + string.digits + string.punctuation
+            characters = string.ascii_letters + string.digits
+            #password = "".join(secrets.choice(characters) for i in range(8))
+            password = "".join(random.choice(characters) for i in range(8))
+            
+            send_mail(
+                'Новый пароль',
+                f"""Здравствуйте, пароль был изменен.
+                Если вы не пытались изменить пароль на данном сайте, пожалуйста, удалите данное сообщение.
+                Новый пароль: {password}
+                Войдите с новым паролем""",
+                'support@auto-deflector.ru',
+                [user.email,],
+                fail_silently=False
+                )
+            username=user.username
+            user.set_password(password)
+            user.save()
+            user = authenticate(request, username=username, password=password)
 
+            messages.error(request, "Пароль был изменён. Войдите с новым паролем.")
+            return redirect ('shopfront')
+                
+
+        else:
+            messages.error(request, "База данных не содержит данного почтового ящика.")
+            return redirect ('password_recovery_page')

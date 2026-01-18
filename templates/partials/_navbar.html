@@ -141,7 +141,7 @@
                  <div class="modal-dialog">
                     <div class="modal-content">
                           
-            <form action="{% url 'login_user' %}" method='POST'>
+            <form action="{% url 'login_user' %}" method='POST' id="login_form">
               {% csrf_token %}
               <div class="form-group">
                 <!-- <label for="username">Имя пользователя</label>
@@ -155,11 +155,16 @@
               </div>
               <br>
               <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
-              <input type="submit" value="Войти" class="btn btn-outline-dark btn-block">
+              <input type="submit" value="Войти" class="btn btn-outline-dark btn-block" id="login_button">
           </form>
-                  </div>
               </div>
               </div>
+              <div class="row mt-5">
+              <a href="{% url 'password_recovery_page' %}">Забыли пароль?</a>
+              </div>
+    
+              </div>
+ 
             </div>
             </div>
     <!-- =========================End of Login Modal=========================== -->
@@ -286,5 +291,17 @@
           outer_modal_login.classList.remove('openModal')
   }
 
+//==============blocking login button after pushing it ===============
+const login_form = document.querySelector('#login_form')
+const login_button = document.querySelector('#login_button')
+
+    login_form.addEventListener('submit', blockButton)
+    function blockButton() {
+        login_button.disabled = true;
+    }
+//===========End of Blockign Login button Module================
 
 </script>
+
+
+

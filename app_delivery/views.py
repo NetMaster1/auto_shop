@@ -21,47 +21,63 @@ def get_list_of_sdek_offices (request):
     #в качестве параметров (params) передаём заголовки (headers)
     response = requests.post(url, params=headers, )
     json=response.json()
-    print('============================')
-    print(json)
     access_token=json['access_token']
-  
     headers = {
         "Authorization": f'Bearer {access_token}',
     }
-    
     url="https://api.cdek.ru/v2/deliverypoints"
     #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
     response = requests.get(url, headers=headers)
     json=response.json()
+    # print('======================')
+    # print(json)
     offices=SDEK_Office.objects.all()
+    office_codes=[]
+    country_codes=['RU', 'KZ', 'BY']
     for i in json:
-        print(i)
-        print('===========================')
-        code=i['code']
-        type=i['type']
-        location=i['location']
-        city_code=location['city_code']
-        if SDEK_Office.objects.filter(code=code).exists():
-            office=SDEK_Office.objects.get(code=code)
-            office.city_code=city_code
-            office.type=type
-            office.save()
+        for c in country_codes:
+            # if i['location']['country_code']==c and i['type']=='PVZ' and i['is_handout']==True:
+            if i['location']['country_code']==c and i['type']=='PVZ' and i['is_handout']==True:
+                # if i['type']=='PVZ' and i['is_handout']==True:
+                office_codes.append(i['code'])
+                print('===========================')
+                print(i)
+                code=i['code']
+                type=i['type']
+                location=i['location']
+                city_code=location['city_code']
+                if SDEK_Office.objects.filter(code=code).exists():
+                    office=SDEK_Office.objects.get(code=code)
+                    office.city_code=city_code
+                    office.type=type
+                    office.save()
+                    continue
+                region=location['region']
+                city=location['city']
+                address_full=location['address_full']
+                country_code=location['country_code']
+
+                office =SDEK_Office.objects.create(
+                    code=code,
+                    type=type,
+                    address_full = address_full,
+                    country_code=country_code,
+                    region = region,
+                    city = city,
+                    city_code=city_code
+                )
+    #getting rid of closed offices
+    offices=SDEK_Office.objects.all()
+    print(office_codes)
+    deleted=0
+    for office in offices:
+        if office.code in office_codes:
             continue
-        region=location['region']
-        city=location['city']
-        address_full=location['address_full']
-        country_code=location['country_code']
-
-        office =SDEK_Office.objects.create(
-            code=code,
-            type=type,
-            address_full = address_full,
-            country_code=country_code,
-            region = region,
-            city = city,
-            city_code=city_code
-        )
-
+        else:
+            deleted+=1
+            office.delete()
+    print(f'Total Number of Offices: {offices.count()}')
+    print(f'Number of offices deleted: {deleted}')
     return redirect ('shopfront')
 
 def get_list_of_sdek_cities(request):
@@ -88,6 +104,14 @@ def get_list_of_sdek_cities(request):
     response = requests.get(url, headers=headers)
     json=response.json()
     for i in json:
+        if SDEK_City.objects.filter(code=i['code']).exists():
+            city=SDEK_City.objects.get(code=i['code'])
+            city.name=i['city'],
+            city.region=i['region'],
+            city.city_uuid=i['city_uuid'],
+            longitude=i['longitude'],
+            latitude=i['latitude'],
+            country_code=i['country_code'],
         city_items=SDEK_City.objects.create(
             code=i['code'],
             name=i['city'],
@@ -226,6 +250,7 @@ def get_sdek_delivery_cost(request):
             # 'order': order,
         }
         return render (request, 'delivery/delivery_cost.html' , context)
+
 #======================================================
 def delivery_city_choice(request):
     if request.method=="POST":
@@ -280,6 +305,9 @@ def delivery_city_choice(request):
         }
         return render (request, 'delivery/delivery_city_choice.html', context )
 
+#функция, которая сначала подставляет СТРАНУ, потом РЕГИОН, потом ГОРОД
+#основная для выбора пункта доставки
+#использует таблицу app.reference SDEK_Office
 def sdek_office_choice(request, order_id):
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)
@@ -296,7 +324,7 @@ def sdek_office_choice(request, order_id):
                 country_code='KZ'
             else:
                 country_code="BY"
-            regions=SDEK_Office.objects.filter(country_code=country_code)
+            regions=SDEK_Office.objects.filter(country_code=country_code, type='PVZ')
             regions=regions.distinct('region')
             cities=SDEK_Office.objects.filter(region=region)
             cities=cities.distinct('city')
@@ -334,9 +362,9 @@ def sdek_office_choice(request, order_id):
                 country_code='KZ'
             else:
                 country_code="BY"
-            regions=SDEK_Office.objects.filter(country_code=country_code)
+            regions=SDEK_Office.objects.filter(country_code=country_code, type='PVZ')
             regions=regions.distinct('region')
-            cities=SDEK_Office.objects.filter(region=region)
+            cities=SDEK_Office.objects.filter(region=region, type='PVZ')
             cities=cities.distinct('city')
             if request.user.is_authenticated:
                 context = {
@@ -368,7 +396,7 @@ def sdek_office_choice(request, order_id):
             else:
                 country_code="BY"
             
-            regions=SDEK_Office.objects.filter(country_code=country_code)
+            regions=SDEK_Office.objects.filter(country_code=country_code, type='PVZ')
             regions=regions.distinct('region')
 
             if request.user.is_authenticated:
@@ -429,6 +457,7 @@ def sdek_office_choice(request, order_id):
                 'countries' : countries,
             }
             return render(request, 'cart/order_page_final.html', context)
+
 #======================================================
 def create_sdek_shipment (request, order_id):
     order=Order.objects.get(id=order_id)
@@ -499,8 +528,9 @@ def create_sdek_shipment (request, order_id):
             return render (request, 'cart/shipment.html' , context)
         else:
             messages.error(request,"Вы не ввели полностью необдходимые данные.")
-            return redirect ('order', order.id)
-        
+            return redirect ('order', order.id)   
+
+#========================================================
 def get_order_status (request):
     #getting valid bearer token
     if request.method=="POST":
@@ -529,6 +559,7 @@ def get_order_status (request):
     #response = requests.get(url, headers=headers, json=params)
     json=response.json()
     print(json)
+
 #=======================================================
 def open_sdek_vidget(request):
     return render (request, 'cart/sdekvidget_ver_1.html' )

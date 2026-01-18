@@ -11,7 +11,9 @@ urlpatterns = [
     path('email_cofirmation/<int:user_id>', views.email_confirmation, name='email_confirmation'),
     path('chage_password/<int:user_id>', views.change_password, name='change_password'),
     path('send_random_code/<int:user_id>', views.send_random_code, name='send_random_code'),
-    path('pass_change_page/<int:user_id>', views.pass_change_page, name='pass_change_page'),
+    path('password_change_page/<int:user_id>', views.password_change_page, name='password_change_page'),
+    path('password_recovery_page', views.password_recovery_page, name='password_recovery_page'),
+    path('recover_password', views.recover_password, name='recover_password'),
   
  
 ]
