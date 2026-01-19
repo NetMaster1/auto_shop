@@ -11,7 +11,7 @@
                  <div class="modal-dialog">
                     <div class="modal-content">
                           
-            <form action="{% url 'confirm_email' extended_user.id %}" method='POST'>
+            <form action="{% url 'confirm_email' user.id %}" method='POST'>
               {% csrf_token %}
               <div class="form-group">
                 <!-- <label for="username">Имя пользователя</label>

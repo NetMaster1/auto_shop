@@ -30,6 +30,7 @@ class AutoModification (models.Model):
 class SDEK_Office (models.Model):
     code = models.CharField(max_length=25, unique=True, null=True, blank=True)
     type = models.CharField(max_length=25, default="PVZ")
+    #status = models.BooleanField(default=True)#indicates if the office is active
     address_full = models.CharField(max_length=250, null=True, blank=True)
     country_code = models.CharField(max_length=10, null=True, blank=True)
     postal_code = models.CharField(max_length=50, null=True, blank=True)

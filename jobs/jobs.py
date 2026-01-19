@@ -6,6 +6,7 @@ import requests
 import json
 import random
 from app_product.models import Product, DocumentType, RemainderHistory
+from app_reference.models import SDEK_Office
 import pytz
 
 
@@ -149,7 +150,79 @@ def wb_update_prices_auto():
     }
     response = requests.post(url, json=params, headers=headers)
 
-    
+#для работы с методами необходимо получить "Bearer Token". 
+#Для того, чтобы его полчить нужны "client_id" и "client_secret". Берем их из ЛК СДЕК.
+#Время жизни токена: 3599 секунд (1 мин), поэтому каждый раз получаем новый
+def list_of_sdek_offices_update ():
+    #getting valid bearer token
+    url="https://api.cdek.ru/v2/oauth/token"
+
+    headers = {
+        "grant_type": "client_credentials",
+		"client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+		"client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+    }
+    #в качестве параметров (params) передаём заголовки (headers)
+    response = requests.post(url, params=headers, )
+    json=response.json()
+    access_token=json['access_token']
+    headers = {
+        "Authorization": f'Bearer {access_token}',
+    }
+    url="https://api.cdek.ru/v2/deliverypoints"
+    #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    response = requests.get(url, headers=headers)
+    json=response.json()
+    # print('======================')
+    # print(json)
+    offices=SDEK_Office.objects.all()
+    office_codes=[]
+    country_codes=['RU', 'KZ', 'BY']
+    for i in json:
+        for c in country_codes:
+            # if i['location']['country_code']==c and i['type']=='PVZ' and i['is_handout']==True:
+            if i['location']['country_code']==c and i['type']=='PVZ' and i['is_handout']==True:
+                # if i['type']=='PVZ' and i['is_handout']==True:
+                office_codes.append(i['code'])
+                print('===========================')
+                print(i)
+                code=i['code']
+                type=i['type']
+                location=i['location']
+                city_code=location['city_code']
+                if SDEK_Office.objects.filter(code=code).exists():
+                    office=SDEK_Office.objects.get(code=code)
+                    office.city_code=city_code
+                    office.type=type
+                    office.save()
+                    continue
+                region=location['region']
+                city=location['city']
+                address_full=location['address_full']
+                country_code=location['country_code']
+
+                office =SDEK_Office.objects.create(
+                    code=code,
+                    type=type,
+                    address_full = address_full,
+                    country_code=country_code,
+                    region = region,
+                    city = city,
+                    city_code=city_code
+                )
+    #getting rid of closed offices
+    offices=SDEK_Office.objects.all()
+    print(office_codes)
+    deleted=0
+    for office in offices:
+        if office.code in office_codes:
+            continue
+        else:
+            deleted+=1
+            office.delete()
+    print(f'Total Number of Offices: {offices.count()}')
+    print(f'Number of offices deleted: {deleted}')
+  
 
 
 
