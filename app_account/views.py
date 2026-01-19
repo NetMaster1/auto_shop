@@ -121,12 +121,14 @@ def logout_user(request):
 def account_page(request, user_id ):
     if request.user.is_authenticated:
         user=User.objects.get(id=user_id)
+        extended_user=ExtendedUser.objects.get(user=user)
         orders=Order.objects.filter(user=user, status='succeeded')
 
         if request.user.id == user.id:
             context={
                 'user': user,
                 'orders': orders,
+                'extended_user': extended_user,
                 # 'orders_dict': orders_dict
             }
             return render(request, 'accounts/account_page.html', context)
