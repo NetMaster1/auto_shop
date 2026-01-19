@@ -76,7 +76,6 @@
                 {{user.password}}  
               </div>
               <div class="col-2">
-                
               <a href="{% url 'send_random_code' user.id %}" id="a_send_code" >
         <input type="button" value="Изменить пароль" class="btn btn-sm btn-block btn-outline-primary" id="send_code_button" > 
               </a>
@@ -131,11 +130,37 @@
             <strong>Телефон</strong>
           </button>
         </h2>
-        <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-          {{user.phone}}
-          </div>
+   
+          <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+
+              <div class="row mb-3">
+              <div class="col-10">
+                  Телефон для СДЕК: {{user.phone}}
+              </div>
+             
+              <div class="col-2">
+                  <a href="#" id="a_send_code" >
+                    <input type="button" value="Ввести/изменить телефон" class="btn btn-sm btn-block btn-outline-primary" id="send_code_button" > 
+              </a>
+            </div>
+             </div>
+
+              <div class="row mb-3">
+              <div class="col-10">
+                  Телефон для ОЗОН: {{user.phone}}
+              </div>
+             
+              <div class="col-2">
+                  <a href="#" id="a_send_code" >
+                    <input type="button" value="Ввести/изменить телефон" class="btn btn-sm btn-block btn-outline-primary" id="send_code_button" > 
+              </a>
+            </div>
+             </div>
+
+
         </div>
+      </div>
       </div>
 
       <div class="accordion-item">

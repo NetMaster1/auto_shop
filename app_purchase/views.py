@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from . models import Cart, CartItem, Identifier, OrderItem, Order, Customer
 from app_product.models import Product
 from app_reference.models import SDEK_Office
+from app_account.models import ExtendedUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import uuid
@@ -160,6 +161,7 @@ def create_final_purchase_order(request, order_id):
         phone = request.POST["phone"]
         email = request.POST["email"]
         
+        
         office=SDEK_Office.objects.get(address_full=shipment_office)
         city_code=office.city_code
         try:
@@ -220,6 +222,10 @@ def create_final_purchase_order(request, order_id):
             order.delivery_cost=delivery_cost
             order.bill=delivery_cost + order.sum
             order.save()
+            if request.user.is_authenticated:
+                extended_user=ExtendedUser.objects.get(user=request.user)
+                extended_user.sdek_phone=phone
+                extended_user.save()
             print (order.sum)
             print(order.delivery_cost)
             print(order.bill)
