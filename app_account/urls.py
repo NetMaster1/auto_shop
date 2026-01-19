@@ -14,6 +14,8 @@ urlpatterns = [
     path('password_change_page/<int:user_id>', views.password_change_page, name='password_change_page'),
     path('password_recovery_page', views.password_recovery_page, name='password_recovery_page'),
     path('recover_password', views.recover_password, name='recover_password'),
+    path('create_sdek_phone/<int:user_id>', views.create_sdek_phone, name='create_sdek_phone'),
+    path('create_ozon_phone/<int:user_id>', views.create_ozon_phone, name='create_ozon_phone'),
   
  
 ]

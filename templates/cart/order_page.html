@@ -173,7 +173,7 @@
   <div class="row p-1">
   <div class="col-md-4">
     <!-- <label for="phone" class="form-label">Телефон</label> -->
-    <input type="text" class="form-control" id="phone" name="phone" placeholder="Телефон" required >
+    <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required >
   </div>
   </div>
   <div class="row p-1">
@@ -211,8 +211,12 @@
   <div class="row p-1">
   <div class="col-md-4">
     <!-- <label for="phone" class="form-label">Телефон</label> -->
-    <input type="text" class="form-control" id="phone" name="phone" placeholder="Телефон" required >
-  </div>
+    {% if extended_user.sdek_phone %}
+    <input type="tel" class="form-control" id="phone" name="phone" value="{{extended_user.sdek_phone}}" required >
+    {% else%}
+    <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required >
+    {% endif %}  
+</div>
   </div>
   <div class="row p-1">
   <div class="col-md-4">
