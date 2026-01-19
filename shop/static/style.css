@@ -133,7 +133,30 @@
   display: block;
   z-index: 9999;
 }
-
+/* ===================== Login Modal========================= */
+.sdek_phone_outer_modal {
+  display: none;
+}
+.sdek_phone_outer_modal.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.sdek_phone_modal {
+    padding: 3rem;
+    background-color: white;
+    width: 50rem;
+    height: 30rem;
+    display: block;
+    position: fixed;
+    top: 15rem;
+    left: 50rem;  
+}
+/* ===================== End ofDelivery Modal========================= */
 
 .message_window {
  z-index: 9999;

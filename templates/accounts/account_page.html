@@ -15,21 +15,21 @@
     {% endfor%}
     {% endif%}
   </div>
-          <div class="row mt-4 pt-5">
-            <div class="col-12">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Текущая</li>
-                </ol>
-              </nav>
-            </div>
-          </div>
+  <div class="row mt-4 pt-5">
+    <div class="col-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Текущая</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 
 
   <div class="accordion" id="accordionExample">
 
-      <div class="accordion-item">
+    <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
             <strong>ФИО</strong>
@@ -40,9 +40,9 @@
             {{user.first_name}} {{user.last_name}}
         </div>
       </div>
-      </div>
+    </div>
 
-      <div class="accordion-item">
+    <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
           <strong>Email</strong> 
@@ -61,8 +61,9 @@
           </div> -->
         </div>
       </div>
+    </div>
 
-      <div class="accordion-item">
+    <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
             <strong>Пароль</strong>
@@ -83,9 +84,9 @@
             </div>
           </div>
         </div>
-      </div>
+    </div>
 
-      <div class="accordion-item">
+    <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
             <strong>Покупки</strong>
@@ -109,9 +110,9 @@
             {% endfor %}
           </div>
         </div>
-      </div>
+    </div>
 
-      <div class="accordion-item">
+    <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
             <strong>Корзина</strong>
@@ -122,9 +123,9 @@
            <a href="{% url 'cart_detail' %}" target="_blank"> Перейти </a>
           </div>
         </div>
-      </div>
+    </div>
 
-      <div class="accordion-item">
+    <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
             <strong>Телефон</strong>
@@ -140,13 +141,49 @@
                                         {{extended_user.sdek_phone}}
                                       {% endif %}
               </div>
-             
+    <!-- ===========================================Sdek Change Phone Modal Trigger========================      -->
               <div class="col-2">
-                  <a href="#" id="a_send_code" >
-                    <input type="button" value="Ввести/изменить телефон" class="btn btn-sm btn-block btn-outline-primary" id="send_code_button" > 
-              </a>
+                <input type="button" value="Ввести/изменить телефон" class="btn btn-sm btn-block btn-outline-primary" id="change_sdek_phone_button" > 
             </div>
              </div>
+
+    <!-- ===============================Sdek Phone Change Modal===================================== -->
+         <div class="sdek_phone_outer_modal">
+          <div class="hide">
+
+            <div class="sdek_phone_modal">
+              <div class="hide">
+                <div class="enterLoginModal rounded-5">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_sdek_window">
+                    
+                 <div class="modal-dialog">
+                    <div class="modal-content">
+                          
+            <form action="{% url 'create_sdek_phone' user.id %}" method='POST' id="login_form">
+              {% csrf_token %}
+              <div class="form-group">
+                <!-- <label for="username">Имя пользователя</label>
+                <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required> -->
+                <label for="username">Электронная почта</label>
+                <input type="email" name="username" class="form-control" placeholder="Введите имя пользователя" required>
+              </div>
+              <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
+              <input type="submit" value="Войти" class="btn btn-outline-dark btn-block" id="login_button">
+          </form>
+              </div>
+              </div>
+              <div class="row mt-5">
+              <a href="{% url 'password_recovery_page' %}">Забыли пароль?</a>
+              </div>
+    
+              </div>
+ 
+            </div>
+            </div>
+          </div>
+        </div>
+    <!-- =========================End of Change Sdek Phone Modal=========================== -->
+
 
               <div class="row mb-3">
               <div class="col-10">
@@ -156,18 +193,15 @@
               </div>
              
               <div class="col-2">
-                  <a href="#" id="a_send_code" >
-                    <input type="button" value="Ввести/изменить телефон" class="btn btn-sm btn-block btn-outline-primary" id="send_code_button" > 
-              </a>
+                <input type="button" value="Ввести/изменить телефон" class="btn btn-sm btn-block btn-outline-primary" id="change_ozon_phone_button"> 
+              </div>
+              </div>
+            
             </div>
              </div>
-
-
-        </div>
-      </div>
-      </div>
-
-      <div class="accordion-item">
+    </div>
+    <!-- ===============Delete Account============ -->
+    <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
             <strong>Удалить аккаунт</strong>
@@ -178,9 +212,9 @@
             Подтвердите удаление аккаунта
           </div>
         </div>
-      </div>
-
-      <div class="accordion-item">
+    </div>
+    <!-- ===============Log Out=================== -->
+    <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
             <strong><a href="{% url 'logout_user' %}">Выйти</a></strong>
@@ -191,12 +225,11 @@
             <a href="{% url 'logout_user' %}">Подтвердите выход</a>
           </div>
         </div>
-      </div>
+    </div>
 
-
-
-  </div>
+    </div>
 </div>
+
 
 <script>
 
@@ -211,6 +244,29 @@ function removeLink() {
     a_send_code.remove()
 }
 //======================End of Removing a Link after clicking on it once============================
+const change_sdek_phone_button = document.querySelector('#change_sdek_phone_button')
+const sdek_phone_outer_modal = document.querySelector('.sdek_phone_outer_modal')
+const cross_sdek_window =document.querySelector('#cross_sdek_window');
+const change_ozon_phone_button = document.querySelector('#change_ozon_phone_button')
+const cross_ozon_window =document.querySelector('#cross_ozon_window');
+
+change_sdek_phone_button.addEventListener('click', openSdekPhoneModule)
+cross_sdek.addEventListener('click', closeSdekPhoneModule)
+function openSdekPhoneModule () {
+          sdek_phone_outer_modal.classList.add('openModal')
+      }
+   function closeSdekPhoneModule () {
+          outer_modal_login.classList.remove('openModal')
+  }
+
+change_ozon_phone_button.addEventListener('click', openOzonPhoneModule)
+cross_ozon.addEventListener('click', closeOzonPhoneModule)
+function openOzonPhoneModule () {
+          ozon_phone_modal.classList.add('openModal')
+      }
+   function closeOzonPhoneModule () {
+          sdek_phone_modal.classList.remove('openModal')
+  }
 
 </script>
 
