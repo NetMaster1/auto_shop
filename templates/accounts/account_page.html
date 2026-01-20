@@ -149,56 +149,74 @@
 
     <!-- ===============================Sdek Phone Change Modal===================================== -->
          <div class="sdek_phone_outer_modal">
-          <div class="hide">
-
-            <div class="sdek_phone_modal">
-              <div class="hide">
-                <div class="enterLoginModal rounded-5">
-                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_sdek_window">
-                    
-                 <div class="modal-dialog">
-                    <div class="modal-content">
-                          
-            <form action="{% url 'create_sdek_phone' user.id %}" method='POST' id="login_form">
-              {% csrf_token %}
-              <div class="form-group">
-                <!-- <label for="username">Имя пользователя</label>
-                <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required> -->
-                <label for="username">Электронная почта</label>
-                <input type="email" name="username" class="form-control" placeholder="Введите имя пользователя" required>
-              </div>
-              <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
-              <input type="submit" value="Войти" class="btn btn-outline-dark btn-block" id="login_button">
-          </form>
+          <div class="hide">   
+            <div class="sdek_phone_modal rounded-5">
+              <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_sdek_window">         
+              <div class="modal-dialog">
+                <div class="modal-content">        
+                <form action="{% url 'create_sdek_phone' user.id %}" method='POST'>
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <div class="row mb-3">
+                      <label for="phone">Телефон для службы доставки СДЕК</label>
+                    </div>
+                    <div class="row mb-3">
+                       <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Код РФ: 7" required >
+                    </div>
+                    <div class="row">
+                        <input type="submit" value="Ввести" class="btn btn-outline-primary btn-block">
+                    </div>
+                  </div>  
+                </form>
               </div>
               </div>
-              <div class="row mt-5">
-              <a href="{% url 'password_recovery_page' %}">Забыли пароль?</a>
               </div>
-    
-              </div>
- 
-            </div>
-            </div>
           </div>
         </div>
     <!-- =========================End of Change Sdek Phone Modal=========================== -->
 
 
-              <div class="row mb-3">
-              <div class="col-10">
-                  Телефон для ОЗОН:   {% if extended_user.ozon_phone %}
-                                        {{extended_user.ozon_phone}}
-                                      {% endif %}
-              </div>
-             
-              <div class="col-2">
-                <input type="button" value="Ввести/изменить телефон" class="btn btn-sm btn-block btn-outline-primary" id="change_ozon_phone_button"> 
-              </div>
-              </div>
+        <div class="row mb-3">
+          <div class="col-10">
+              Телефон для ОЗОН:   {% if extended_user.ozon_phone %}
+                                    {{extended_user.ozon_phone}}
+                                  {% endif %}
+          </div>
+    <!-- ========================== Ozon Phone Modal Trigger================================ -->    
+        <div class="col-2">
+          <input type="button" value="Ввести/изменить телефон" class="btn btn-sm btn-block btn-outline-primary" id="change_ozon_phone_button"> 
+        </div>
+        </div>
             
+    <!-- ===============================Ozon Phone Change Modal===================================== -->
+         <div class="ozon_phone_outer_modal">
+          <div class="hide">   
+            <div class="ozon_phone_modal rounded-5">
+              <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_ozon_window">         
+              <div class="modal-dialog">
+                <div class="modal-content">        
+                <form action="{% url 'create_ozon_phone' user.id %}" method='POST'>
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <div class="row mb-3">
+                      <label for="phone">Телефон для службы доставки Озон</label>
+                    </div>
+                    <div class="row mb-3">
+                       <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Код РФ: 7" required >
+                    </div>
+                    <div class="row">
+                        <input type="submit" value="Ввести" class="btn btn-outline-primary btn-block">
+                    </div>
+                  </div>  
+                </form>
+              </div>
+              </div>
+              </div>
+          </div>
+        </div>
+    <!-- =========================End of Change Ozon Phone Modal=========================== -->
             </div>
-             </div>
+        </div>
     </div>
     <!-- ===============Delete Account============ -->
     <div class="accordion-item">
@@ -248,24 +266,27 @@ const change_sdek_phone_button = document.querySelector('#change_sdek_phone_butt
 const sdek_phone_outer_modal = document.querySelector('.sdek_phone_outer_modal')
 const cross_sdek_window =document.querySelector('#cross_sdek_window');
 const change_ozon_phone_button = document.querySelector('#change_ozon_phone_button')
+const ozon_phone_outer_modal = document.querySelector('.ozon_phone_outer_modal')
 const cross_ozon_window =document.querySelector('#cross_ozon_window');
 
+
 change_sdek_phone_button.addEventListener('click', openSdekPhoneModule)
-cross_sdek.addEventListener('click', closeSdekPhoneModule)
+cross_sdek_window.addEventListener('click', closeSdekPhoneModule)
 function openSdekPhoneModule () {
           sdek_phone_outer_modal.classList.add('openModal')
       }
    function closeSdekPhoneModule () {
-          outer_modal_login.classList.remove('openModal')
+          sdek_phone_outer_modal.classList.remove('openModal')
   }
 
+
 change_ozon_phone_button.addEventListener('click', openOzonPhoneModule)
-cross_ozon.addEventListener('click', closeOzonPhoneModule)
+cross_ozon_window.addEventListener('click', closeOzonPhoneModule)
 function openOzonPhoneModule () {
-          ozon_phone_modal.classList.add('openModal')
+          ozon_phone_outer_modal.classList.add('openModal')
       }
    function closeOzonPhoneModule () {
-          sdek_phone_modal.classList.remove('openModal')
+          ozon_phone_outer_modal.classList.remove('openModal')
   }
 
 </script>

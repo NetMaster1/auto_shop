@@ -2,6 +2,13 @@
   --max-width: 56%;
 }
 
+.ff1 {
+font-family: "Times New Roman", "Times", serif;
+}
+.ff2 {
+font-family: "Lucida Console", "Courier New", monospace;
+}
+
 .aligner {
   display: flex; 
   align-items: center;
@@ -43,10 +50,10 @@
   align-items: center;
 }
 .enterContactModal {
-    padding: 3rem;
+    padding: 2rem;
     background-color: white;
-    width: 50rem;
-    height: 30rem;
+    width: 30rem;
+    height: 15rem;
     display: inline-block;
     position: relative;
     top: 15rem;
@@ -69,7 +76,7 @@
     padding: 3rem;
     background-color: white;
     width: 50rem;
-    height: 30rem;
+    height: 32rem;
     display: block;
     position: fixed;
     top: 15rem;
@@ -133,7 +140,7 @@
   display: block;
   z-index: 9999;
 }
-/* ===================== Login Modal========================= */
+/* ===================== Sdek Phone Modal========================= */
 .sdek_phone_outer_modal {
   display: none;
 }
@@ -149,14 +156,40 @@
 .sdek_phone_modal {
     padding: 3rem;
     background-color: white;
-    width: 50rem;
-    height: 30rem;
+    width: 30rem;
+    height: 15rem;
     display: block;
     position: fixed;
     top: 15rem;
     left: 50rem;  
+} 
+/* ===================== End of Sdek Phone Modal========================= */
+
+/* ===================== Ozon Phone Modal========================= */
+.ozon_phone_outer_modal {
+  display: none;
 }
-/* ===================== End ofDelivery Modal========================= */
+.ozon_phone_outer_modal.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.ozon_phone_modal {
+    padding: 3rem;
+    background-color: white;
+    width: 30rem;
+    height: 15rem;
+    display: block;
+    position: fixed;
+    top: 15rem;
+    left: 50rem;  
+} 
+/* ===================== End of Ozon Phone Modal========================= */
+
 
 .message_window {
  z-index: 9999;
