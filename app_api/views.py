@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from .models import ServerResponse
 from app_product.models import Product, RemainderHistory, DocumentType
 from app_purchase.models import Order, OrderItem, Cart, CartItem
+from app_purchase.views import _cart_id
 from app_reference.models import SDEK_Office
 from .serializers import ServerResponseSerializer
 import json
@@ -208,12 +209,16 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 				order.corresponding_rhos_created=True
 				order.save()
 				if order.status=='succeeded':
-				#===============clearing cart========================
+					print('========================')
+					print('order payment succeeded')
 					order_items=OrderItem.objects.filter(order=order)
-					cart = request.session.session_key 
+					cart=Cart.objects.get(cart_id=_cart_id(request))
+					print(cart)
 					cart_items=CartItem.objects.filter(cart=cart)
 					for order_item in order_items:
+						print(f'Order_item_poduct: {order_item.product}')
 						for cart_item in cart_items:
+							print(f'Cart_item_product: {cart_item.product}')
 							if order_item.product==cart_item.product:
 								cart_item.quantity=cart_item.quantity-order_item.quantity
 								if cart_item.quantity<=0:

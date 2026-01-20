@@ -26,14 +26,16 @@ class Customer (models.Model):
 
 class Cart(models.Model):
     cart_id = models.CharField(max_length=250, blank=True)
-    #date_added = models.DateField(auto_now_add=True)
+    cart_user = models.ForeignKey(User, null=True, blank=True, on_delete=models.DO_NOTHING)
+    date_added = models.DateField(auto_now_add=True, blank=True, null=True)
 
     # class Meta:
     #     db_table = 'Cart'
     #     ordering = ['date_added']
 
     def __str__(self):
-        return self.cart_id
+        # return self.cart_id
+        return self.cart_user
     #def __unicode__(self):
     #    return "Cart id: %s" %(self.id)
 

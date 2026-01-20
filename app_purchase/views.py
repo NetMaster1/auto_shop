@@ -25,13 +25,23 @@ def _cart_id(request):
 
 def add_cart(request, id):
     product=Product.objects.get(id=id)
-    try:
-        cart=Cart.objects.get(cart_id=_cart_id(request))
-        #cart=Cart.objects.get(cart_id=request.session)
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(cart_id=_cart_id(request))
-        #cart = Cart.objects.create(cart_id=request.session)
-        #cart.save()
+    if request.user.is_authenticated:
+        if Cart.objects.filter(user=User).exists():
+            cart=Cart.objects.get(user=User)
+        else:
+            cart=Cart.objects.create(user=User)
+    else:
+        if Cart.objects.filter(user=request.user).exists():
+            cart=Cart.objects.get(user=request.user)
+        else:
+            cart=Cart.objects.create(user=request.user)
+    # try:
+    #     cart=Cart.objects.get(cart_id=_cart_id(request))
+    #     #cart=Cart.objects.get(cart_id=request.session)
+    # except Cart.DoesNotExist:
+    #     cart = Cart.objects.create(cart_id=_cart_id(request))
+    #     #cart = Cart.objects.create(cart_id=request.session)
+    #     #cart.save()
     try:
         cart_item = CartItem.objects.get(product=product.name, cart=cart)
         cart_item.quantity+=1

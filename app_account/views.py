@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages, auth
-from django.contrib.auth.models import User, Group
 from app_product.models import Product
 from app_purchase.models import Order, OrderItem
 from . models import ExtendedUser
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages, auth
+from django.contrib.auth.models import User, Group
 from django.core.mail import send_mail
 import random
 from django.http import HttpResponse
@@ -28,14 +29,12 @@ def register_user(request):
                 return redirect('shopfront')
             else:
                 user=User.objects.create_user(
-                    username=email,
+                    username=username,
                     password=password,
                     email=email,
                     first_name=first_name,
                     last_name=last_name,
                     )
-                
-
             if ExtendedUser.objects.filter(user=user).exists():
                 pass
             else:
