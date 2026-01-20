@@ -43,13 +43,6 @@ def add_cart(request, id):
         else:
             cart=Cart.objects.create(cart_id=request.session.session_key)
 
-    # try:
-    #     cart=Cart.objects.get(cart_id=_cart_id(request))
-    #     #cart=Cart.objects.get(cart_id=request.session)
-    # except Cart.DoesNotExist:
-    #     cart = Cart.objects.create(cart_id=_cart_id(request))
-    #     #cart = Cart.objects.create(cart_id=request.session)
-    #     #cart.save()
     try:
         cart_item = CartItem.objects.get(product=product.name, cart=cart)
         cart_item.quantity+=1
@@ -83,19 +76,23 @@ def cart_detail(request):
         else:
             cart=Cart.objects.create(cart_id=request.session.session_key)
             
+    if CartItem.objects.filter(cart=cart).exists():
         cart_items=CartItem.objects.filter(cart=cart).order_by('product')
         total=0
         for item in cart_items:
             sub_total=item.quantity*item.price
             total+=sub_total
-        
-    context = {
-        'cart_items' : cart_items,
-        'total': total,
-        'cart': cart,
-    }
-
-    return render (request, 'cart/cart.html', context)
+        context = {
+            'cart_items' : cart_items,
+            'total': total,
+            'cart': cart,
+        }
+        return render (request, 'cart/cart.html', context)
+    else:
+        context = {
+            'cart': cart,
+        }
+        return render (request, 'cart/cart.html', context)
 
 def add_cart_item(request, id):
     cart_item=CartItem.objects.get(id=id)

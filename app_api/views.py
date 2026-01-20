@@ -213,6 +213,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 					print('========================')
 					print('order payment succeeded')
 					order_items=OrderItem.objects.filter(order=order)
+        #====================Cart Module==============================
 					if request.user.is_authenticated:
 						user=User.objects.get(id=request.user.id)
 						cart=Cart.objects.get(user=user)
@@ -232,6 +233,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 									cart_item.delete()
 								else:
 									cart_item.save()
+          #===================End of Cart Module=========================
 					delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
 					print('========================')
 					print(f'Код пункта выдачи СДЕК: {delivery_point.code}')

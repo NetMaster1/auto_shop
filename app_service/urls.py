@@ -9,5 +9,7 @@ urlpatterns = [
     path('create_list_of_files', views.create_list_of_files, name='create_list_of_files'),
     path('rename_files', views.rename_files, name='rename_files'),
     path('db_correct_model_names', views.db_correct_model_names, name='db_correct_model_names'),
+    path('delete_cart_items', views.delete_cart_items, name='delete_cart_items'),
+    path('delete_carts', views.delete_carts, name='delete_carts'),
    
 ]

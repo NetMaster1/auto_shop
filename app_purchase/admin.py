@@ -3,7 +3,7 @@ from app_product.models import Product
 from . models import Cart, CartItem, Customer, Order, OrderItem
 
 class CartAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cart_id', )
+    list_display = ('id', 'cart_id', 'cart_user' )
   
 class CartItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'product', 'cart','quantity',)

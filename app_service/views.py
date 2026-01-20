@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from app_product.models import Product, ProductCategory, RemainderHistory, DocumentType
+from app_purchase.models import Cart, CartItem
 import pandas
 import xlwt
 from django.contrib import messages
@@ -148,3 +149,14 @@ def db_correct_model_names(request):
                     product.save()   
             return redirect('dashboard')
 
+def delete_cart_items(request):
+    cart_items=CartItem.objects.all()
+    for item in cart_items:
+        item.delete()
+    return redirect ('shopfront')
+
+def delete_carts(request):
+    carts=Cart.objects.all()
+    for item in carts:
+        item.delete()
+    return redirect ('shopfront')
