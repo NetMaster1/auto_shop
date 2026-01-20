@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import ServerResponse
 from app_product.models import Product, RemainderHistory, DocumentType
-from app_purchase.models import Order, OrderItem
+from app_purchase.models import Order, OrderItem, Cart, CartItem
 from app_reference.models import SDEK_Office
 from .serializers import ServerResponseSerializer
 import json
@@ -182,177 +182,187 @@ def ozon_push(request):#receives a notification from ozon on a new order
 #и формирования заказа на отпрвку в СДЕК
 @csrf_exempt #отключает защиту csrf
 def payment_status(request):#receives an http notice from Y-kassa on a successful payment
-  if request.method=='POST':
-    doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
-    tdelta=datetime.timedelta(hours=3)
-    dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
-    dateTime=dT_utcnow+tdelta
-    #converts django time to string
-    dateTime=datetime.datetime.strftime(dateTime, "%Y-%m-%dT%H:%M:%SZ")
-    #dispays milliseconds in string format
-    # datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-2]
-    import json  
-    try: 
-      data = json.loads(request.body)
-      #data = json.loads(request.body.decode('utf-8'))
-      object=data.get('object')
-      order_id=object.get('description')
-      status=object.get('status')
-      order=Order.objects.get(id=order_id)
-      if order.corresponding_rhos_created == True and order.status=='succeeded':
-         print ('rho has been previously created')
-      else:
-        print('response from Y-kassa: ')
-        print(data)
-        order.status=status
-        order.corresponding_rhos_created=True
-        order.save()
-        if order.status=='succeeded':
-          delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
-          print('========================')
-          print(f'Код пункта выдачи СДЕК: {delivery_point.code}')
-          print('========================')
-          contragent_full_name=[order.receiver_firstName, order.receiver_lastName]
-          contragent_full_name = ' '.join(contragent_full_name)
-          order_items=OrderItem.objects.filter(order=order)
-          order_item_array=[]
-          
-          for item in order_items:
-            product=Product.objects.get(article=item.article)
-            sku=product.ozon_sku
-            order_item_dict={
-                    'name': item.product,
-                    'ware_key': item.article,
-                    'payment': {
-                        "value": 0,
-                        "vat_sum": 0,
-                        "vat_rate": 0,
-                        },
-                    "weight": 800,
-                    "amount": 1,
-                    "cost": 1,
-                  }
-            order_item_array.append(order_item_dict)
-              
-            if RemainderHistory.objects.filter(article=item.article, created__lt=dateTime).exists():
-              rhos=RemainderHistory.objects.filter(article=item.article, created__lt=dateTime)
-              rho_latest=rhos.latest('created')
-              pre_remainder=rho_latest.current_remainder
-            else:
-              pre_remainder=0
-              #rint(pre_remainder)
-            rho=RemainderHistory.objects.create(
-              rho_type=doc_type,
-              created=dateTime,
-              article=product.article,
-              ozon_id=product.ozon_id,
-              ozon_sku=sku,
-              name=product.name,
-              status='initiated by auto-deflector.ru',
-              shipment_id=order.id,
-              pre_remainder=pre_remainder,
-              incoming_quantity=0,
-              outgoing_quantity=int(item.quantity),
-              current_remainder=pre_remainder - int(item.quantity),
-              retail_price=int(product.site_retail_price),
-              total_retail_sum=int(item.quantity) * int(product.site_retail_price),
-            )
-            #editing current quatityt in product table for future reports
-            #taking current qunatity report based on rho table takes too much time
-            product.quantity=rho.current_remainder
-            product.total_sum=rho.current_remainder * product.av_price
-            product.save()
-          
-          #creating sdek shipment order		
-          sdek_order={
-              "type": 1,
-              # "additional_order_types": [],
-              "number": order.id,
-              # "accompanying_number": "string",
-              "tariff_code": 136,
-              # "comment": "string",
-              "shipment_point": "NN8",
-              "delivery_point": delivery_point.code,
-              # "date_invoice": "2019-08-24",
-              # "shipper_name": "string",
-              # "shipper_address": "string",
-              # "delivery_recipient_cost":{
-              #     "value": delivery_cost,
-              #     "vat_sum": 0,
-              #     "vat_rate": 0,
-              #     },
-              # "delivery_recipient_cost_adv": [],
-              # "sender": {},
-              # "seller": {},
-              "recipient":{
-                # "company": "string",
-                "name": contragent_full_name,
-                # "contragent_type": "INDIVIDUAL",
-                # "passport_series": "string",
-                # "passport_number": "string",
-                # "passport_date_of_issue": "2019-08-24",
-                # "passport_organization": "string",
-                # "tin": "string",
-                # "passport_date_of_birth": "2019-08-24",
-                "email": order.receiver_email,
-                "phones": [
-                   {'number': order.receiver_phone, },]
-                },
-              # "from_location": {},
-              # "to_location": {},
-              # "services": [],
-              "packages": [
-                  {
-                  "number": order.id,
-                  "weight": 1000,
-                  "length": 100,
-                  "width": 30,
-                  "height": 5,
-                  "comment": "Хрупкое, обращаться осторожно",
-                  "items":  order_item_array,
-                  }
-                ],
-              # "is_client_return": true,
-              # "has_reverse_order": true,
-              # "developer_key": "string",
-              # "print": "WAYBILL",
-              # "widget_token": "string"
-              }
-          print('===================Getting Auth Token for SDEK========================')
-          url="https://api.cdek.ru/v2/oauth/token"
-          headers = {
-            "grant_type": "client_credentials",
-            "client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
-            "client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
-          }
-          response = requests.post(url, params=headers,)
-          json=response.json()
-          access_token=json['access_token']
-          print(access_token)
-          print('=================Successfull Getting of Auth Token for SDEK========================')
-          headers = {
-            "Authorization": f'Bearer {access_token}',
-          }
-          print('=========================Creating SDEK Order========================')
-          url="https://api.cdek.ru/v2/orders"
-          response = requests.post(url, headers=headers, json=sdek_order)
-          print(response.status_code)
-          json=response.json()
-          print("Respone from SDEK API: ")
-          print(json)
-          print('=====================Successfull Creation of SDEK order===========================')
-          #two ways to get dict key value
-          entity=json['entity']
-          #entity=json.get('entity')
-          uuid=entity['uuid']
-          #uuid=entity.get('uuid')
-          order.delivery_order_uuid=uuid
-          order.save()
-          
-          
-      
-    except Exception as e:
-      print(e)
+	if request.method=='POST':
+		doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
+		tdelta=datetime.timedelta(hours=3)
+		dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+		dateTime=dT_utcnow+tdelta
+		#converts django time to string
+		dateTime=datetime.datetime.strftime(dateTime, "%Y-%m-%dT%H:%M:%SZ")
+		#dispays milliseconds in string format
+		# datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-2]
+		import json
+		try:
+			data = json.loads(request.body)
+			#data = json.loads(request.body.decode('utf-8'))
+			object=data.get('object')
+			order_id=object.get('description')
+			status=object.get('status')
+			order=Order.objects.get(id=order_id)
+			if order.corresponding_rhos_created == True and order.status=='succeeded':
+				print ('rho has been previously created')
+			else:
+				print('response from Y-kassa: ')
+				print(data)
+				order.status=status
+				order.corresponding_rhos_created=True
+				order.save()
+				if order.status=='succeeded':
+				#===============clearing cart========================
+					order_items=OrderItem.objects.filter(order=order)
+					cart = request.session.session_key 
+					cart_items=CartItem.objects.filter(cart=cart)
+					for order_item in order_items:
+						for cart_item in cart_items:
+							if order_item.product==cart_item.product:
+								cart_item.quantity=cart_item.quantity-order_item.quantity
+								if cart_item.quantity<=0:
+									cart_item.delete()
+								else:
+									cart_item.save()
+					delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
+					print('========================')
+					print(f'Код пункта выдачи СДЕК: {delivery_point.code}')
+					print('========================')
+					contragent_full_name=[order.receiver_firstName, order.receiver_lastName]
+					contragent_full_name = ' '.join(contragent_full_name)
+					order_items=OrderItem.objects.filter(order=order)
+					order_item_array=[]
+					
+					for item in order_items:
+						product=Product.objects.get(article=item.article)
+						sku=product.ozon_sku
+						order_item_dict={
+								'name': item.product,
+								'ware_key': item.article,
+								'payment': {
+									"value": 0,
+									"vat_sum": 0,
+									"vat_rate": 0,
+									},
+								"weight": 800,
+								"amount": 1,
+								"cost": 1,
+							}
+						order_item_array.append(order_item_dict)
+						
+						if RemainderHistory.objects.filter(article=item.article, created__lt=dateTime).exists():
+							rhos=RemainderHistory.objects.filter(article=item.article, created__lt=dateTime)
+							rho_latest=rhos.latest('created')
+							pre_remainder=rho_latest.current_remainder
+						else:
+							pre_remainder=0
+							#rint(pre_remainder)
+							rho=RemainderHistory.objects.create(
+							rho_type=doc_type,
+							created=dateTime,
+							article=product.article,
+							ozon_id=product.ozon_id,
+							ozon_sku=sku,
+							name=product.name,
+							status='initiated by auto-deflector.ru',
+							shipment_id=order.id,
+							pre_remainder=pre_remainder,
+							incoming_quantity=0,
+							outgoing_quantity=int(item.quantity),
+							current_remainder=pre_remainder - int(item.quantity),
+							retail_price=int(product.site_retail_price),
+							total_retail_sum=int(item.quantity) * int(product.site_retail_price),
+							)
+							#editing current quatityt in product table for future reports
+							#taking current qunatity report based on rho table takes too much time
+							product.quantity=rho.current_remainder
+							product.total_sum=rho.current_remainder * product.av_price
+							product.save()
+					
+					#creating sdek shipment order		
+					sdek_order={
+						"type": 1,
+						# "additional_order_types": [],
+						"number": order.id,
+						# "accompanying_number": "string",
+						"tariff_code": 136,
+						# "comment": "string",
+						"shipment_point": "NN8",
+						"delivery_point": delivery_point.code,
+						# "date_invoice": "2019-08-24",
+						# "shipper_name": "string",
+						# "shipper_address": "string",
+						# "delivery_recipient_cost":{
+						#     "value": delivery_cost,
+						#     "vat_sum": 0,
+						#     "vat_rate": 0,
+						#     },
+						# "delivery_recipient_cost_adv": [],
+						# "sender": {},
+						# "seller": {},
+						"recipient":{
+							# "company": "string",
+							"name": contragent_full_name,
+							# "contragent_type": "INDIVIDUAL",
+							# "passport_series": "string",
+							# "passport_number": "string",
+							# "passport_date_of_issue": "2019-08-24",
+							# "passport_organization": "string",
+							# "tin": "string",
+							# "passport_date_of_birth": "2019-08-24",
+							"email": order.receiver_email,
+							"phones": [
+							{'number': order.receiver_phone, },]
+							},
+						# "from_location": {},
+						# "to_location": {},
+						# "services": [],
+						"packages": [
+							{
+							"number": order.id,
+							"weight": 1000,
+							"length": 100,
+							"width": 30,
+							"height": 5,
+							"comment": "Хрупкое, обращаться осторожно",
+							"items":  order_item_array,
+							}
+							],
+						# "is_client_return": true,
+						# "has_reverse_order": true,
+						# "developer_key": "string",
+						# "print": "WAYBILL",
+						# "widget_token": "string"
+						}
+					print('===================Getting Auth Token for SDEK========================')
+					url="https://api.cdek.ru/v2/oauth/token"
+					headers = {
+						"grant_type": "client_credentials",
+						"client_id": "xJ8eEVHHhkFivswDPikl6MEOSv3Xz4y8",
+						"client_secret": "UGAs5SsIJChB0SetwSabYHAocKCRaTdV"
+					}
+					response = requests.post(url, params=headers,)
+					json=response.json()
+					access_token=json['access_token']
+					print(access_token)
+					print('=================Successfull Getting of Auth Token for SDEK========================')
+					headers = {
+						"Authorization": f'Bearer {access_token}',
+					}
+					print('=========================Creating SDEK Order========================')
+					url="https://api.cdek.ru/v2/orders"
+					response = requests.post(url, headers=headers, json=sdek_order)
+					print(response.status_code)
+					json=response.json()
+					print("Respone from SDEK API: ")
+					print(json)
+					print('=====================Successfull Creation of SDEK order===========================')
+					#two ways to get dict key value
+					entity=json['entity']
+					#entity=json.get('entity')
+					uuid=entity['uuid']
+					#uuid=entity.get('uuid')
+					order.delivery_order_uuid=uuid
+					order.save()
+					
+		except Exception as e:
+			print(e)
 
 
 #===================================WB Reference Data===========================================

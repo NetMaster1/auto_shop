@@ -31,12 +31,28 @@
                                 <h5 class="modal-title" id="exampleModalLabel">
                                   <strong>Правила </strong>
                                   <br>
+                                  <div class="ff2">
+                                  <p>
                                   Осуществляя покупку в нашем интернет магазине, покупатель соглашается с данными Правилами.
-                                  В соответствии с данными Правилами доставка товара осуществляется после его оплаты в пункт
-                                  выдачи СДЕК, указанный покупателем, на ФИО, указанное покупателем при оформлении заказа.
-                                  Доставка оплачивается отдельно в пункте выдачи СДЕК.
-                                  Стоимость доставки можно узнать перед оформлением заказа при указании пункта выдачи СДЕК.
-                                  В остальном взаимодействие между покупателем и продавцом регулируетя Законом РФ о Защите прав потребителей.
+                                  В соответствии с данными Правилами доставка товара осуществляется после его оплаты. Доставка осуществляется
+                                  в пункт выдачи СДЕК, указанный покупателем, на ФИО, указанное покупателем при оформлении заказа.
+                                  Стоимость доставки включена в стоимость заказа. Стоимость доставки можно узнать перед оформлением заказа при указании пункта выдачи СДЕК.
+                                  </p>
+                                  <p>
+                                  Продавец гарантирует возврат денежных средст в случае поломки товара в процессе транспортировки.
+                                  Возврат денежных средств осуществляется в течение 5 дней с момента подтверждения поломки товара. 
+                                  Подтверждением поломки товара в процессе транспортировки может служить фотография поломанного товара 
+                                  в пункте выдачи СДЕК, сделанная покупателем при получении товара и его проверке.
+                                  </p>
+                                  <p>
+                                  Транспортировка товара осуществляется в коробках, изготовленных из пятислойного картона марки П32.
+                                  </p>
+                                  <p>
+                                    В остальном взаимодействие между покупателем и продавцом регулируетя Законом РФ о Защите прав потребителей.
+                                  </p>
+                                  
+                                  
+                                  </div>
                                 </h5>
                     </div>
                   </div>
@@ -47,14 +63,12 @@
             </div>
             <!-- =================================End of Modal Body======================================== -->
 
-
-
         <li class="nav-item dropdown contact_trigger ">
             <a class="nav-link active" aria-current="page" href="#">Контакты</a>
          </li>
 
         <!-- ===========================Modal Body================================= -->
-            <div class="outer_modal_contacts">
+            <div class="outer_modal_contacts ff2">
               <div class="hide">
                 <div class="enterContactModal rounded-5">
                  <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_contacts">
@@ -83,28 +97,6 @@
             </div>
             <!-- =================================End of Modal Body======================================== -->
        
-        
-
-
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li> -->
-
-        <!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Информация
-          </a>
-       -->
-
-
-          <!-- <ul class="dropdown-menu">
-            <li class="contact_trigger"><a class="dropdown-item" href="#">Контакты </a></li> -->
-
-
-           
-            <!-- <li><a class="dropdown-item" href="#">Доставка</a></li> -->
-            <!-- <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li> -->
           </ul>
       </ul>
           </li>
@@ -113,118 +105,125 @@
       <form action="{% url 'search' %}" method="POST" class="d-flex" role="search">
         {% csrf_token %}
         <input class="form-control me-2" type="text" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
-</div>       
+      
 
         <button class="btn btn-md btn-outline-dark mr-2" type="submit">Поиск</button>
       </form>
-
-      <a href="{% url 'shopfront' %}">
-         <input type="button" value="Очистить" class="btn btn-md btn-outline-dark mr-2" > 
-       </a>
+</div> 
+<div class="col-2">
+    <a href="{% url 'shopfront' %}">
+      <input type="button" value="Очистить" class="btn btn-md btn-outline-dark mr-2" > 
+    </a>
+</div>
+      
 {% if request.user.is_authenticated %}
-  <a href="{% url 'account_page' user.id %}"  >{{request.user.first_name}} {{request.user.last_name}}</a>
+<div class="col-2">
+    <a href="{% url 'account_page' user.id %}"  >{{request.user.first_name}} {{request.user.last_name}}</a>
+</div>
+  
 
-<!-- <img src="{% static 'images/tray.png' %}"> -->
-<a href="{% url 'cart_detail' %}" class="btn btn-primary"><h3><i class="fas fa-cart-plus"></i></h3></a>
-          
-        </a>
+
 
 {% else %}
 <!-- ============================Login Modal Trigger========================== -->
     <button class="btn btn-md btn-outline-dark login_trigger">Войти</button>
 <!-- ===============================Login Modal===================================== -->
-            <div class="outer_modal_login">
-              <div class="hide">
-                <div class="enterLoginModal rounded-5">
-                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_login">
-                    
-                 <div class="modal-dialog">
-                    <div class="modal-content">
-                          
-            <form action="{% url 'login_user' %}" method='POST' id="login_form">
-              {% csrf_token %}
-              <div class="form-group">
-                <!-- <label for="username">Имя пользователя</label>
-                <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required> -->
-                <label for="username">Электронная почта</label>
-                <input type="email" name="username" class="form-control" placeholder="Введите имя пользователя" required>
-              </div>
-              <div class="form-group">
-                <label for="password">Пароль</label>
-                <input type="password" name="password" class="form-control" placeholder='Введите пароль' required>
-              </div>
-              <br>
-              <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
-              <input type="submit" value="Войти" class="btn btn-outline-dark btn-block" id="login_button">
-          </form>
-              </div>
-              </div>
-              <div class="row mt-5">
-              <a href="{% url 'password_recovery_page' %}">Забыли пароль?</a>
-              </div>
-    
-              </div>
- 
-            </div>
-            </div>
+    <div class="outer_modal_login">
+      <div class="hide">
+        <div class="enterLoginModal rounded-5">
+          <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_login">
+            
+          <div class="modal-dialog">
+            <div class="modal-content">
+                  
+    <form action="{% url 'login_user' %}" method='POST' id="login_form">
+      {% csrf_token %}
+      <div class="form-group">
+        <!-- <label for="username">Имя пользователя</label>
+        <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required> -->
+        <label for="username">Электронная почта</label>
+        <input type="email" name="username" class="form-control" placeholder="Введите имя пользователя" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" name="password" class="form-control" placeholder='Введите пароль' required>
+      </div>
+      <br>
+      <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
+      <input type="submit" value="Войти" class="btn btn-outline-dark btn-block" id="login_button">
+  </form>
+      </div>
+      </div>
+      <div class="row mt-5">
+      <a href="{% url 'password_recovery_page' %}">Забыли пароль?</a>
+      </div>
+
+      </div>
+
+    </div>
+    </div>
     <!-- =========================End of Login Modal=========================== -->
 
 <!-- ============================Register Modal Trigger========================== -->
     <button class="btn btn-md btn-outline-dark register_trigger">Регистрация</button>
 <!-- ===============================Register Modal===================================== -->
-            <div class="outer_modal_register">
-              <div class="hide">
-                <div class="enterRegisterModal rounded-5">
-                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_register">
-                    
-                 <div class="modal-dialog">
-                    <div class="modal-content">
-                          
-                    <form action="{% url 'register_user' %}" method='POST'>
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="first_name" class="text-black">Имя</label>
-                            <input type="text" name="first_name" class="form-control" required>
-                        </div>
+    <div class="outer_modal_register">
+      <div class="hide">
+        <div class="enterRegisterModal rounded-5">
+          <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_register">
+            
+          <div class="modal-dialog">
+            <div class="modal-content">
+                  
+            <form action="{% url 'register_user' %}" method='POST'>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name" class="text-black">Имя</label>
+                    <input type="text" name="first_name" class="form-control" required>
+                </div>
 
 
-                        <div class="form-group">
-                            <label for="last_name" class="text-black">Фамилия</label>
-                            <input type="text" name="last_name" class="form-control" required>
-                        </div>
-                        <!-- <div class="form-group">
-                            <label for="username" class="text-black">Логин</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div> -->
-                        <div class="form-group">
-                            <label for="email" class="text-black">Электронная почта</label>
-                            <input type="email" name="email" class="form-control" required autocomplete="off"  >
-                        </div>
+                <div class="form-group">
+                    <label for="last_name" class="text-black">Фамилия</label>
+                    <input type="text" name="last_name" class="form-control" required>
+                </div>
+                <!-- <div class="form-group">
+                    <label for="username" class="text-black">Логин</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div> -->
+                <div class="form-group">
+                    <label for="email" class="text-black">Электронная почта</label>
+                    <input type="email" name="email" class="form-control" required autocomplete="off"  >
+                </div>
 
-                        
-                        <div class="form-group">
-                            <label for="password" class="text-black">Пароль</label>
-                            <input type="password" name="password" class="form-control" required autocomplete="off">
-                        </div>
-                        <div class="form-group">
-                            <label for="password2" class="text-black">Подтверждение пароля</label>
-                            <input type="password" name="password2" class="form-control" required>
-                        </div>
-                        <br>
-                     
-                            <!-- <input type="submit" value="Submit" class="btn btn-info btn-block"> -->
-                            <input type="submit" value="Отправить" class="btn btn-outline-dark btn-block">
-                       
-                        
-                    </form>
-                  </div>
-              </div>
-              <!-- ================================================================ -->
-              </div>
-            </div>
-            </div>
+                
+                <div class="form-group">
+                    <label for="password" class="text-black">Пароль</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password2" class="text-black">Подтверждение пароля</label>
+                    <input type="password" name="password2" class="form-control" required>
+                </div>
+                <br>
+              
+                    <!-- <input type="submit" value="Submit" class="btn btn-info btn-block"> -->
+                    <input type="submit" value="Отправить" class="btn btn-outline-dark btn-block">
+                
+                
+            </form>
+          </div>
+      </div>
+      <!-- ================================================================ -->
+      </div>
+    </div>
+    </div>
     <!-- =========================End of Register Modal=========================== -->
   {% endif %}
+
+<div class="col-2">
+<a href="{% url 'cart_detail' %}" class="btn btn-primary"><h3><i class="fas fa-cart-plus"></i></h3></a>
+</div>
 
     </div>
   </div>

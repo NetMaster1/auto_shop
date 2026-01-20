@@ -254,8 +254,11 @@ def create_ozon_phone(request, user_id):
     if request.user.is_authenticated:
         if request.method == 'POST':
             phone = request.POST['phone']
-    
-
+            user=User.objects.get(id=user_id)
+            extended_user=ExtendedUser.objects.get(user=user)
+            extended_user.ozon_phone=phone
+            extended_user.save()
+            return redirect ('account_page', user.id)
     else:
         auth.logout(request)
         return redirect ('shopfront')
