@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from rest_framework import viewsets
 from .models import ServerResponse
 from app_product.models import Product, RemainderHistory, DocumentType
 from app_purchase.models import Order, OrderItem, Cart, CartItem
-from app_purchase.views import _cart_id
 from app_reference.models import SDEK_Office
 from .serializers import ServerResponseSerializer
 import json
@@ -16,15 +16,16 @@ import pytz
 import pandas
 import time
 
+
 # Create your views here.
 
 
 class ServerResponseView(viewsets.ModelViewSet):
-  
+
     queryset=ServerResponse.objects.all()
     serializer_class=ServerResponseSerializer
 
-#url, куда приходит post request from ozon ( push уведомление) в формате json on поступившем заказе 
+#url, куда приходит post request from ozon ( push уведомление) в формате json on поступившем заказе
 @csrf_exempt #отключает защиту csrf
 def ozon_push(request):#receives a notification from ozon on a new order
     if request.method == 'POST':
@@ -40,7 +41,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
         message_type=data['message_type']
         if message_type=='TYPE_PING':
           print(message_type)
-        
+
           tdelta=datetime.timedelta(hours=3)
           dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
           dateTime=dT_utcnow+tdelta
@@ -66,7 +67,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
           dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
           dateTime=dT_utcnow+tdelta
           print(dateTime)
-        
+
           products=data['products']
           print(products)
           item=products[0]
@@ -77,12 +78,12 @@ def ozon_push(request):#receives a notification from ozon on a new order
           print(f'Quantity: {quantity}')
           doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
           print(doc_type)
-        
+
           product=Product.objects.get(ozon_sku=sku)
           print(product.name)
           print(f'Ozon_id: {product.ozon_id}')
           print(f'Ozon_sku: {product.ozon_sku}')
-         
+
           if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
             print("True")
             rho_latest_before = RemainderHistory.objects.filter(article=product.article,  created__lt=dateTime).latest('created')
@@ -132,7 +133,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
             }
             stock_arr.append(stock_dict)
             params= {
-                "stocks": stock_arr  
+                "stocks": stock_arr
             }
             response = requests.put(url, json=params, headers=headers)
             #status_code=response.status_code
@@ -159,9 +160,9 @@ def ozon_push(request):#receives a notification from ozon on a new order
               "details": None
             }
         }
-      
+
       #Sending the answer in json format via HttpResponse method
-      #before using HTTPResponse method you have to manually convert python dictionnary to json object which is done in the 
+      #before using HTTPResponse method you have to manually convert python dictionnary to json object which is done in the
       #following string
       # json_data=json.dumps(json_data)
       # print(json_data)
@@ -176,7 +177,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
 
       #return JsonResponse(json_data, status=200)
 
-      #messages.success(request, data)   
+      #messages.success(request, data)
       #return redirect("dashboard")
 
 #url, куда приходит уведомление от ю-касса. Используется для изменения статуса заказа на "succeeded"
@@ -212,9 +213,15 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 					print('========================')
 					print('order payment succeeded')
 					order_items=OrderItem.objects.filter(order=order)
-					cart=Cart.objects.get(cart_id=_cart_id(request))
-					print(cart)
-					cart_items=CartItem.objects.filter(cart=cart)
+					if request.user.is_authenticated:
+						user=User.objects.get(id=request.user.id)
+						cart=Cart.objects.get(user=user)
+					else:
+						if Cart.objects.filter(cart_id=request.session.session_key).exists():
+							cart=Cart.objects.get(cart_id=request.session.session_key)
+						else:
+							cart=Cart.objects.create(cart_id=request.session.session_key)
+							cart_items=CartItem.objects.filter(cart=cart)
 					for order_item in order_items:
 						print(f'Order_item_poduct: {order_item.product}')
 						for cart_item in cart_items:
@@ -233,7 +240,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 					contragent_full_name = ' '.join(contragent_full_name)
 					order_items=OrderItem.objects.filter(order=order)
 					order_item_array=[]
-					
+
 					for item in order_items:
 						product=Product.objects.get(article=item.article)
 						sku=product.ozon_sku
@@ -250,7 +257,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 								"cost": 1,
 							}
 						order_item_array.append(order_item_dict)
-						
+
 						if RemainderHistory.objects.filter(article=item.article, created__lt=dateTime).exists():
 							rhos=RemainderHistory.objects.filter(article=item.article, created__lt=dateTime)
 							rho_latest=rhos.latest('created')
@@ -279,8 +286,8 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 							product.quantity=rho.current_remainder
 							product.total_sum=rho.current_remainder * product.av_price
 							product.save()
-					
-					#creating sdek shipment order		
+
+					#creating sdek shipment order
 					sdek_order={
 						"type": 1,
 						# "additional_order_types": [],
@@ -365,7 +372,6 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 					#uuid=entity.get('uuid')
 					order.delivery_order_uuid=uuid
 					order.save()
-					
 		except Exception as e:
 			print(e)
 
@@ -374,7 +380,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 def wb_test(request):
     #url = "https://common-api.wildberries.ru/ping"
     url = "https://common-api.wildberries.ru/api/v1/seller-info"
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
     response = requests.get(url, headers=headers)
     status_code=response.status_code
     a=response.json()
@@ -385,7 +391,7 @@ def wb_test(request):
 
 def wb_categories (request):
   url="https://content-api.wildberries.ru/content/v2/object/parent/all"
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
   response = requests.get(url, headers=headers)
   status_code=response.status_code
   a=response.json()
@@ -394,13 +400,13 @@ def wb_categories (request):
   b=a['data']
   for i in b:
     print(i)
-  
+
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
 def wb_subjects (request):
   url="https://content-api.wildberries.ru/content/v2/object/all"
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
   params = {'parentID': '8891', 'limit': 1000}
 
   response = requests.get(url, headers=headers,  params=params,)
@@ -411,13 +417,13 @@ def wb_subjects (request):
   b=a['data']
   for i in b:
     print(i)
-  
+
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
 def wb_colors (request):
   url="https://content-api.wildberries.ru/content/v2/directory/colors"
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
   response = requests.get(url, headers=headers)
   status_code=response.status_code
   a=response.json()
@@ -426,13 +432,13 @@ def wb_colors (request):
   b=a['data']
   for i in b:
     print(i)
-  
+
     messages.error(request,f'WB Response: {i}')
   return redirect ('dashboard')
 
 def wb_country_of_manufacture(request):
   url="https://content-api.wildberries.ru/content/v2/directory/countries"
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
   response = requests.get(url, headers=headers)
   status_code=response.status_code
   a=response.json()
@@ -441,14 +447,14 @@ def wb_country_of_manufacture(request):
   b=a['data']
   for i in b:
     print(i)
-  
+
     messages.error(request,f'WB Response: {i}')
   return redirect ('dashboard')
 
 def wb_subject_specs (request):
   subjectID=2251
   url=f'https://content-api.wildberries.ru/content/v2/object/charcs/{subjectID}'
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
 
   response = requests.get(url, headers=headers)
   status_code=response.status_code
@@ -458,13 +464,13 @@ def wb_subject_specs (request):
   b=a['data']
   for i in b:
     print(i)
-  
+
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
 def wb_limits (request):
   url=f'https://content-api.wildberries.ru/content/v2/cards/limits'
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}  
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
 
   response = requests.get(url, headers=headers)
   status_code=response.status_code
@@ -474,7 +480,7 @@ def wb_limits (request):
   # b=a['data']
   # for i in b:
   #   print(i)
-  
+
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
@@ -491,7 +497,7 @@ def wb_change_qnty (request):
       }
     ]
   }
-          
+
   response = requests.put(url, json=params, headers=headers)
   status_code=response.status_code
   a=response.json()
@@ -554,7 +560,7 @@ def wb_synchronize_orders_with_ozon_ver_1 (request):
 	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
     url=f'https://marketplace-api.wildberries.ru/api/v3/orders/new'
     headers_wb = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-   
+
     response = requests.get(url, headers=headers_wb)
     print (response)
     status_code=response.status_code
@@ -570,7 +576,7 @@ def wb_synchronize_orders_with_ozon_ver_1 (request):
         sku=i['skus']
         sku=sku[0]
         print(sku)
-        
+
         if RemainderHistory.objects.filter(shipment_id=order_id).exists():
             print('Error_1. RHO with such shipment_id exists.')
             print("========================")
@@ -593,8 +599,8 @@ def wb_synchronize_orders_with_ozon_ver_1 (request):
             else:
                 print('Error_2. No product with such wb_bar_code')
                 continue
-                
-         
+
+
             if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
                 # print("True")
                 rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
@@ -632,13 +638,13 @@ def wb_synchronize_orders_with_ozon_ver_1 (request):
     #                 "warehouse_id": 1020005000113280
     #                 }
     #             stock_arr.append(stock_dict)
-                
-    # if len(stock_arr) > 0:           
+
+    # if len(stock_arr) > 0:
     #     for i in stock_arr:
     #         print (i)
     # else:
     #     print('stock_arr is empty')
-        
+
     # task={
     #     "stocks" : stock_arr
     # }
@@ -666,7 +672,7 @@ def yandex_category_list(request):
   a=a['children']
 
   # print(a)
-  
+
   # for key, value in a.items():
     #print(f"{key}")
   for i in a:
@@ -691,7 +697,7 @@ def yandex_update_prices(request):
     body_list=[]
     url=f'https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offer-prices/updates'
     headers = {"Api-Key": "ACMA:lRqnoRHucSnmiG7kCDWEXVtYe99fBQN2obEHsYCR:21dc8ee9"}
-  
+
     for product in products:
         price_dict ={
             'offerId' : product.article,
@@ -700,7 +706,7 @@ def yandex_update_prices(request):
                 'currencyId': "RUR",
                 'discountBase': 3990,
                 "minimumForBestseller": 2700
-            } 
+            }
         }
         body_list.append(price_dict)
 
@@ -715,7 +721,7 @@ def yandex_update_prices(request):
     print(response)
     print('========================')
     print(a)
- 
+
 #показывает среднюю цена на площадке на аналогичный товар и кол-во показов за последние 7 дней (параметр "show")
 def yandex_price_recommendations (request):
     products=Product.objects.all()
@@ -754,7 +760,7 @@ def yandex_price_recommendations (request):
        print(recommendation)
        print()
     #    print(f"SKU: {item['offerID']}; Price: {item['price']['value']}; Status: {item['price']['value']}")
-   
+
 def yandex_update_quantities(request):
     pass
 

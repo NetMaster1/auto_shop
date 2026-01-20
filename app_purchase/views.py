@@ -15,26 +15,34 @@ import requests
 import json
 from decimal import Decimal
 
-
-# Create your views here.
-def _cart_id(request):
-    cart = request.session.session_key
-    if not cart:
-        cart = request.session.create()
-    return cart
+#CART CREATION
+#В некоторых более ранних приложениях я использовал способ создания корзины (def _cart_id(request)).
+#Но позднее мне показалось удобонее закреплять корзину за User при request.user.is_authenticated:
+#или вписывать в поле модели корзины (см. Models Cart) ключи request.session.session_key (это достаточно длинная строка.)
+#в обоих случаях мы делаем корзину уинкальной
+#не получается прикрепить корзину к анонимному пользователю, так ка Джанго не присавивает никаких уникальных атрибутов анонимным пользователям
+#============================================
+# def _cart_id(request):
+#     cart = request.session.session_key
+#     if not cart:
+#         cart = request.session.create()
+#     return cart
+#==================================
 
 def add_cart(request, id):
     product=Product.objects.get(id=id)
     if request.user.is_authenticated:
-        if Cart.objects.filter(user=User).exists():
-            cart=Cart.objects.get(user=User)
+        user=User.objects.get(id=request.user.id)
+        if Cart.objects.filter(cart_user=user).exists():
+            cart=Cart.objects.get(cart_user=user)
         else:
-            cart=Cart.objects.create(user=User)
+            cart=Cart.objects.create(cart_user=user)
     else:
-        if Cart.objects.filter(user=request.user).exists():
-            cart=Cart.objects.get(user=request.user)
+        if Cart.objects.filter(cart_id=request.session.session_key).exists():
+            cart=Cart.objects.get(cart_id=request.session.session_key)
         else:
-            cart=Cart.objects.create(user=request.user)
+            cart=Cart.objects.create(cart_id=request.session.session_key)
+
     # try:
     #     cart=Cart.objects.get(cart_id=_cart_id(request))
     #     #cart=Cart.objects.get(cart_id=request.session)
@@ -59,18 +67,26 @@ def add_cart(request, id):
     return redirect('cart_detail')
 
 def cart_detail(request):
-    try:
-        cart=Cart.objects.get(cart_id=_cart_id(request))
-        #cart=Cart.objects.get(cart_id=request.session)
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(cart_id=_cart_id(request))
-
-    cart=Cart.objects.get(cart_id=cart)
-    cart_items=CartItem.objects.filter(cart=cart).order_by('product')
-    total=0
-    for item in cart_items:
-        sub_total=item.quantity*item.price
-        total+=sub_total
+    if request.user.is_authenticated:
+        try:
+            user=user=User.objects.get(id=request.user.id)
+            #cart=Cart.objects.get(cart_id=_cart_id(request))
+            cart=Cart.objects.get(cart_user=user)
+            #cart=Cart.objects.get(cart_id=request.session)
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(cart_user=user)
+            #cart = Cart.objects.create(cart_id=_cart_id(request))
+    else:
+        #cart=Cart.objects.get(cart_id=cart)
+        if Cart.objects.filter(cart_id=request.session.session_key).exists():
+            cart=Cart.objects.get(cart_id=request.session.session_key)
+        else:
+            cart=Cart.objects.create(cart_id=request.session.session_key)
+        cart_items=CartItem.objects.filter(cart=cart).order_by('product')
+        total=0
+        for item in cart_items:
+            sub_total=item.quantity*item.price
+            total+=sub_total
         
     context = {
         'cart_items' : cart_items,
