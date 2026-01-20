@@ -82,6 +82,7 @@ def cart_detail(request):
             cart=Cart.objects.get(cart_id=request.session.session_key)
         else:
             cart=Cart.objects.create(cart_id=request.session.session_key)
+            
         cart_items=CartItem.objects.filter(cart=cart).order_by('product')
         total=0
         for item in cart_items:

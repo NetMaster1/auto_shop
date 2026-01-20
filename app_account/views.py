@@ -17,10 +17,10 @@ def register_user(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
-        username = request.POST['email']
         email = request.POST['email']
         password = request.POST['password']
         password2 = request.POST['password2']
+        username=email.lower()
 
         if password == password2:
             # Check user name
@@ -100,6 +100,7 @@ def login_user(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
+        username=username.lower()
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
