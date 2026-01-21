@@ -17,7 +17,7 @@ from decimal import Decimal
 
 #CART CREATION
 #В некоторых более ранних приложениях я использовал способ создания корзины (def _cart_id(request)).
-#Но позднее мне показалось удобонее закреплять корзину за User при request.user.is_authenticated:
+#Но позднее мне показалось удобнее закреплять корзину за User при request.user.is_authenticated:
 #или вписывать в поле модели корзины (см. Models Cart) ключи request.session.session_key (это достаточно длинная строка.)
 #в обоих случаях мы делаем корзину уинкальной
 #не получается прикрепить корзину к анонимному пользователю, так ка Джанго не присавивает никаких уникальных атрибутов анонимным пользователям
@@ -38,11 +38,14 @@ def add_cart(request, id):
         else:
             cart=Cart.objects.create(cart_user=user)
     else:
-        if Cart.objects.filter(cart_id=request.session.session_key).exists():
-            cart=Cart.objects.get(cart_id=request.session.session_key)
+        key=request.session.session_key
+        if not key:
+            key=request.session.save()
+        print(f'Key: {key}')
+        if Cart.objects.filter(cart_id=key).exists():
+            cart=Cart.objects.get(cart_id=key)
         else:
-            cart=Cart.objects.create(cart_id=request.session.session_key)
-
+            cart=Cart.objects.create(cart_id=key)
     try:
         cart_item = CartItem.objects.get(product=product.name, cart=cart)
         cart_item.quantity+=1
@@ -70,11 +73,16 @@ def cart_detail(request):
             cart = Cart.objects.create(cart_user=user)
             #cart = Cart.objects.create(cart_id=_cart_id(request))
     else:
-        #cart=Cart.objects.get(cart_id=cart)
-        if Cart.objects.filter(cart_id=request.session.session_key).exists():
-            cart=Cart.objects.get(cart_id=request.session.session_key)
+        key=request.session._get_or_create_session_key()
+        # key=request.session.session_key
+        # if not key:
+        #     key=request.session.save()
+        #key=request.session.create()
+        print(f'Key: {key}')
+        if Cart.objects.filter(cart_id=key).exists():
+            cart=Cart.objects.get(cart_id=key)
         else:
-            cart=Cart.objects.create(cart_id=request.session.session_key)
+            cart=Cart.objects.create(cart_id=key)
             
     if CartItem.objects.filter(cart=cart).exists():
         cart_items=CartItem.objects.filter(cart=cart).order_by('product')

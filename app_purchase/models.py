@@ -33,7 +33,7 @@ class Cart(models.Model):
         db_table = 'Cart'
         ordering = ['date_added']
 
-    def __str__(self):
+    def __int__(self):
         return self.id
         #return self.cart_user
     #def __unicode__(self):
@@ -45,7 +45,7 @@ class CartItem(models.Model):
     article = models.CharField(max_length=100,null=True, blank=True )
     image = models.ImageField(upload_to='uploads', blank=True)
     slug = models.SlugField(max_length=100, null=True)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(default=0, max_digits=7, decimal_places=2)
     active = models.BooleanField(default=True)
