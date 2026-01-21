@@ -38,9 +38,11 @@ def add_cart(request, id):
         else:
             cart=Cart.objects.create(cart_user=user)
     else:
+        #key=request.session._get_or_create_session_key()
         key=request.session.session_key
-        if not key:
-            key=request.session.save()
+        if not request.session.session_key:
+            request.session.save()
+            key = request.session.session_key
         print(f'Key: {key}')
         if Cart.objects.filter(cart_id=key).exists():
             cart=Cart.objects.get(cart_id=key)
@@ -73,11 +75,11 @@ def cart_detail(request):
             cart = Cart.objects.create(cart_user=user)
             #cart = Cart.objects.create(cart_id=_cart_id(request))
     else:
-        key=request.session._get_or_create_session_key()
-        # key=request.session.session_key
-        # if not key:
-        #     key=request.session.save()
-        #key=request.session.create()
+        key=request.session.session_key
+        if not request.session.session_key:
+            request.session.save()
+            key = request.session.session_key
+        #key=request.session._get_or_create_session_key()
         print(f'Key: {key}')
         if Cart.objects.filter(cart_id=key).exists():
             cart=Cart.objects.get(cart_id=key)
