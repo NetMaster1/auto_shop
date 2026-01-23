@@ -216,13 +216,22 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
         #====================Cart Module==============================
 					if request.user.is_authenticated:
 						user=User.objects.get(id=request.user.id)
-						cart=Cart.objects.get(user=user)
-					else:
-						if Cart.objects.filter(cart_id=request.session.session_key).exists():
-							cart=Cart.objects.get(cart_id=request.session.session_key)
+						if Cart.objects.filter(cart_user=user).exists():
+							cart=Cart.objects.get(cart_user=user)
 						else:
-							cart=Cart.objects.create(cart_id=request.session.session_key)
-							cart_items=CartItem.objects.filter(cart=cart)
+							print('no cart for this user exits')
+					else:
+						#key=request.session._get_or_create_session_key()
+						key=request.session.session_key
+						if not request.session.session_key:
+							request.session.save()
+							key = request.session.session_key
+						print(f'Key: {key}')
+						if Cart.objects.filter(cart_id=key).exists():
+							cart=Cart.objects.get(cart_id=key)	
+						else:
+							print('no cart with this session.key exists')
+					cart_items=CartItem.objects.filter(cart=cart)
 					for order_item in order_items:
 						print(f'Order_item_poduct: {order_item.product}')
 						for cart_item in cart_items:
