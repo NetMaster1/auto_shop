@@ -207,9 +207,10 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 				print('response from Y-kassa: ')
 				print(data)
 				order.status=status
-				order.corresponding_rhos_created=True
 				order.save()
 				if order.status=='succeeded':
+					order.corresponding_rhos_created=True
+					order.save()
 					print('========================')
 					print('order payment succeeded')
 					order_items=OrderItem.objects.filter(order=order)
