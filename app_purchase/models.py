@@ -65,6 +65,7 @@ class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True)
     sum = models.DecimalField(default=0, max_digits=8, decimal_places=2)
     buyer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.DO_NOTHING)
+    #cart = models.ForeignKey(Cart, null=True, blank=True, on_delete=models.DO_NOTHING)
     #is filled after status is received from y-kassa
     status=models.CharField(max_length=50, null=True, blank=True)
     shipped=models.BooleanField(default=False)
@@ -86,6 +87,8 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, null=True, on_delete=models.DO_NOTHING)
+    #cart field is used to delete cart_items from the cart afer the order has been paid
+    cart = models.ForeignKey(Cart, null=True, blank=True, on_delete=models.DO_NOTHING)
     product = models.CharField(max_length=100, null=True, blank=True)
     image = models.ImageField(upload_to='uploads', blank=True)
     article = models.CharField(max_length=50,null=True, blank=True )

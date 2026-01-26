@@ -213,47 +213,32 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 					order.save()
 					print('========================')
 					print('order payment succeeded')
-					order_items=OrderItem.objects.filter(order=order)
-        #====================Cart Module==============================
-					if request.user.is_authenticated:
-						user=User.objects.get(id=request.user.id)
-						if Cart.objects.filter(cart_user=user).exists():
-							cart=Cart.objects.get(cart_user=user)
-						else:
-							print('no cart for this user exits')
-					else:
-						#key=request.session._get_or_create_session_key()
-						key=request.session.session_key
-						if not request.session.session_key:
-							request.session.save()
-							key = request.session.session_key
-						print(f'Key: {key}')
-						if Cart.objects.filter(cart_id=key).exists():
-							cart=Cart.objects.get(cart_id=key)	
-						else:
-							print('no cart with this session.key exists')
-					cart_items=CartItem.objects.filter(cart=cart)
-					for order_item in order_items:
-						print(f'Order_item_poduct: {order_item.product}')
-						for cart_item in cart_items:
-							print(f'Cart_item_product: {cart_item.product}')
-							if order_item.product==cart_item.product:
-								cart_item.quantity=cart_item.quantity-order_item.quantity
-								if cart_item.quantity<=0:
-									cart_item.delete()
-								else:
-									cart_item.save()
-          #===================End of Cart Module=========================
+                    #==============================Getting SDEK Delivery Point====================
 					delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
 					print('========================')
 					print(f'Код пункта выдачи СДЕК: {delivery_point.code}')
 					print('========================')
 					contragent_full_name=[order.receiver_firstName, order.receiver_lastName]
 					contragent_full_name = ' '.join(contragent_full_name)
-					order_items=OrderItem.objects.filter(order=order)
+					#================End fo Getting SDEK Delivery Point Module=======================
 					order_item_array=[]
-
+					order_items=OrderItem.objects.filter(order=order)
+					#====================Cart Module==============================
+					#confirmation from Y-kassa does not see if the user is authorized or not. Consequently if can not select
+					#a cart sinsce the cart is selected either based on the user or session key. Confirmatin function does not
+					#see neither & creates a new sessison key. That's why we save the cart in order_items model.              
 					for item in order_items:
+						if CartItem.objects.filter(product=item.product, cart=item.cart).exists():
+							cart_item=CartItem.objects.get(product=item.product, cart=item.cart)
+							cart_item.quantity=cart_item.quantity-item.quantity
+							if cart_item.quantity<=0:
+								cart_item.delete()
+							else:
+								cart_item.save()
+						else:
+							print('No cart_item corresponds to the order_item')
+				#===================End of Cart Module=========================
+				#=======Making order_items array for further using it in SDEK order=======================			
 						product=Product.objects.get(article=item.article)
 						sku=product.ozon_sku
 						order_item_dict={
@@ -269,7 +254,8 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 								"cost": 1,
 							}
 						order_item_array.append(order_item_dict)
-
+				#==============End of Making order_items arrary=====================
+        #==============Creating an RHO=========================================
 						if RemainderHistory.objects.filter(article=item.article, created__lt=dateTime).exists():
 							rhos=RemainderHistory.objects.filter(article=item.article, created__lt=dateTime)
 							rho_latest=rhos.latest('created')
@@ -277,29 +263,29 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 						else:
 							pre_remainder=0
 							#rint(pre_remainder)
-							rho=RemainderHistory.objects.create(
-							rho_type=doc_type,
-							created=dateTime,
-							article=product.article,
-							ozon_id=product.ozon_id,
-							ozon_sku=sku,
-							name=product.name,
-							status='initiated by auto-deflector.ru',
-							shipment_id=order.id,
-							pre_remainder=pre_remainder,
-							incoming_quantity=0,
-							outgoing_quantity=int(item.quantity),
-							current_remainder=pre_remainder - int(item.quantity),
-							retail_price=int(product.site_retail_price),
-							total_retail_sum=int(item.quantity) * int(product.site_retail_price),
-							)
-							#editing current quatityt in product table for future reports
-							#taking current qunatity report based on rho table takes too much time
-							product.quantity=rho.current_remainder
-							product.total_sum=rho.current_remainder * product.av_price
-							product.save()
+						rho=RemainderHistory.objects.create(
+						rho_type=doc_type,
+						created=dateTime,
+						article=product.article,
+						ozon_id=product.ozon_id,
+						ozon_sku=sku,
+						name=product.name,
+						status='initiated by auto-deflector.ru',
+						shipment_id=order.id,
+						pre_remainder=pre_remainder,
+						incoming_quantity=0,
+						outgoing_quantity=int(item.quantity),
+						current_remainder=pre_remainder - int(item.quantity),
+						retail_price=int(product.site_retail_price),
+						total_retail_sum=int(item.quantity) * int(product.site_retail_price),
+						)
+						#editing current quatityt in product table for future reports
+						#taking current qunatity report based on rho table takes too much time
+						product.quantity=rho.current_remainder
+						product.total_sum=rho.current_remainder * product.av_price
+						product.save()
 
-					#creating sdek shipment order
+				#=====================Creating sdek shipment order========================
 					sdek_order={
 						"type": 1,
 						# "additional_order_types": [],
@@ -377,6 +363,8 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 					print("Respone from SDEK API: ")
 					print(json)
 					print('=====================Successfull Creation of SDEK order===========================')
+                    
+					#===============================	
 					#two ways to get dict key value
 					entity=json['entity']
 					#entity=json.get('entity')

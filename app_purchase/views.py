@@ -127,7 +127,7 @@ def delete_cart_item(request, id):
 def purchase_product(request):
     if request.method == "POST":
         check_boxes=request.POST.getlist("checkbox", None)
-        identifier=Identifier.objects.create()
+        #identifier=Identifier.objects.create()
         order=Order.objects.create()
         if request.user.is_authenticated:
             order.user=request.user
@@ -136,16 +136,15 @@ def purchase_product(request):
             cart_item=CartItem.objects.get(id=value)
             order_item=OrderItem.objects.create(
                 order=order,
+                cart=cart_item.cart,
                 product=cart_item.product,
                 article=cart_item.article,
                 image=cart_item.image,
                 price=cart_item.price,
                 quantity=cart_item.quantity,
                 sub_total=cart_item.price*cart_item.quantity,
-
             )
         order_items=OrderItem.objects.filter(order=order).order_by('product')
-       
         sum=0
         for item in order_items:
             sum+=item.sub_total
