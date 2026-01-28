@@ -2,140 +2,167 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
+<!-- <div class="container"> -->
+<!-- ==============Breadcumbs======================== -->
+<div class="row pl-5">
+<div class="row p-5">
+     <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Текущая</li>
+        </ol>
+  </nav>
+</div>
 
-          <div class="row mt-4 pt-5">
-            <div class="col-12">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Текущая</li>
-                </ol>
-              </nav>
-            </div>
+</div>
+     
+<!-- ===========End of Breadcumbs==================== -->
+
+<div class="row pl-5 pr-5">
+  <div class="col-9">
+
+<!-- ===================Headings================================================= -->
+      <div class="row m-auto pb-5 ff2_120">
+          <div class="col-1">
+            <h5 class="text-right">Фото</h5>
           </div>
-  <!-- Empty Cart -->
-  <!-- ========================================================== -->
-  {% if not cart_items %}
-  <div class="row bg-light m-1 p-2 align-items-center">
-      <div class="col-8">
-      <h1>
-        Ваша корзина пуста
-      </h1>
-    </div>
-
-    <div class="col-4  ">
-      <a href="{% url 'shopfront' %}" class="btn btn-outline-primary">Продолжить покупки</a>
-    </div>
-  </div>
-  {% else %}
-<!-- Total Sum & quantity
-==================================================================== -->
-<div class="row align-items-center justify-content-right"  style="height:100px">
-  <div class="col-8 justify-content-right">
-    <h4>Всего товаров на сумму: <strong>{{total}}&nbsp;руб.</strong></h4>
-  </div>
-
-  <!-- <div class="row align-items-center justify-content-center bg-light pt-5 mt-5"  style="height:50px"> -->
-    <div class="row mt-3 mb-3">
-    <div class="col-sm-1">
-      <h5 class="text-left">Фото</h5>
-    </div>
-    <div class="col-sm-2">
-      <h5 class="text-center">Наименование</h5>
-    </div>
-    <div class="col-sm-1">
-      <h5 class="text-right">Цена</h5>
-    </div>
-    <div class="col-sm-1">
-      <h5>Кол-во</h5>
-    </div>
-    <div class="col-sm-1">
-      <h5 class="text-right">Сумма</h5>
-    </div>
-    <div class="col-sm-1">
-      <h5 class="text-right">Добавить</h5>
-    </div>
-    <div class="col-sm-1">
-      <h5 class="text-right">Уменьшить</h5>
-    </div>
-    <div class="col-sm-1">
-      <h5 class="text-right">Удалить</h5>
-    </div>
-    <div class="col-sm-1">
-      <h5 class="text-right">К оплате</h5>
-    </div>
-  </div>
+          <div class="col-4">
+            <h5 class="text-left">Наименование</h5>
+          </div>
+          <div class="col-1">
+            <h5 class="text-left">Цена</h5>
+          </div>
+          <div class="col-1">
+            <h5 class="'text-left">Кол-во</h5>
+          </div>
+          <div class="col-1">
+            <h5 class="text-left">Сумма</h5>
+          </div>
+          <div class="col-1">
+            <h5 class="text-center">Добавить</h5>
+          </div>
+          <div class="col-1">
+            <h5 class="text-center">Уменьшить</h5>
+          </div>
+          <div class="col-1">
+            <h5 class="text-center">Удалить</h5>
+          </div>
+          <div class="col-1">
+            <h5 class="text-left">Оплата</h5>
+          </div>
+      </div>
+<!-- ====================End of Headings================================== -->
 
 <!-- CartItems -->
 <!-- ================================================================ -->
-  <form action="{% url 'purchase_product' %}" method="POST" >
-                {% csrf_token %}
+      <form action="{% url 'purchase_product' %}" method="POST" >
+        {% csrf_token %}
+        {% for cart_item in cart_items %}
+          <div class="row m-auto mt-1 mb-3 ff2" >
+              <div class="col-sm-1 flex justify-content-end" >
+                <a href="{{cart_item.get_url}}">
+                  <img src="{{cart_item.image.url}}" width="50" alt="" >
+                </a>
+              </div>
+              <div class="col-sm-4">
+                {{cart_item.product}}
+              </div>
+              <div class="col-sm-1">
+                {{cart_item.price}} руб.
+              </div>
+              <div class="col-sm-1">
+                {{cart_item.quantity}} 
+              </div>
+              <div class="col-sm-1"> 
+                <span class="subtotal">{{cart_item.sub_total}}</span> <span> руб.</span>
+                 
+              </div>
+              <div class="col-sm-1">
+                <a href="{% url 'add_cart_item' cart_item.id %}" class="text-info">
+                  <h3 class="text-center"><i class="fas fa-cart-plus"></i></h3>
+                </a>
+              </div>
+              <div class="col-sm-1">
+                <a href="{% url 'remove_cart_item' cart_item.id %}"class="text-info" >
+                  <h3 class="text-center"><i class="fas fa-minus-circle"></i></h3>
+                </a>
+              </div>
+              <div class="col-sm-1">
+                <a href="{% url 'delete_cart_item' cart_item.id %}"class="text-info" >
+                      <h3 class="text-center"><i class="fas fa-trash-alt"></i></h3>
+                </a>
+              </div>
+              <div class="col-sm-1">
+                <div class="form-check form-switch">
+                  <input class="form-check-input switchCheck" type="checkbox" role="switch"  value='{{cart_item.id}}' name="checkbox" checked>
+                </div>
+              </div>    
+          </div> 
+        {% endfor %}
+  </div>
 
-  {% for cart_item in cart_items %}
-  
-   <div class="row mt-3 mb-3">
-      <div class="col-1">
-        <a href="{{cart_item.get_url}}">
-          <img src="{{cart_item.image.url}}" width="50" alt="">
-        </a>
-      </div>
-
-     <div class="col-2">
-      {{cart_item.product}}
-      </div>
-
-     <div class="col-1">
-      
-      {{cart_item.price}} руб.
-      
-      </div>
-      <div class="col-1">
-      {{cart_item.quantity}} 
-      </div>
-      <div class="col-sm-1">
-      {{cart_item.sub_total}}
-        &nbsp; руб.
-      </div>
-
-      <div class="col-sm-1">
-        <a href="{% url 'add_cart_item' cart_item.id %}" class="text-info">
-          <h3><i class="fas fa-cart-plus"></i></h3>
-        </a>
-        </div>
-
-       <div class="col-sm-1">
-        <a href="{% url 'remove_cart_item' cart_item.id %}"class="text-info" >
-          <i class="fas fa-minus-circle"></i>
-        </a>
-       </div>
-
-      <div class="col-sm-1">
-        <a href="{% url 'delete_cart_item' cart_item.id %}"class="text-info" >
-           <i class="fas fa-trash-alt"></i>
-        </a>
-        </div>
-
-        
-        <div class="col-sm-1">
-        <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" value='{{cart_item.id}}' name="checkbox" checked>
-        <!-- <label class="form-check-label" for="switchCheckChecked">Checked switch checkbox input</label> -->
-        </div>
-       </div>
-      
-   </div> 
-	  {% endfor %}
-
-      <div class="row m-auto mt-3">
-          <div class="col-6">
-            <input type="submit" value="Перейти к оформлению" class="btn btn-block btn-outline-primary" id="clear_storage">
+  <div class="col-2 cart_price_window">
+      {% if cart_items %}  
+          <div class="row mb-2 mt-2  ">
+            <div class="ff2 aligner">Всего товаров на сумму:</div>
           </div>
-      </div>
-  </form>
+          <div class="row mt-3 mb-3">
+            <div class="ff2_120 aligner" >
+              <span id="sum_to_pay">{{total}}</span> &nbsp<span>руб.</span>
+          </div>
+          </div>
+          <div class="row mt-3 mb-3">
+              <div class="col aligner">
+                <input type="submit" value="Перейти к оформлению" class="btn btn-block btn-outline-primary" id="clear_storage">
+              </div>
+          </div> 
+          </form>
+      {% else %}
+        <div class="row align-items-center">
+          <div class="row mb-2 mt-2  ">
+            <div class="ff2 aligner">Ваша корзина пуста</div>
+          </div>
+          <div class="row mt-3 mb-3">
+            <div class="col aligner">
+              <a href="{% url 'shopfront' %}" class="btn btn-outline-primary">Продолжить покупки</a>
+            </div>
+          </div> 
+        </div>
 
-</div>
-{% endif %}
 
+
+      {% endif %}
+  </div>
+<div class="col-sm-1">
 </div>
+</div>
+
+<script>
+  console.log('Script works');
+
+  const switchCheck=document.querySelectorAll(".switchCheck");
+  const subtotal=document.querySelectorAll(".subtotal");
+  const sum_to_pay=document.querySelector('#sum_to_pay');
+
+// функция выводит сумму заказа в зависимости от положения ползуна каждого наименования
+for (let i=0; i<switchCheck.length; i++) {
+    switchCheck[i].addEventListener('change', e=>{
+      let sum_counter=0;
+      console.log('Cчетчик:', sum_counter);
+      console.log('Switch:', i)
+
+      for (let n=0; n<subtotal.length; n++){
+          if (switchCheck[n].checked){
+              // console.log(subtotal[n].innerHTML)
+              sum_counter+=Number(subtotal[n].innerHTML)}}   
+       
+        console.log(sum_counter)
+        sum_to_pay.innerHTML=sum_counter;
+
+})}
+console.log('Script ends');
+</script>
+
+
+
 {% endblock %}

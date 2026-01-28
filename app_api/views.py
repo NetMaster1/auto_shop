@@ -375,7 +375,6 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 		except Exception as e:
 			print(e)
 
-
 #===================================WB Reference Data===========================================
 def wb_test(request):
     #url = "https://common-api.wildberries.ru/ping"

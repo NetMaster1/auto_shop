@@ -4,9 +4,13 @@
 
 .ff1 {
 font-family: "Times New Roman", "Times", serif;
+font-size: large;
+font-weight: 500;
 }
 .ff2 {
 font-family: "Lucida Console", "Courier New", monospace;
+font-size:   x-large;
+font-weight: 500;
 }
 
 .aligner {

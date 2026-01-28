@@ -8,6 +8,11 @@ font-family: "Times New Roman", "Times", serif;
 .ff2 {
 font-family: "Lucida Console", "Courier New", monospace;
 }
+.ff2_120 {
+font-family: "Lucida Console", "Courier New", monospace;
+font-size:100%;
+font-weight: 900;
+}
 
 .aligner {
   display: flex; 
@@ -32,6 +37,16 @@ font-family: "Lucida Console", "Courier New", monospace;
   font-size: 50px;
 
 }
+
+/* =========================Cart Price Window============= */
+.cart_price_window {
+  background-color: gainsboro;
+  border-radius: 1vmax;
+  height: 100%;
+}
+
+
+
 
 /* ===================== Cotacts Modal========================= */
 .outer_modal_contacts {
