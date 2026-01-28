@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
 
-<div class="row">
+<div class="row ff2">
     <div class="col-8">
         <div class="box_client p-3 mt-5">
             <div class="row m-auto">
@@ -45,9 +45,19 @@
         </div>   
     </div>
 
-    <div class="col-4">
+    <div class="col-4 ">
         <div class="row mt-5 p-3">
-            <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">Всего к оплате {{order.bill}} руб.</a>
+            <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">
+                <div class="row flex justify-content-center">
+                    Всего к оплате:
+                </div>
+                <div class="row flex justify-content-center">
+                   {{order.bill}}
+                </div>
+                <div class="row flex justify-content-center">
+                    руб.
+                </div>
+            </a>
       
         </div>
         </div> 

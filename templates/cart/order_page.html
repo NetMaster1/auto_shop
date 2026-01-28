@@ -31,19 +31,19 @@
 
 <div class="box_client p-3">
 <div class="row p-1">
-  <div class="col-1">
+  <div class="col-1 ff2_120">
     <strong>Заказ # {{order.id}}</strong>
   </div>
-  <div class="col-4">
+  <div class="col-4 ff2_120">
     <strong>Наименование товара</strong>
   </div>
-  <div class="col-2">
+  <div class="col-2 ff2_120">
     <strong>Кол-во товара (шт.)</strong>
   </div>
-  <div class="col-2">
+  <div class="col-2 ff2_120">
     <strong>Цена</strong>
   </div>
-  <div class="col-2">
+  <div class="col-2 ff2_120">
     <strong>Всего</strong>
   </div>
 
@@ -61,7 +61,7 @@
         <!-- </a> -->
       </div>
 
-    <div class="col-4">
+    <div class="col-4 ff2">
     <strong>{{item.product}}</strong> 
     </div>
     <div class="col-2">
@@ -85,10 +85,12 @@
 
 
 
-<form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent">
+<form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent" class="ff2">
           {% csrf_token %}
 
-<strong>Пункт доставки</strong>
+<div class="row ff2_120">
+  Пункт доставки:
+</div>
 <div class="box_client p-3">
   <div class="row mt-2 mb-2">
   <div class="col-md-4">
@@ -152,11 +154,13 @@
 
 
 {% if request.user.is_authenticated %}
-<form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form">
+<form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form" class="ff2">
    {% csrf_token %}
         <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
   
-        <strong>Получатель:</strong>
+  <div class="row ff2_120">
+        Получатель:
+  </div>
 <div class="box_client p-3">
  <div class="row p-1">
   <div class="col-md-4">
@@ -190,7 +194,7 @@
       </div>
 </form>
 {% else %}
-<form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form">
+<form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form" class="ff2">
    {% csrf_token %}
         <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
   

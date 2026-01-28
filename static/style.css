@@ -2,15 +2,21 @@
   --max-width: 56%;
 }
 
+body {
+font-family: "Lucida Console", "Courier New", monospace;
+}
+
+
 .ff1 {
 font-family: "Times New Roman", "Times", serif;
-font-size: large;
-font-weight: 500;
 }
 .ff2 {
 font-family: "Lucida Console", "Courier New", monospace;
-font-size:   x-large;
-font-weight: 500;
+}
+.ff2_120 {
+font-family: "Lucida Console", "Courier New", monospace;
+font-size:100%;
+font-weight: 900;
 }
 
 .aligner {
@@ -36,6 +42,16 @@ font-weight: 500;
   font-size: 50px;
 
 }
+
+/* =========================Cart Price Window============= */
+.cart_price_window {
+  background-color: gainsboro;
+  border-radius: 1vmax;
+  height: 100%;
+}
+
+
+
 
 /* ===================== Cotacts Modal========================= */
 .outer_modal_contacts {

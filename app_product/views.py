@@ -11,8 +11,6 @@ from django.contrib import messages
 import xlwt
 from django.http import HttpResponse, JsonResponse
 
-
-
 def product_page(request, article):
     product = Product.objects.get(article=article)
   

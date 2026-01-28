@@ -2,6 +2,11 @@
   --max-width: 56%;
 }
 
+body {
+font-family: "Lucida Console", "Courier New", monospace;
+}
+
+
 .ff1 {
 font-family: "Times New Roman", "Times", serif;
 }
