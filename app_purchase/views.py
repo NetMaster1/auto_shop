@@ -130,7 +130,8 @@ def purchase_product(request):
         #identifier=Identifier.objects.create()
         order=Order.objects.create()
         if request.user.is_authenticated:
-            order.user=request.user
+            user=User.objects.get(id=request.user.id)
+            order.user=user
             order.save()
         for value in check_boxes:
             cart_item=CartItem.objects.get(id=value)
@@ -159,31 +160,33 @@ def order(request, order_id):
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)
     if request.user.is_authenticated:
-        f_name=order.user.first_name
-        l_name=order.user.last_name
-        email=order.user.email
-
-        context = {
-            'order': order,
-            'order_items': order_items,
-            'countries': countries,
-            'f_name': f_name,
-            'l_name': l_name,
-            'email': email,
-            # 'sdek_offices': sdek_offices,
-            }
-        return render (request, 'cart/order_page.html', context)
+        user=User.objects.get(id=request.user.id)
+        if order.user==user:
+            extended_user=ExtendedUser.objects.get(user=user)
+            context = {
+                'order': order,
+                'user': user,
+                'extended_user': extended_user,
+                'order_items': order_items,
+                'countries': countries,
+                }
+            return render (request, 'cart/order_page.html', context)
+        else:
+            auth.logout(request)
+            return redirect("login")
     
     else:
         context = {
             'order': order,
             'order_items': order_items,
             'countries': countries,
-            # 'sdek_offices': sdek_offices,
         }
 
         return render (request, 'cart/order_page.html', context)
  
+def delete_order(request, order_id):
+    pass
+
 def create_final_purchase_order(request, order_id):
     if request.method=='POST': 
         order=Order.objects.get(id=order_id)

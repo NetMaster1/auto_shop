@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from app_product.models import Product
 from app_purchase.models import Order, OrderItem
-from . models import ExtendedUser
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages, auth
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User, Group
+from . models import ExtendedUser
 from django.core.mail import send_mail
 import random
 from django.http import HttpResponse
@@ -103,7 +103,9 @@ def login_user(request):
         username=username.lower()
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
+            request.session.set_expiry(0)  #user session terminates on browser close
+            #request.session.set_expiry(600) #user session terminates every 10 minuntes
+            auth.login(request, user)
             #messages.success(request, ('Your have successfully been logged in. Welcome to ruversity.com'))
             messages.success(request, ('Добро пожаловать. Вы успешно вошли в свой профиль.'))
             return redirect('shopfront')
@@ -111,6 +113,8 @@ def login_user(request):
             #messages.error(request, ('Incorrect username or password. Check your credentials & try again'))
             messages.error(request, ('Неправильное имя пользователи или пароль. Проверьте ваше данные и попробуйте еще раз'))
             return redirect('shopfront')
+    else:
+        return redirect('shopfront')
 
 def logout_user(request):
     auth.logout(request)
