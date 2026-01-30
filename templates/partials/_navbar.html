@@ -22,44 +22,41 @@
             <div class="outer_modal_delivery">
               <div class="hide">
                 <div class="enterDeliveryModal rounded-5">
-                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_rules">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                            
-                              
-                                <h5 class="modal-title" id="exampleModalLabel">
-                                  <strong>Правила </strong>
-                                  <br>
-                                  <div class="ff2">
-                                  <p>
-                                  Осуществляя покупку в нашем интернет магазине, покупатель соглашается с данными Правилами.
-                                  В соответствии с данными Правилами доставка товара осуществляется после его оплаты. Доставка осуществляется
-                                  в пункт выдачи СДЕК, указанный покупателем, на ФИО, указанное покупателем при оформлении заказа.
-                                  Стоимость доставки включена в стоимость заказа. Стоимость доставки можно узнать перед оформлением заказа при указании пункта выдачи СДЕК.
-                                  </p>
-                                  <p>
-                                  Продавец гарантирует возврат денежных средст в случае поломки товара в процессе транспортировки.
-                                  Возврат денежных средств осуществляется в течение 5 дней с момента подтверждения поломки товара. 
-                                  Подтверждением поломки товара в процессе транспортировки может служить фотография поломанного товара 
-                                  в пункте выдачи СДЕК, сделанная покупателем при получении товара и его проверке.
-                                  </p>
-                                  <p>
-                                  Транспортировка товара осуществляется в коробках, изготовленных из пятислойного картона марки П32.
-                                  </p>
-                                  <p>
-                                    В остальном взаимодействие между покупателем и продавцом регулируетя Законом РФ о Защите прав потребителей.
-                                  </p>
-                                  
-                                  
-                                  </div>
-                                </h5>
+                              <h5 class="modal-title" id="exampleModalLabel">
+                                <strong>Правила </strong>
+                                <br>
+                                <div class="ff2">
+                                <p>
+                                Осуществляя покупку в нашем интернет магазине, покупатель соглашается с данными Правилами.
+                                В соответствии с данными Правилами доставка товара осуществляется после его оплаты. Доставка осуществляется
+                                в пункт выдачи СДЕК, указанный покупателем, на ФИО, указанное покупателем при оформлении заказа.
+                                Стоимость доставки включена в стоимость заказа. Стоимость доставки можно узнать перед оформлением заказа при указании пункта выдачи СДЕК.
+                                </p>
+                                <p>
+                                Продавец гарантирует возврат денежных средст в случае поломки товара в процессе транспортировки.
+                                Возврат денежных средств осуществляется в течение 5 дней с момента подтверждения поломки товара. 
+                                Подтверждением поломки товара в процессе транспортировки может служить фотография поломанного товара 
+                                в пункте выдачи СДЕК, сделанная покупателем при получении товара и его проверке.
+                                </p>
+                                <p>
+                                Транспортировка товара осуществляется в коробках, изготовленных из пятислойного картона марки П32.
+                                </p>
+                                <p>
+                                  В остальном взаимодействие между покупателем и продавцом регулируетя Законом РФ о Защите прав потребителей.
+                                </p>
+                                
+                                
+                                </div>
+                              </h5>
+                            </div>
+                        </div>
                     </div>
-                  </div>
+                </div>
               </div>
-              </div>
-           
-            </div>
             </div>
             <!-- =================================End of Modal Body======================================== -->
 
@@ -71,7 +68,7 @@
             <div class="outer_modal_contacts ff2">
               <div class="hide">
                 <div class="enterContactModal rounded-5">
-                 <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;"  class="cross" id="cross_contacts">>
+                 <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;"  class='cross' id="cross_contacts" >
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -80,7 +77,6 @@
                                 <h5 class="modal-title" style="text-align: left;" id="exampleModalLabel">
                                   e-mail: support@auto-deflector.ru <br>
                                   <br>
-
                                   Реквизиты: ИП Винокуров Сергей Николаевич <br>
                                   ИНН 526013223435 <br>
                                   ОГРНИП 322527500137506
@@ -107,12 +103,12 @@
         <input class="form-control me-2" type="text" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
       
 
-        <button class="btn btn-md btn-outline-dark mr-2" type="submit">Поиск</button>
+        <button type="submit" class="btn btn-md btn-outline-dark mr-2" id="search_button">Поиск</button>
       </form>
 </div> 
 <div class="col-2">
     <a href="{% url 'shopfront' %}">
-      <input type="button" value="Очистить" class="btn btn-md btn-outline-dark mr-2" > 
+      <input type="button" value="Очистить" class="btn btn-md btn-outline-dark mr-2" id="clear_search_button"> 
     </a>
 </div>
       
@@ -122,8 +118,6 @@
 </div>
   
 
-
-
 {% else %}
 <!-- ============================Login Modal Trigger========================== -->
     <button class="btn btn-md btn-outline-dark login_trigger">Войти</button>
@@ -131,7 +125,7 @@
     <div class="outer_modal_login">
       <div class="hide">
         <div class="enterLoginModal rounded-5">
-          <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_login">
+          <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_login">
             
           <div class="modal-dialog">
             <div class="modal-content">
@@ -155,7 +149,7 @@
       </div>
       </div>
       <div class="row mt-5">
-      <a href="{% url 'password_recovery_page' %}">Забыли пароль?</a>
+      <a href="{% url 'password_recovery_page' %}" id="password_restore_link">Забыли пароль?</a>
       </div>
 
       </div>
@@ -170,12 +164,12 @@
     <div class="outer_modal_register">
       <div class="hide">
         <div class="enterRegisterModal rounded-5">
-          <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_register">
+          <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_register">
             
           <div class="modal-dialog">
             <div class="modal-content">
                   
-            <form action="{% url 'register_user' %}" method='POST'>
+            <form action="{% url 'register_user' %}" method='POST' id="register_form">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="first_name" class="text-black">Имя</label>
@@ -230,39 +224,29 @@
 </nav>
 
 
-
-  
-
-
 <script>
-  const outer_modal_contats =document.querySelector('.outer_modal_contacts');
+  const outer_modal_contacts =document.querySelector('.outer_modal_contacts');
   const contact_trigger =document.querySelector('.contact_trigger');
   const outer_modal_delivery =document.querySelector('.outer_modal_delivery');
   const delivery_trigger =document.querySelector('.delivery_trigger');
   const outer_modal_register =document.querySelector('.outer_modal_register');
   const register_trigger =document.querySelector('.register_trigger');
+  const register_form =document.querySelector('#register_form');
   const outer_modal_login =document.querySelector('.outer_modal_login');
   const login_trigger =document.querySelector('.login_trigger');
 
   const cross_contacts =document.querySelector('#cross_contacts');
   const cross_register =document.querySelector('#cross_register');
   const cross_login =document.querySelector('#cross_login');
-  const cross =document.querySelector('.cross');
+  const cross_rules =document.querySelector('#cross_rules');
+  const password_restore_link =document.querySelector('#password_restore_link');
+  const search_button =document.querySelector('#search_button');
+  const clear_search_button =document.querySelector('#clear_search_button');
+
   
 
-  contact_trigger.addEventListener('click', openModal)
-  cross_contacts.addEventListener('click', closeModal)
-
-  function openModal () {
-          outer_modal_contats.classList.add('openModal')
-      }
-  function closeModal () {
-          outer_modal_contats.classList.remove('openModal')
-  }
-
-
   delivery_trigger.addEventListener('click', openDeliveryModal)
-  cross.addEventListener('click', closeDeliveryModal)
+  cross_rules.addEventListener('click', closeDeliveryModal)
 
   function openDeliveryModal () {
           outer_modal_delivery.classList.add('openModal')
@@ -270,6 +254,17 @@
   function closeDeliveryModal () {
           outer_modal_delivery.classList.remove('openModal')
   }
+
+  contact_trigger.addEventListener('click', openModal)
+  cross_contacts.addEventListener('click', closeModal)
+
+  function openModal () {
+          outer_modal_contacts.classList.add('openModal')
+      }
+  function closeModal () {
+          outer_modal_contacts.classList.remove('openModal')
+  }
+
 
 
   register_trigger.addEventListener('click', openRegisterModal)
@@ -298,6 +293,29 @@ const login_button = document.querySelector('#login_button')
     function blockButton() {
         login_button.disabled = true;
     }
+
+    login_button.addEventListener('click', e=>{
+        sessionStorage.clear();
+    }
+  )
+    password_restore_link.addEventListener('click', e=>{
+        sessionStorage.clear();
+    }
+  )
+     
+    search_button.addEventListener('click', e=>{
+        sessionStorage.clear();
+    }
+  )
+    clear_search_button.addEventListener('click', e=>{
+        sessionStorage.clear();
+    }
+  )
+    register_form.addEventListener('submit', e=>{
+        sessionStorage.clear();
+    }
+  )
+
 //===========End of Blockign Login button Module================
 
 </script>

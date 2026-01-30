@@ -196,7 +196,7 @@
       <div class="row p-1">
         <div class="col-md-4">
           <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
-          <input type="text" class="form-control" id="lastName" name="l_name" placeholder="Фамилия" required autocomplete="on">
+          <input type="text" class="form-control" id="lastName" name="l_name" placeholder="Фамилия" required autocomplete="off">
         </div>
       </div>
       <div class="row p-1">
@@ -219,13 +219,15 @@
       <div class="col-2">
         <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
       </div>
-     
+</form>
+
       <div class="col-2">
-        <a href="{% url 'delete_order' order.id %}">
-         <input type="button" value="Удалить" class="btn btn-block btn-outline-primary"> 
+        <a href="{% url 'delete_order' order.id %}" style="text-decoration: none;" >
+         <input type="button" value="Удалить" class="btn btn-block btn-outline-primary" id="order_delete_button"> 
       </div>
     </div>
-</form>
+
+
     </div>
 
 
@@ -239,6 +241,7 @@ console.log ('Beginning of the script')
 
 const form_to_be_sent=document.querySelector('#form_to_be_sent');
 const shipment_form = document.querySelector('#shipment_form');
+const order_delete_button = document.querySelector('#order_delete_button');
 const shipment_office = document.querySelector('#shipment_office');
 //const shipment_city = document.querySelector('#shipment_city');
 //const shipment_region = document.querySelector('#shipment_region');
@@ -354,6 +357,11 @@ shipment_form.addEventListener('submit', e=>{
         sessionStorage.clear();
     }
  )
+order_delete_button.addEventListener('click', e=>{
+       sessionStorage.clear();
+   }
+)
+
 
 
 

@@ -185,7 +185,12 @@ def order(request, order_id):
         return render (request, 'cart/order_page.html', context)
  
 def delete_order(request, order_id):
-    pass
+    order=Order.objects.get(id=order_id)
+    order_items=OrderItem.objects.filter(order=order)
+    for item in order_items:
+        item.delete()
+    order.delete()
+    return redirect ('shopfront')
 
 def create_final_purchase_order(request, order_id):
     if request.method=='POST': 

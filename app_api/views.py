@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from .models import ServerResponse
+from django.core.mail import send_mail
 from app_product.models import Product, RemainderHistory, DocumentType
 from app_purchase.models import Order, OrderItem, Cart, CartItem
 from app_reference.models import SDEK_Office
@@ -213,7 +214,7 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 					order.save()
 					print('========================')
 					print('order payment succeeded')
-                    #==============================Getting SDEK Delivery Point====================
+    #==============================Getting SDEK Delivery Point====================
 					delivery_point=SDEK_Office.objects.get(address_full=order.delivery_point)
 					print('========================')
 					print(f'Код пункта выдачи СДЕК: {delivery_point.code}')
@@ -224,9 +225,10 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 					order_item_array=[]
 					order_items=OrderItem.objects.filter(order=order)
 					#====================Cart Module==============================
-					#confirmation from Y-kassa does not see if the user is authorized or not. Consequently if can not select
+					#confirmation from Y-kassa does not see if the user is authorized or not. Consequently it can not select
 					#a cart sinsce the cart is selected either based on the user or session key. Confirmatin function does not
-					#see neither & creates a new sessison key. That's why we save the cart in order_items model.              
+					#see neither & creates a new sessison key. That's why we save the cart in order_items model.
+          #This is done to delete items bought from the corresponding carts            
 					for item in order_items:
 						if CartItem.objects.filter(product=item.product, cart=item.cart).exists():
 							cart_item=CartItem.objects.get(product=item.product, cart=item.cart)
@@ -284,7 +286,14 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 						product.quantity=rho.current_remainder
 						product.total_sum=rho.current_remainder * product.av_price
 						product.save()
-
+ 		        #===================Sending Email Notice to bizon-nn@yandex.ru================
+					send_mail(
+						f'Оплачен заказ {order}',
+						f"Оплачен заказ {order}. Собрать {order_item_array}""",
+						'support@auto-deflector.ru',
+						[order.receiver_email, '79200711112@yandex.ru',],
+						fail_silently=False
+						)
 				#=====================Creating sdek shipment order========================
 					sdek_order={
 						"type": 1,
