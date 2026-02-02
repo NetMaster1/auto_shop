@@ -54,6 +54,7 @@ def product_review (request, user_id):
             print(f'Total rating:   {total_rating}')
             average_rating=total_rating/number_of_reviews
             product.av_rating=average_rating
+            product.caclulate_percent()
             product.save()
             print(product.av_rating)
             

@@ -46,18 +46,29 @@
                     <div style="font-size: 30px; font-weight: 650;">{{product.name}}</div>
                 </div>
                     <div class="row pl-5">
-                        <div class="col"><strong>Бренд</strong></div>
-                    </div>
-                    <div class="row pl-5">
                         <div class="col">
-                            <i class="fa-regular fa-star star-orange"></i>
-                            <strong>Рейтинг: </strong>
-                            {{product.av_rating}}
+                            <strong>Бренд</strong> {{product.brand}}
                         </div>
                     </div>
                     <div class="row pl-5">
+                        <div class="col">
+                          <strong>Рейтинг: </strong>
+                            {{product.av_rating}}
+                        </div>
+                    </div>
+
+                    <div class="row pl-5">
+                        <div class="col">
+                            <div class="stars-outer">
+                                <div class="stars-inner" style="width: {{product.percent}}"></div>
+                            </div>
+                        </div>
+                    </div>
+                   
+
+                    <div class="row pl-5">
                             <div class="col">
-                                <strong>Покупки:</strong> ({{product.transactions}})
+                                <strong>Покупки:</strong> {{product.transactions}}
                             </div>
                     </div>
                     

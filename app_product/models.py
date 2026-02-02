@@ -55,6 +55,12 @@ class Product (models.Model):
     image_7 = models.FileField(upload_to='uploads', null=True, blank=True)
     video_1 = models.FileField(upload_to='uploads', null=True, blank=True)
     
+    def caclulate_percent(self):
+        percent= round(self.av_rating / 5 * 100, 2)
+        percent = f'{percent}'
+        self.percent= percent + '%'
+    
+        # self.percent = str(round(self.total / self.quantity, 1)) + '%'
 
     def __int__(self):
         return self.id
