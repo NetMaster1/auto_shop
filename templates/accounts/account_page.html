@@ -104,10 +104,80 @@
 
               {% for item in order.orderitem_set.all %}
                   <div class="row ml-5 pl-5">
-                  {{item}}
+<!-- ============================Review Modal Trigger========================== -->
+                    <a href="#" ><div class="div" id='review_window' >{{item}}</div></a>
                   </div>
+<!-- ===============================Review Modal===================================== -->
+    <div class="outer_modal_review">
+      <div class="hide">
+        <div class="reviewModal rounded-5">
+          <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_review_window">
+            
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="row">
+                <div class="col-2">
+                  <a href="{{item.get_url}}">
+                  <img src="{{item.image.url}}" width="50" alt="" >
+                </a>
+                </div>
+                <div class="col-10">
+                   {{item.product}}
+                </div>
+              </div>
+              <!-- <div class="row mt-4">
+                <div class="stars-outer">
+                   <div class="stars-inner" style="width: {{product.percent}}"></div>
+                </div>
+              </div> -->
+              <div class="row mt-3">
+                <div class="col-1">
+                  <i class="fa-regular fa-star star"></i>
+                </div>
+                <div class="col-1">
+                  <i class="fa-regular fa-star star"></i>
+                </div>
+                <div class="col-1">
+                  <i class="fa-regular fa-star star"></i>
+                </div>
+                <div class="col-1">
+                  <i class="fa-regular fa-star star"></i>
+                </div>
+                <div class="col-1">
+                  <i class="fa-regular fa-star star"></i>
+                </div>
+                <div class="col-7">
+                </div>
+            </div>
+
+              <div class="row mt-4">
+             <form action="{% url 'product_review' user.id %}" method='POST'>
+                      {% csrf_token %}
+
+                   <input type="number" name="rating" id="rating" class="form-control"hidden>
+                   <input type="text" name="article" value="{{item.article}}" class="form-control"hidden>
+                    <textarea name="review" rows="4" cols="93" class='text-area p-2' placeholder=" Введите отзыв. Не более 350 знаков.">
+               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Hic veniam ab, nihil nam numquam, cum alias recusandae accusamus magni vitae molestiae illo. Hic sint aliquam eveniet autem quia. Ipsa dolorem quas maiores aliquid ex, repudiandae tempora dignissimos voluptate repellat atque explicabo quos impedit, natus iusto dolore obcaecati nobis eligendi tenetur?
+                    </textarea>
+                  <br>
+                  
+                <div class=" row pl-4 pr-4 mt-3">
+                  <input type="submit" value="Сохранить" class="btn btn-outline-primary btn-block">
+                </div>
+                </form>     
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+    <!-- =========================End of Review Modal=========================== -->
+<br>
+<br>
                 {% endfor %}
             {% endfor %}
+
+
           </div>
         </div>
     </div>
@@ -174,8 +244,6 @@
           </div>
         </div>
     <!-- =========================End of Change Sdek Phone Modal=========================== -->
-
-
         <div class="row mb-3">
           <div class="col-10">
               Телефон для ОЗОН:   {% if extended_user.ozon_phone %}
@@ -268,6 +336,28 @@ const cross_sdek_window =document.querySelector('#cross_sdek_window');
 const change_ozon_phone_button = document.querySelector('#change_ozon_phone_button')
 const ozon_phone_outer_modal = document.querySelector('.ozon_phone_outer_modal')
 const cross_ozon_window =document.querySelector('#cross_ozon_window');
+const review_window=document.querySelectorAll('#review_window');
+const outer_modal_review =document.querySelectorAll('.outer_modal_review');
+const cross_review_window =document.querySelectorAll('#cross_review_window');
+
+
+// for (let i=0; i<review_window.length; i++) {
+//   review_window[i].addEventListener('click', openReviewModal)
+// }
+// function openReviewModal (){
+//     outer_modal_review.classList.add('openModal')
+// }
+// function closeReviewModule () {
+//           outer_modal_review.classList.remove('openModal')
+//   }
+
+for (let i=0; i<review_window.length; i++) {
+  review_window[i].addEventListener('click', (e)=> {
+    outer_modal_review[i].classList.add('openModal')
+})
+}
+
+
 
 
 change_sdek_phone_button.addEventListener('click', openSdekPhoneModule)
@@ -288,6 +378,33 @@ function openOzonPhoneModule () {
    function closeOzonPhoneModule () {
           ozon_phone_outer_modal.classList.remove('openModal')
   }
+
+//===================Star Rating===========================================
+const stars =document.querySelectorAll('.star');
+const rating =document.querySelector('#rating');
+
+for (let i=0; i<stars.length; i++) {
+  stars[i].addEventListener('click', (e)=> {
+    //кроме того, я думаю, можно передать параметр (оценку) через data-attribute,
+    //если заранее в HTML коде каждой зведе прописать свой data-grade='5' (от 1 до 5)
+    //насколько я понимаю, data-attribute представляет собой sting. Но впоследствии можно через 
+    //функцию Number() преобразовать его в число
+    stars[i].starValue = (i + 1);
+    rating.value=i+1
+    console.log(stars[i].starValue);
+    console.log(rating.value);
+    for (let n=0; n<stars.length; n++) {
+      if (n<=i) {
+        stars[n].classList.add('orange')
+      }
+      else {
+        stars[n].classList.remove('orange')
+      }    
+}
+})
+}
+//====================End of Star Rating======================================
+
 
 </script>
 

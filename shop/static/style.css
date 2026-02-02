@@ -6,7 +6,6 @@ body {
 font-family: "Lucida Console", "Courier New", monospace;
 }
 
-
 .ff1 {
 font-family: "Times New Roman", "Times", serif;
 }
@@ -48,10 +47,18 @@ font-weight: 900;
 
 }
 
+.text-area {
+  border-width: thin;
+  border-radius: 10px;
+  /* background-color: lightgray; */
+  border-color: lightgray;
+}
+
+
 /* =========================Cart Price Window============= */
 .cart_price_window {
   background-color: gainsboro;
-  border-radius: 1vmax;
+  border-radius: 5%;
   height: 100%;
 }
 
@@ -154,7 +161,32 @@ font-weight: 900;
     top: 15rem;
     left: 50rem;  
 }
+/* ===================== Review Modal========================= */
+
+.outer_modal_review {
+  display: none;
+}
+.outer_modal_review.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.reviewModal {
+    padding: 3rem;
+    background-color: white;
+    width: 50rem;
+    height: 30rem;
+    display: block;
+    position: fixed;
+    top: 15rem;
+    left: 50rem;  
+}
 /* ===================== End ofDelivery Modal========================= */
+
 
 .change_pass_window {
   position: fixed;
@@ -331,6 +363,21 @@ font-weight: 900;
   font-size: 20px;
   transition: all .25s;
 }
+/* ==========================Star Rating New Version================== */
+.star {
+  font-size: 30px;
+  font-weight: 300;
+  color: grey;
+  position: relative;
+  /* display: inline-block; */
+}
+
+.orange {
+  color: orange;
+ }
+
+
+
 
 /*===================End of Rating Stars Module=========================*/
 .box_price {
