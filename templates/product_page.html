@@ -17,16 +17,16 @@
         <div class="col-1 ml-5 mr-5">
             <div class="card" style="width: 6rem; justify-self: right;">
                 <div class="row mb-3 aligner">
-                    <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale aligner" alt="Placeholder image">
+                    <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale aligner" alt="Placeholder image" id="image_1">
                 </div>
                 <div class="row mb-3">
-                    <img src="{{product.image_2.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
+                    <img src="{{product.image_2.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image" id="image_2">
                 </div>
             </div>
         </div>
         <div class="col-3">
-            <div class="card">
-                <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
+            <div class="card" >
+                <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image" id="big_image">
             </div>
         </div>
 
@@ -61,7 +61,7 @@
 <!-- =========================Product Description Modal Trigger========= -->
                 <div class="row pl-5">
                     <div class="col">
-                        <strong id="description">Описание</strong>
+                        <a href="#"><strong id="description">Описание</strong></a>  
                     </div>
                 </div>
 <!-- =====================End of Product Description Modal Trigger========= -->
@@ -86,7 +86,7 @@
 <!-- =====================Reviews Modal Trigger==================== -->
                 <div class="row pl-5">
                     <div class="col">
-                        <strong id="reviews">Отзывы</strong>
+                        <a href="#"> <strong id="reviews">Отзывы</strong></a>
                     </div>
                 </div>
 <!-- =======================End of Reviews Modal Trigger============ -->
@@ -158,6 +158,10 @@ const description = document.querySelector('#description')
 const product_description_modal = document.querySelector('.product_description_modal')
 const cross_description_modal = document.querySelector('#cross_description_modal')
 const cross_reviews_list_modal = document.querySelector('#cross_reviews_list_modal')
+const image_1 = document.querySelector('#image_1')
+const image_2 = document.querySelector('#image_2')
+const big_image = document.querySelector('#big_image')
+
 
 reviews.addEventListener('click', showReviews)
 function showReviews () {
@@ -176,6 +180,14 @@ function closeReviews () {
           review_list_modal.classList.remove('openModal')
   }
 
+image_1.addEventListener('mouseover', exchageImages1)
+function exchageImages1 () {
+    big_image.src= image_1.src
+    }
+image_2.addEventListener('mouseover', exchageImages2)
+function exchageImages2 () {
+    big_image.src= image_2.src
+    }
 
 
 </script>
