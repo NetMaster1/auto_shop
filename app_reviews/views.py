@@ -30,7 +30,7 @@ from django.contrib.auth.models import User
            
     # return redirect('login')
 
-def product_review (request, user_id):
+def create_product_review (request, user_id):
     if request.user.is_authenticated:
         user=User.objects.get(id=user_id)
         if request.method == 'POST':
@@ -57,12 +57,8 @@ def product_review (request, user_id):
             product.caclulate_percent()
             product.save()
             print(product.av_rating)
-            
-                
-           
             return redirect ('account_page', user.id)
             
 
-            
 
 

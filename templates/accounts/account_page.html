@@ -151,7 +151,7 @@
             </div>
 
               <div class="row mt-4">
-             <form action="{% url 'product_review' user.id %}" method='POST'>
+             <form action="{% url 'create_product_review' user.id %}" method='POST'>
                       {% csrf_token %}
 
                    <input type="number" name="rating" id="rating" class="form-control"hidden>

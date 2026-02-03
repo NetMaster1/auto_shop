@@ -1,141 +1,179 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
 <!-- <div class="container"> -->
-    <div class="row mt-2 ml-5 pt-3 pl-5">
-            <div class="col-12">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Текущая</li>
-                </ol>
-              </nav>
-            </div>
-    </div>
+<div class="row mt-2 ml-5 pt-3 pl-5">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Текущая</li>
+            </ol>
+            </nav>
+        </div>
+</div>
     <div class="row mt-5">
         <div class="col-1 ml-5 mr-5">
             <div class="card" style="width: 6rem; justify-self: right;">
                 <div class="row mb-3 aligner">
-                   
-                        <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale aligner" alt="Placeholder image">
-              
+                    <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale aligner" alt="Placeholder image">
                 </div>
                 <div class="row mb-3">
-              <img src="{{product.image_2.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
+                    <img src="{{product.image_2.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
                 </div>
             </div>
         </div>
         <div class="col-3">
             <div class="card">
-                <!-- <div class="card-header" style='min-height:5rem' >
-                <h4>{{product.name}}</h4>
-                </div> -->
                 <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
-              
-                <!-- <a href='#collapse-p' data-bs-toggle="collapse" data-target="#collapse-p">
-                        Ознакомиться {{product.article}}
-                        </a>
-                <p class="card-text">{{product.description}}.</p> -->
-
             </div>
         </div>
+
         <div class="col-4 ml-5" style="text-align: left;">
-               <div class="card-body">
+            <div class="card-body">
                 <div class="row pl-5">
                     <div style="font-size: 30px; font-weight: 650;">{{product.name}}</div>
                 </div>
-                    <div class="row pl-5">
-                        <div class="col">
-                            <strong>Бренд</strong> {{product.brand}}
-                        </div>
+                <div class="row pl-5">
+                    <div class="col">
+                        <strong>Бренд</strong> {{product.brand}}
                     </div>
-                    <div class="row pl-5">
-                        <div class="col">
-                          <strong>Рейтинг: </strong>
-                            {{product.av_rating}}
-                        </div>
-                    </div>
-
-                    <div class="row pl-5">
-                        <div class="col">
-                            <div class="stars-outer">
-                                <div class="stars-inner" style="width: {{product.percent}}"></div>
-                            </div>
-                        </div>
-                    </div>
-                   
-
-                    <div class="row pl-5">
-                            <div class="col">
-                                <strong>Покупки:</strong> {{product.transactions}}
-                            </div>
-                    </div>
-                    
-                    <div class="row pl-5">
-                            <div class="col">
-                                <strong>Описание</strong>
-                            </div>
-                    </div>
-                    <div class="row pl-5">
-                            <div class="col">
-                                <strong id="reviews">Отзывы</strong>
-                            </div>
-                    </div>
-                    
                 </div>
+                <div class="row pl-5">
+                    <div class="col">
+                        <strong>Рейтинг: </strong>
+                        {{product.av_rating}}
+                    </div>
+                </div>
+                <div class="row pl-5">
+                    <div class="col">
+                        <div class="stars-outer">
+                            <div class="stars-inner" style="width: {{product.percent}}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pl-5">
+                    <div class="col">
+                        <strong>Покупки:</strong> {{product.transactions}}
+                    </div>
+                </div>
+<!-- =========================Product Description Modal Trigger========= -->
+                <div class="row pl-5">
+                    <div class="col">
+                        <strong id="description">Описание</strong>
+                    </div>
+                </div>
+<!-- =====================End of Product Description Modal Trigger========= -->
+<!-- =====================Product Description Modal========= -->
+                    <div class="product_description_modal">
+                        <div class="hide">
+                            <div class="productDescriptionModal rounded-5">
+                                <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_description_modal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="row">
+                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto iste dolore magnam consequatur, porro tenetur adipisci praesentium reiciendis, molestias ullam quasi reprehenderit aliquam sapiente! Eius nostrum non sint, obcaecati perspiciatis culpa officia vitae enim quisquam incidunt magni pariatur dolorem ab quibusdam? Illo eaque itaque et explicabo vel, minus voluptatum! Nulla?
+                                    
+                                        </div>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+<!-- =====================End of Product Description Modal========= -->
 
+<!-- =====================Reviews Modal Trigger==================== -->
+                <div class="row pl-5">
+                    <div class="col">
+                        <strong id="reviews">Отзывы</strong>
+                    </div>
+                </div>
+<!-- =======================End of Reviews Modal Trigger============ -->
+            <!-- ===============================Review Modal===================================== -->
+                    <div class="review_list_modal">
+                        <div class="hide">
+                        <div class="reviewListModal rounded-5">
+                            <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_reviews_list_modal">
+                            
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="row">
+                                <div class="col-2">
+                                    <a href="{{item.get_url}}">
+                                    <img src="{{item.image.url}}" width="50" alt="" >
+                                </a>
+                                </div>
+                                <div class="col-10">
+                                    {{item.product}}
+                                </div>
+                                </div>
+                                                <div class="row pl-5">
+                                        <div class="col">
+                                            <div class="stars-outer">
+                                                <div class="stars-inner" style="width: {{product.percent}}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+            <!-- =========================End of Review List Modal=========================== -->
+            </div>
         </div>
         <div class="col-3" >
             <div class="card">
                <div class="card-body" style="text-align: center">
-                        <div class="box_price">
-                          <div class="row pl-5">
-                    <div style="font-size: 50px; font-weight: 700; color: white">{{product.site_retail_price}} руб.</div> 
+                    <div class="box_price">
+                        <div class="row pl-5">
+                            <div style="font-size: 50px; font-weight: 700; color: white">{{product.site_retail_price}} руб.</div> 
                         </div>
-                         </div>
                     </div>
+                </div>
             
-                    <div class="card-body">
-                        <div class="row m-auto mt-3">
-                            <a href="{% url 'add_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
-                        </div>
-
-                        <div class="row m-auto mt-3">
-                            <a href="{% url 'cart_detail' %}" class="btn btn-primary">Перейти в корзину</a>
-                        </div>
-
-                        <div class="row m-auto mt-3">
-                            <a href="{% url 'delivery_city_choice' %}" class="btn btn-primary" target="_blank">Узнать стоимость доставки</a>
-                        </div>
-
-                        <!-- <div class="row m-auto mt-3 ">
-                    <a href="#"  class="btn btn-primary">Купить одним кликом</a>
-                        </div>
-
-                        <div class="row m-auto mt-3">
-                    <a href="#"  class="btn btn btn-primary">Узнать стоимость доставки до пункта выдачи СДЕК</a>
-                        </div>
-
-                        <div class="row m-auto mt-3">
-                    <a href="#"  class="btn btn-primary">Узнать стоимость доставки до пункта выдачи ОЗОН</a>
-                        </div> -->
+                <div class="card-body">
+                    <div class="row m-auto mt-3">
+                        <a href="{% url 'add_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
                     </div>
+
+                    <div class="row m-auto mt-3">
+                        <a href="{% url 'cart_detail' %}" class="btn btn-primary">Перейти в корзину</a>
+                    </div>
+
+                    <div class="row m-auto mt-3">
+                        <a href="{% url 'delivery_city_choice' %}" class="btn btn-primary" target="_blank">Узнать стоимость доставки</a>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
  
 <script>
-const reviews = document.querySelectorAll('#reviews')
-const list_of_reviews_window = document.querySelectorAll('#list_of_reviews_window.')
-
+const reviews = document.querySelector('#reviews')
+const review_list_modal = document.querySelector('.review_list_modal')
+const description = document.querySelector('#description')
+const product_description_modal = document.querySelector('.product_description_modal')
+const cross_description_modal = document.querySelector('#cross_description_modal')
+const cross_reviews_list_modal = document.querySelector('#cross_reviews_list_modal')
 
 reviews.addEventListener('click', showReviews)
 function showReviews () {
-          list_of_reviews_window.classList.add('openModal')
+          review_list_modal.classList.add('openModal')
       }
-   function closeReviews () {
-          list_of_reviews_window.classList.remove('openModal')
+description.addEventListener('click', showDescription)
+function showDescription () {
+          product_description_modal.classList.add('openModal')
+      }
+cross_description_modal.addEventListener('click', closeDescription)
+function closeDescription () {
+          product_description_modal.classList.remove('openModal')
+  }
+cross_reviews_list_modal.addEventListener('click', closeReviews)
+function closeReviews () {
+          review_list_modal.classList.remove('openModal')
   }
 
 

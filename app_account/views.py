@@ -253,7 +253,6 @@ def create_sdek_phone(request, user_id):
         auth.logout(request)
         return redirect ('shopfront')
     
-
 def create_ozon_phone(request, user_id):
     if request.user.is_authenticated:
         if request.method == 'POST':

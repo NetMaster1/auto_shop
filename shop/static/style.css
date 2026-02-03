@@ -185,7 +185,56 @@ font-weight: 900;
     top: 15rem;
     left: 50rem;  
 }
-/* ===================== End ofDelivery Modal========================= */
+/* ===================== Reviews List Modal========================= */
+.review_list_modal {
+  display: none;
+}
+.review_list_modal.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.reviewListModal {
+    padding: 3rem;
+    background-color: white;
+    width: 50rem;
+    height: 30rem;
+    display: block;
+    position: fixed;
+    top: 15rem;
+    left: 50rem;  
+}
+/* ===================== End of Reviews List Modal========================= */
+/* ===================== Product Desription Modal========================= */
+.product_description_modal {
+  display: none;
+}
+.product_description_modal.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.productDescriptionModal {
+    padding: 3rem;
+    background-color: white;
+    width: 50rem;
+    height: 30rem;
+    display: block;
+    position: fixed;
+    top: 15rem;
+    left: 50rem;  
+}
+/* ===================== End of Product Description Modal========================= */
+
+
 
 
 .change_pass_window {
@@ -251,10 +300,6 @@ font-weight: 900;
 .message_window {
  z-index: 9999;
 }
-
-
-
-
 
 .hide {
     /* display: flex;
