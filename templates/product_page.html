@@ -1,141 +1,220 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
 <!-- <div class="container"> -->
-    <div class="row mt-2 ml-5 pt-3 pl-5">
-            <div class="col-12">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Текущая</li>
-                </ol>
-              </nav>
-            </div>
-    </div>
+<div class="row mt-2 ml-5 pt-3 pl-5">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Текущая</li>
+            </ol>
+            </nav>
+        </div>
+</div>
     <div class="row mt-5">
         <div class="col-1 ml-5 mr-5">
-            <div class="card" style="width: 6rem; justify-self: right;">
+            <div style="width: 6rem; justify-self: right;">
                 <div class="row mb-3 aligner">
-                   
-                        <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale aligner" alt="Placeholder image">
-              
+                    <img src="{{product.image_1.url}}" class=" img-fluid photo_scale aligner" alt="Placeholder image" id="image_1">
                 </div>
+
                 <div class="row mb-3">
-              <img src="{{product.image_2.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
+                    <img src="{{product.image_2.url}}"class="card-img-top img-fluid photo_scale" alt="Placeholder image" id="image_2">
                 </div>
             </div>
         </div>
         <div class="col-3">
-            <div class="card">
-                <!-- <div class="card-header" style='min-height:5rem' >
-                <h4>{{product.name}}</h4>
-                </div> -->
-                <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image">
-              
-                <!-- <a href='#collapse-p' data-bs-toggle="collapse" data-target="#collapse-p">
-                        Ознакомиться {{product.article}}
-                        </a>
-                <p class="card-text">{{product.description}}.</p> -->
-
+            <div class="card" >
+                <img src="{{product.image_1.url}}" class="card-img-top img-fluid photo_scale" alt="Placeholder image" id="big_image">
             </div>
         </div>
+
         <div class="col-4 ml-5" style="text-align: left;">
-               <div class="card-body">
+            <div class="card-body">
                 <div class="row pl-5">
                     <div style="font-size: 30px; font-weight: 650;">{{product.name}}</div>
                 </div>
-                    <div class="row pl-5">
-                        <div class="col"><strong>Бренд</strong></div>
+                <div class="row pl-5">
+                    <div class="col">
+                        <strong>Бренд</strong> {{product.brand}}
                     </div>
-                    <div class="row pl-5">
-                        <div class="col">
+                </div>
+                <div class="row pl-5">
+                    <div class="col">
                         <strong>Рейтинг: </strong>
-                        {{product.av_rating}}
+                          {{product.av_rating}}
+                    </div>
+                </div>
+                <div class="row pl-5">
+                    <div class="col">
                         <div class="stars-outer">
                             <div class="stars-inner" style="width: {{product.percent}}"></div>
                         </div>
+
+                    </div>
+                </div>
+                <div class="row pl-5">
+                    <div class="col">
+                        <strong>Покупки:</strong> {{product.transactions}}
+                    </div>
+                </div>
+<!-- =========================Product Description Modal Trigger========= -->
+                <div class="row pl-5">
+                    <div class="col">
+                        <a href="#"><strong id="description">Описание</strong></a>  
+                    </div>
+                </div>
+<!-- =====================End of Product Description Modal Trigger========= -->
+<!-- =====================Product Description Modal========= -->
+                <div class="product_description_modal">
+                    <div class="hide">
+                        <div class="productDescriptionModal rounded-5">
+                            <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_description_modal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="row ff2">
+                    
+                            Дефлектор капота (мухобойка) разработан специально для {{product.auto_model}}, выполнен из гибкого оргстекла, представляет собой тонкую, просчитанную пластину.
+                            <br><br>
+                            Устанавливается на капот при помощи креплений, которые идут в комплекте, в штатные места в усилителе капота вашего автомобиля.
+                            Расстояние между капотом и дефлектором примерно равно 1 см, оно продувается и промывается на мойке.
+                            <br><br>
+                            Дефлектор защищает фронтальную часть капота от повреждений и царапин. Он отражает камни и песок от впереди идущих машин, сохраняя лакокрасочное покрытие капота целым. Также дефлектор изменяет воздушный поток, уменьшает загрязнение лобового стекла и щёток стеклоочистителя.
+                            В быту дефлектор капота еще называют отбойник или мухобойка, так как помимо камешков он отражает и летящих навстречу машине насекомых.
+                            <br><br>
+                            Цвет дефлектора капота тёмный, тонированный до 20%, на машине он будет выглядеть полностью чёрным. Дефлектор - это не только функциональный атрибут, но и стильный элемент тюнинга, который выгодно выделит на фоне других ваше авто.
+                       
+                                    </div>    
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row pl-5">
-                            <div class="col">
-                                <strong>Покупки:</strong> ({{product.transactions}})
-                            </div>
-                    </div>
-                    
-                    <div class="row pl-5">
-                            <div class="col">
-                                <strong>Описание</strong>
-                            </div>
-                    </div>
-                    <div class="row pl-5">
-                            <div class="col">
-                                <strong>Отзывы</strong>
-                            </div>
-                    </div>
-                    
                 </div>
+<!-- =====================End of Product Description Modal========= -->
 
+<!-- =====================Reviews Modal Trigger==================== -->
+                <div class="row pl-5">
+                    <div class="col">
+                        <a href="#"> <strong id="reviews">Отзывы</strong></a>
+                    </div>
+                </div>
+<!-- =======================End of Reviews Modal Trigger============ -->
+<!-- ===============================Review Modal===================================== -->
+                <div class="review_list_modal">
+                    <div class="hide">
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="reviewListModal">
+                                    <!-- <div class="reviewListModal rounded-5"> -->
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="row">
+                                                    {% if reviews %}
+                                                        {% for review in reviews %}
+
+                                                            <div style="color: blue; font-weight: 500;">
+                                                                {{review.date_posted}}
+                                                            </div>
+                                                                {{review.content}}
+                                                            <div class="row pl-5">
+                                                                <div class="col">
+                                                                    <div class="stars-outer" >
+                                                                        <div class="stars-inner" style="width: {{review.percent}}"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}    
+
+                                                    {% else%}
+                                                        Отзывы пока отсутвуют
+                                                    {% endif %}
+                                                </div>
+                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="col"> 
+                               <img src="{% static 'images/cross_edited.png' %}" style="width:2rem;height:2rem;" class="cross_review" id="cross_reviews_list_modal">
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            <!-- =========================End of Review List Modal=========================== -->
+            </div>
         </div>
         <div class="col-3" >
             <div class="card">
                <div class="card-body" style="text-align: center">
-                        <div class="box_price">
-                          <div class="row pl-5">
-                    <div style="font-size: 50px; font-weight: 700; color: white">{{product.site_retail_price}} руб.</div> 
+                    <div class="box_price">
+                        <div class="row pl-5">
+                            <div style="font-size: 50px; font-weight: 700; color: white">{{product.site_retail_price}} руб.</div> 
                         </div>
-                         </div>
                     </div>
+                </div>
             
-                    <div class="card-body">
-                        <div class="row m-auto mt-3">
-                            <a href="{% url 'add_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
-                        </div>
-
-                        <div class="row m-auto mt-3">
-                            <a href="{% url 'cart_detail' %}" class="btn btn-primary">Перейти в корзину</a>
-                        </div>
-
-                        <div class="row m-auto mt-3">
-                            <a href="{% url 'delivery_city_choice' %}" class="btn btn-primary" target="_blank">Узнать стоимость доставки</a>
-                        </div>
-
-                        <!-- <div class="row m-auto mt-3 ">
-                    <a href="#"  class="btn btn-primary">Купить одним кликом</a>
-                        </div>
-
-                        <div class="row m-auto mt-3">
-                    <a href="#"  class="btn btn btn-primary">Узнать стоимость доставки до пункта выдачи СДЕК</a>
-                        </div>
-
-                        <div class="row m-auto mt-3">
-                    <a href="#"  class="btn btn-primary">Узнать стоимость доставки до пункта выдачи ОЗОН</a>
-                        </div> -->
+                <div class="card-body">
+                    <div class="row m-auto mt-3">
+                        <a href="{% url 'add_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
                     </div>
+
+                    <div class="row m-auto mt-3">
+                        <a href="{% url 'cart_detail' %}" class="btn btn-primary">Перейти в корзину</a>
+                    </div>
+
+                    <div class="row m-auto mt-3">
+                        <a href="{% url 'delivery_city_choice' %}" class="btn btn-primary" target="_blank">Узнать стоимость доставки</a>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
-    <div class="row mt-2 ml-5 pt-3 pl-5">
-        <div class="col-12">
-            <h3>Отзывы</h3>
-        <!-- <div class="row mt-1 mb-5">
-        <div class="col-11">
-            {% for review in reviews %}
-                <div class="row" style=" height: 6rem;">
-                    <div class="col-2 m-2 border-top">
-                        <strong>{{review.author}}</strong>
-                    </div>
+ 
+<script>
+const reviews = document.querySelector('#reviews')
+const review_list_modal = document.querySelector('.review_list_modal')
+const description = document.querySelector('#description')
+const product_description_modal = document.querySelector('.product_description_modal')
+const cross_description_modal = document.querySelector('#cross_description_modal')
+const cross_reviews_list_modal = document.querySelector('#cross_reviews_list_modal')
+const image_1 = document.querySelector('#image_1')
+const image_2 = document.querySelector('#image_2')
+const big_image = document.querySelector('#big_image')
 
-                    <div class="col-7 m-2 border-top">
-                    {{review.content}}
-                    </div>
-                    <div class="col-2 m-2 border-top">
-                        {{review.date_posted}}
-                    </div>
-                </div> -->
-            <!-- {% endfor %}
-            -->
-        </div>
-    </div>
+
+reviews.addEventListener('click', showReviews)
+function showReviews () {
+          review_list_modal.classList.add('openModal')
+      }
+description.addEventListener('click', showDescription)
+function showDescription () {
+          product_description_modal.classList.add('openModal')
+      }
+cross_description_modal.addEventListener('click', closeDescription)
+function closeDescription () {
+          product_description_modal.classList.remove('openModal')
+  }
+cross_reviews_list_modal.addEventListener('click', closeReviews)
+function closeReviews () {
+          review_list_modal.classList.remove('openModal')
+  }
+
+image_1.addEventListener('mouseover', exchageImages1)
+function exchageImages1 () {
+    big_image.src= image_1.src
+    }
+image_2.addEventListener('mouseover', exchageImages2)
+function exchageImages2 () {
+    big_image.src= image_2.src
+    }
+
+
+</script>
+
 
 {% endblock %}

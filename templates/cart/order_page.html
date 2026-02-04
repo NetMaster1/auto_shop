@@ -152,92 +152,83 @@
   </div>
 </form>
 
-
-{% if request.user.is_authenticated %}
 <form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form" class="ff2">
    {% csrf_token %}
-        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
-  
-  <div class="row ff2_120">
-        Получатель:
-  </div>
-<div class="box_client p-3">
- <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
-    <input type="text" class="form-control" id="firstName" name="f_name" value="{{f_name}}" required >
-  </div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
-    <input type="text" class="form-control" id="lastName" name="l_name" value="{{l_name}}" required >
-  </div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="phone" class="form-label">Телефон</label> -->
-    <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required >
-  </div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="email" class="form-label">Email</label> -->
-    <input type="email" class="form-control" id="email" name="email" value="{{email}}" required >
-  </div>
-  </div>
-  </div>
-      <div class="row m-auto mt-3">
-          <div class="col-2">
-            <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
+    <div class="row ff2_120">
+          Получатель:
+    </div>
+  {% if request.user.is_authenticated %}
+    <div class="box_client p-3">
+      <div class="row p-1">
+        <div class="col-md-4">
+        <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
+        <input type="text" class="form-control" id="firstName" name="f_name" value="{{user.first_name}}" required autocomplete="off">
+        </div>
+      </div>
+      <div class="row p-1">
+        <div class="col-md-4">
+          <input type="text" class="form-control" id="lastName" name="l_name" value="{{user.last_name}}" required autocomplete="off">
+        </div>
+      </div>
+      <div class="row p-1">
+        <div class="col-md-4">
+          {% if extended_user.sdek_phone %}
+          <input type="tel" class="form-control" id="phone" name="phone" value="{{extended_user.sdek_phone}}" required autocomplete="off">
+          {% else%}
+          <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required autocomplete="off">
+          {% endif %}  
+        </div>
+      </div>
+      <div class="row p-1">
+        <div class="col-md-4">
+          <input type="email" class="form-control" id="email" name="email" value="{{user.email}}" required >
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="box_client p-3">
+      <div class="row p-1">
+          <div class="col-md-4">
+            <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
+            <input type="text" class="form-control" id="firstName" name="f_name" placeholder="Имя" required autocomplete="off">
           </div>
       </div>
-</form>
-{% else %}
-<form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form" class="ff2">
-   {% csrf_token %}
-        <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
-  
-        <strong>Получатель:</strong>
-<div class="box_client p-3">
- <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
-    <input type="text" class="form-control" id="firstName" name="f_name" placeholder="Имя" required >
-  </div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
-    <input type="text" class="form-control" id="lastName" name="l_name" placeholder="Фамилия" required >
-  </div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="phone" class="form-label">Телефон</label> -->
-    {% if extended_user.sdek_phone %}
-    <input type="tel" class="form-control" id="phone" name="phone" value="{{extended_user.sdek_phone}}" required >
-    {% else%}
-    <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required >
-    {% endif %}  
-</div>
-  </div>
-  <div class="row p-1">
-  <div class="col-md-4">
-    <!-- <label for="email" class="form-label">Email</label> -->
-    <input type="email" class="form-control" id="email" name="email" placeholder="email" required >
-  </div>
-  </div>
-  </div>
-      <div class="row m-auto mt-3">
-          <div class="col-2">
-            <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
-          </div>
+      <div class="row p-1">
+        <div class="col-md-4">
+          <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
+          <input type="text" class="form-control" id="lastName" name="l_name" placeholder="Фамилия" required autocomplete="off">
+        </div>
       </div>
-</form>
+      <div class="row p-1">
+        <div class="col-md-4">
+          <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required autocomplete="off">
+        </div>
+      </div>
+      <div class="row p-1">
+        <div class="col-md-4">
+          <!-- <label for="email" class="form-label">Email</label> -->
+          <input type="email" class="form-control" id="email" name="email" placeholder="email" required autocomplete="off">
+        </div>
+      </div>
+    </div>
 {% endif %}
 
-      
+    <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
+
+    <div class="row m-auto mt-3">
+      <div class="col-2">
+        <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
+      </div>
+</form>
+
+      <div class="col-2">
+        <a href="{% url 'delete_order' order.id %}" style="text-decoration: none;" >
+         <input type="button" value="Удалить" class="btn btn-block btn-outline-primary" id="order_delete_button"> 
+      </div>
+    </div>
+
+
+    </div>
 
 
 </div>
@@ -250,6 +241,7 @@ console.log ('Beginning of the script')
 
 const form_to_be_sent=document.querySelector('#form_to_be_sent');
 const shipment_form = document.querySelector('#shipment_form');
+const order_delete_button = document.querySelector('#order_delete_button');
 const shipment_office = document.querySelector('#shipment_office');
 //const shipment_city = document.querySelector('#shipment_city');
 //const shipment_region = document.querySelector('#shipment_region');
@@ -283,7 +275,6 @@ lastName.addEventListener('change', e=>{
         sessionStorage.setItem('lastName',  lastName_value);
     }
  )
-
 phone.addEventListener('change', e=>{
         phone_value = phone.value;
         sessionStorage.setItem('phone',  phone_value);
@@ -294,7 +285,6 @@ email.addEventListener('change', e=>{
         sessionStorage.setItem('email',  email_value);
     }
  )
-
 //====================Country Module=======================
 country.addEventListener('change', e=>{
         //sessionStorage.clear();
@@ -359,6 +349,21 @@ office.addEventListener('change', e=>{
         // sendShipmentForm();
     }
 )
+
+
+
+//===============Clear Session Storage==================
+shipment_form.addEventListener('submit', e=>{
+        sessionStorage.clear();
+    }
+ )
+order_delete_button.addEventListener('click', e=>{
+       sessionStorage.clear();
+   }
+)
+
+
+
 
 // function sendShipmentForm() {
 //         shipment_form.submit();

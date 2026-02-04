@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 import requests
 from app_reference.models import SDEK_Office, SDEK_City
 from app_purchase.models import Order, OrderItem
+from app_account.models import ExtendedUser
 from django.contrib import messages, auth
+from django.contrib.auth.models import User
 import time
 
 
@@ -331,18 +333,23 @@ def sdek_office_choice(request, order_id):
 
             offices=SDEK_Office.objects.filter(country_code=country_code, region=region, city=city, type='PVZ').order_by('address_full')
             if request.user.is_authenticated:
-                context = {
-                    'order': order,
-                    'order_items': order_items,
-                    'countries': countries,
-                    'regions': regions,
-                    'cities' : cities,
-                    'offices': offices,
-                    'f_name': order.user.first_name,
-                    'l_name': order.user.last_name,
-                    'email': order.user.email,
-                }
-                return render(request, 'cart/order_page.html', context)
+                user=User.objects.get(id=request.user.id)
+                if order.user==user:
+                    extended_user=ExtendedUser.objects.get(user=user)
+                    context = {
+                        'user': user,
+                        'order': order,
+                        'order_items': order_items,
+                        'countries': countries,
+                        'regions': regions,
+                        'cities' : cities,
+                        'offices': offices,
+                        'extended_user': extended_user,
+                    }
+                    return render(request, 'cart/order_page.html', context)
+                else:
+                    auth.logout(request)
+                    return redirect("login")
             else:
                 context = {
                     'order': order,
@@ -367,17 +374,22 @@ def sdek_office_choice(request, order_id):
             cities=SDEK_Office.objects.filter(region=region, type='PVZ')
             cities=cities.distinct('city')
             if request.user.is_authenticated:
-                context = {
-                'order': order,
-                'order_items': order_items,
-                'countries' : countries,
-                'regions': regions,
-                'cities' : cities,
-                'f_name': order.user.first_name,
-                'l_name': order.user.last_name,
-                'email': order.user.email,
-                }
-                return render(request, 'cart/order_page.html', context)
+                user=User.objects.get(id=request.user.id)
+                if order.user==user:
+                    extended_user=ExtendedUser.objects.get(user=user)
+                    context = {
+                        'user': user,
+                        'order': order,
+                        'order_items': order_items,
+                        'countries' : countries,
+                        'regions': regions,
+                        'cities' : cities,
+                        'extended_user': extended_user,
+                        }
+                    return render(request, 'cart/order_page.html', context)
+                else:
+                    auth.logout(request)
+                    return redirect("login")
             else:
                 context = {
                     'order': order,
@@ -400,16 +412,21 @@ def sdek_office_choice(request, order_id):
             regions=regions.distinct('region')
 
             if request.user.is_authenticated:
-                context = {
-                'order': order,
-                'order_items': order_items,
-                'regions': regions,
-                'countries' : countries,
-                'f_name': order.user.first_name,
-                'l_name': order.user.last_name,
-                'email': order.user.email,
-                }
-                return render(request, 'cart/order_page.html', context)
+                user=User.objects.get(id=request.user.id)
+                if order.user==user:
+                    extended_user=ExtendedUser.objects.get(user=user)
+                    context = {
+                        'user': user,
+                        'order': order,
+                        'order_items': order_items,
+                        'regions': regions,
+                        'countries' : countries,
+                        'extended_user': extended_user,
+                    }
+                    return render(request, 'cart/order_page.html', context)
+                else:
+                    auth.logout(request)
+                    return redirect("login")
             else:
                 context = {
                     'countries': countries,
@@ -441,22 +458,30 @@ def sdek_office_choice(request, order_id):
     else:
         countries=['Россия', 'Казахстан', 'Белоруссия']
         if request.user.is_authenticated:
-            context = {
-                'order': order,
-                'order_items': order_items,
-                'countries' : countries,
-                'f_name': order.user.first_name,
-                'l_name': order.user.last_name,
-                'email': order.user.email,
-            }
-            return render(request, 'cart/order_page_final.html', context)
+            user=User.objects.get(id=request.user.id)
+            if order.user==user:
+                extended_user=ExtendedUser.objects.get(user=user)
+                context = {
+                    'user': user,
+                    'order': order,
+                    'order_items': order_items,
+                    'countries' : countries,
+                    'extended_user': extended_user,
+                    
+                }
+                # return render(request, 'cart/order_page_final.html', context)
+                return render(request, 'cart/order_page.html', context)
+            else:
+                auth.logout(request)
+                return redirect("login")
         else:
             context = {
                 'order': order,
                 'order_items': order_items,
                 'countries' : countries,
             }
-            return render(request, 'cart/order_page_final.html', context)
+            # return render(request, 'cart/order_page_final.html', context)
+            return render(request, 'cart/order_page.html', context)
 
 #======================================================
 def create_sdek_shipment (request, order_id):

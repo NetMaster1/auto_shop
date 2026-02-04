@@ -5,6 +5,7 @@ import pandas
 import time
 from .models import Product, DocumentType, RemainderHistory, Report, Identifier, ProductCategory
 from app_reference.models import AutoBrand, AutoModel, AutoModification
+from app_reviews.models import Review
 import datetime
 import pytz
 from django.contrib import messages
@@ -13,11 +14,18 @@ from django.http import HttpResponse, JsonResponse
 
 def product_page(request, article):
     product = Product.objects.get(article=article)
-  
-    context = {
-        'product': product,
-    }
-    return render(request, 'product_page.html', context)
+    if Review.objects.filter(product=product).exists():
+        reviews=Review.objects.filter(product=product).order_by('-date_posted')
+        context = {
+            'product': product,
+            'reviews': reviews,
+        }
+        return render(request, 'product_page.html', context)
+    else:
+        context = {
+            'product': product,
+        }
+        return render(request, 'product_page.html', context)
 
 def dashboard(request):
     if request.user.is_authenticated:
