@@ -29,7 +29,7 @@ from decimal import Decimal
 #     return cart
 #==================================
 
-def add_cart(request, id):
+def add_cart(request, product_id):
     product=Product.objects.get(id=id)
     if request.user.is_authenticated:
         user=User.objects.get(id=request.user.id)

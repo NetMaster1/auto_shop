@@ -60,7 +60,8 @@
         {% for cart_item in cart_items %}
           <div class="row m-auto mt-1 mb-3 ff2" >
               <div class="col-sm-1 flex justify-content-end" >
-                <a href="{{cart_item.get_url}}">
+                <!-- <a href="{{cart_item.get_url}}"> -->
+                <a href="{% url 'product_page' cart_item.article %}">
                   <img src="{{cart_item.image.url}}" width="50" alt="" >
                 </a>
               </div>

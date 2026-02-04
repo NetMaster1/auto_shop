@@ -3,6 +3,7 @@ import requests
 from app_reference.models import SDEK_Office, SDEK_City
 from app_purchase.models import Order, OrderItem
 from app_account.models import ExtendedUser
+from app_product.models import Product
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
 import time
@@ -184,9 +185,9 @@ def get_list_of_sdek_tariffs(request):
         print(i)
 
 #========================================================
-
 #tariffs   
-def get_sdek_delivery_cost(request):
+def get_sdek_delivery_cost(request, product_id):
+    product=Product.objects.get(id=product_id)
     if request.method == 'POST':
         shipment_city=request.POST["shipment_city"]
         shipment_region=request.POST["shipment_region"]
@@ -247,6 +248,7 @@ def get_sdek_delivery_cost(request):
         # delivery_cost= int(delivery_sum)
         
         context = {
+            'product': product,
             'delivery_cost': delivery_cost,
             'shipment_city' : shipment_city,
             # 'order': order,
@@ -254,7 +256,10 @@ def get_sdek_delivery_cost(request):
         return render (request, 'delivery/delivery_cost.html' , context)
 
 #======================================================
-def delivery_city_choice(request):
+#ЭТА ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ СПРАВОЧНОЙ ИНФОРМАЦИИ ПО СТОИМОСТИ ДОСТАВКИ
+#В РАЗНЫЕ ГОРОДА (ИСПОЛЬЗУЕТСЯ СО СТРАНИЫЦ PRODUCT_PAGE)
+def delivery_city_choice(request, product_id):
+    product=Product.objects.get(id=product_id)
     if request.method=="POST":
         country=request.POST.get('country', False)
         region=request.POST.get('region', False)
@@ -273,6 +278,7 @@ def delivery_city_choice(request):
             cities=SDEK_Office.objects.filter(region=region)
             cities=cities.distinct('city')
             context = {
+                'product': product,
                 'countries': countries,
                 'regions': regions,
                 'cities': cities
@@ -293,6 +299,7 @@ def delivery_city_choice(request):
             regions=regions.distinct('region')
           
             context = {
+                'product': product,
                 'countries': countries,
                 'regions': regions,
                 #'cities': cities,
@@ -303,10 +310,13 @@ def delivery_city_choice(request):
         countries=['Россия', 'Казахстан', 'Белоруссия']
         # sdek_offices=SDEK_Office.objects.filter(country_code__in=['KZ', 'RU', 'BY']).order_by('-country_code')
         context = {
+            'product': product,
             'countries': countries,
         }
         return render (request, 'delivery/delivery_city_choice.html', context )
 
+#ЭТА ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ФИНАЛЬНОГО ЗАКАЗА СО СТОИМОСТЬЮ ДОСТАВКИ
+#ИСПОЛЬЗУЕТСЯ СО СТРАНИЦЫ ORDER_PAGE
 #функция, которая сначала подставляет СТРАНУ, потом РЕГИОН, потом ГОРОД
 #основная для выбора пункта доставки
 #использует таблицу app.reference SDEK_Office
