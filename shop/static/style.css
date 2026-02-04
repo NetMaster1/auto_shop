@@ -70,8 +70,6 @@ font-weight: 900;
   display: none;
 }
 .outer_modal_contacts.openModal {
-  text-align: center;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -79,17 +77,14 @@ font-weight: 900;
   height: 100%;
   display: block;
   z-index: 9999;
-  align-items: center;
 }
 .enterContactModal {
-    padding: 2rem;
+    padding: 3rem;
     background-color: white;
-    width: 30rem;
-    height: 15rem;
-    display: inline-block;
-    position: relative;
-    top: 15rem;
-    /* left: 50rem;   */
+    width: 30vw;
+    height: 40vh;
+    display: block;
+    position: absolute;
 }
 /* ===================== Delivery Modal========================= */
 .outer_modal_delivery {
@@ -114,6 +109,28 @@ font-weight: 900;
     top: 15rem;
     left: 50rem;  
 }
+/* ===================== Rules Modal========================= */
+.outer_modal_rules {
+  display: none;
+}
+.outer_modal_rules.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.rulesModal {
+    padding: 3rem;
+    background-color: white;
+    width: 50vw;
+    height: 70vh;
+    display: block;
+    position: absolute;
+    /* overflow-y: scroll; */
+}
 
 /* ===================== Register Modal========================= */
 .outer_modal_register {
@@ -131,12 +148,10 @@ font-weight: 900;
 .enterRegisterModal {
     padding: 3rem;
     background-color: white;
-    width: 50rem;
-    height: 30rem;
+    width: 30vw;
+    height: 63vh;
     display: block;
-    position: fixed;
-    top: 15rem;
-    left: 50rem;  
+    position: absolute;
 }
 /* ===================== Login Modal========================= */
 .outer_modal_login {
@@ -154,12 +169,20 @@ font-weight: 900;
 .enterLoginModal {
     padding: 3rem;
     background-color: white;
-    width: 50rem;
-    height: 30rem;
+    width: 40vw;
+    height: 50vh;
     display: block;
-    position: fixed;
-    top: 15rem;
-    left: 50rem;  
+    position: absolute;
+}
+
+/* ======================Change Password Module========= */
+.changePassword {
+    padding: 3rem;
+    background-color: white;
+    width: 40vw;
+    height: 55vh;
+    display: block;
+    position: absolute;
 }
 /* ===================== Review Modal========================= */
 
@@ -167,7 +190,7 @@ font-weight: 900;
   display: none;
 }
 .outer_modal_review.openModal {
-  position: fixed;
+ position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -178,12 +201,25 @@ font-weight: 900;
 .reviewModal {
     padding: 3rem;
     background-color: white;
-    width: 50rem;
-    height: 30rem;
+    width: 50vw;
+    height: 55vh;
     display: block;
-    position: fixed;
-    top: 15rem;
-    left: 50rem;  
+    position: absolute
+}
+/* =======================Hide======================================== */
+.hide {
+    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: scroll;
+    opacity: 100%;
 }
 /* ===================== Reviews List Modal========================= */
 .review_list_modal {
@@ -199,14 +235,13 @@ font-weight: 900;
   z-index: 9999;
 }
 .reviewListModal {
+    border-radius: 7px 7px 7px 7px;
     padding: 3rem;
     background-color: white;
-    width: 50rem;
-    height: 30rem;
+    width: 50vw;
+    height: 70vh;
     display: block;
-    position: fixed;
-    top: 15rem;
-    left: 50rem;  
+    overflow-y: scroll;
 }
 /* ===================== End of Reviews List Modal========================= */
 /* ===================== Product Desription Modal========================= */
@@ -225,17 +260,11 @@ font-weight: 900;
 .productDescriptionModal {
     padding: 3rem;
     background-color: white;
-    width: 50rem;
-    height: 30rem;
+    width: 50vw;
+    height: 70vh;
     display: block;
-    position: fixed;
-    top: 15rem;
-    left: 50rem;  
 }
 /* ===================== End of Product Description Modal========================= */
-
-
-
 
 .change_pass_window {
   position: fixed;
@@ -262,12 +291,10 @@ font-weight: 900;
 .sdek_phone_modal {
     padding: 3rem;
     background-color: white;
-    width: 30rem;
-    height: 15rem;
+    width: 30vw;
+    height: 30vh;
     display: block;
-    position: fixed;
-    top: 15rem;
-    left: 50rem;  
+    position:absolute;
 } 
 /* ===================== End of Sdek Phone Modal========================= */
 
@@ -287,12 +314,10 @@ font-weight: 900;
 .ozon_phone_modal {
     padding: 3rem;
     background-color: white;
-    width: 30rem;
-    height: 15rem;
+    width: 30vw;
+    height: 30vh;
     display: block;
-    position: fixed;
-    top: 15rem;
-    left: 50rem;  
+    position:absolute;
 } 
 /* ===================== End of Ozon Phone Modal========================= */
 
@@ -300,38 +325,26 @@ font-weight: 900;
 .message_window {
  z-index: 9999;
 }
-
-.hide {
-    /* display: flex;
-    justify-content: center; */
-    display: block;
-    /* display: none; */
-    /* position: fixed; */
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /*background-color: red;*/
-    overflow-y: scroll;
-    opacity: 100%;
-    /*visibility: visible;*/
-    /*visibility: hidden;*/   
-}
-
 .cross {
   margin: 1rem;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 0px;
+  right: 0px;
 }
-
 .cross:hover {
   /* opacity: 2; */
   transform: scale(1.1);
- 
 }
+/* ======================================== */
+.cross_review {
+  position: absolute;
+  margin: 1rem;
+  top: 5vh;
+}
+.cross_review:hover {
+   transform: scale(1.1);
+}
+
 /*==========================Displaying Rating Stars=====================*/
 .stars-outer {
   position: relative;
@@ -389,7 +402,6 @@ font-weight: 900;
   background-color: rgb(204, 212, 214);
   border-radius: 1vmax;
   font-weight: bold;
-
 }
 
 .box_city_choice {
@@ -406,7 +418,7 @@ font-weight: 900;
   justify-content: center; */
 }
 
-/* ============================Button ========================================= */
+/* ============================Payment Button ========================================= */
 a.boxShadow4 {
 display: inline-block;
 text-align: center;

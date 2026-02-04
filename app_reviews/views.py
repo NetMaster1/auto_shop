@@ -44,6 +44,8 @@ def create_product_review (request, user_id):
                 content=review,
                 rating=rating
                 )
+            review.caclulate_percent()
+            review.save()
             reviews=Review.objects.filter(product=product) 
             number_of_reviews=len(reviews)
             print(f'Number of reviews:  {number_of_reviews}')

@@ -28,7 +28,7 @@
 
 
   <div class="accordion" id="accordionExample">
-
+<!-- ==============================Name============================ -->
     <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-
+<!-- ===============================Email=========== -->
     <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -63,6 +63,7 @@
       </div>
     </div>
 
+<!-- ==============================Password=============== -->
     <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -86,6 +87,7 @@
         </div>
     </div>
 
+<!-- ============================Purchases & Reviews============================== -->
     <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
@@ -101,7 +103,6 @@
             {% for order in orders %}
             Заказ# {{order.id}} от {{order.created}}
               <br>
-
               {% for item in order.orderitem_set.all %}
                   <div class="row ml-5 pl-5">
 <!-- ============================Review Modal Trigger========================== -->
@@ -111,8 +112,8 @@
     <div class="outer_modal_review">
       <div class="hide">
         <div class="reviewModal rounded-5">
-          <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_review_window">
-            
+           <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross"  id="cross_review_window">
+     
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="row">
@@ -125,11 +126,6 @@
                    {{item.product}}
                 </div>
               </div>
-              <!-- <div class="row mt-4">
-                <div class="stars-outer">
-                   <div class="stars-inner" style="width: {{product.percent}}"></div>
-                </div>
-              </div> -->
               <div class="row mt-3">
                 <div class="col-1">
                   <i class="fa-regular fa-star star"></i>
@@ -169,10 +165,9 @@
             </div>
           </div>
         </div>
-    </div>
+      </div>
     </div>
     <!-- =========================End of Review Modal=========================== -->
-<br>
 <br>
                 {% endfor %}
             {% endfor %}
@@ -181,7 +176,7 @@
           </div>
         </div>
     </div>
-
+  <!-- ========================Cart===================== -->
     <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
@@ -194,7 +189,7 @@
           </div>
         </div>
     </div>
-
+  <!-- =======================Phone======================== -->
     <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
@@ -221,7 +216,7 @@
          <div class="sdek_phone_outer_modal">
           <div class="hide">   
             <div class="sdek_phone_modal rounded-5">
-              <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_sdek_window">         
+              <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_sdek_window">         
               <div class="modal-dialog">
                 <div class="modal-content">        
                 <form action="{% url 'create_sdek_phone' user.id %}" method='POST'>
@@ -260,7 +255,7 @@
          <div class="ozon_phone_outer_modal">
           <div class="hide">   
             <div class="ozon_phone_modal rounded-5">
-              <img src="{% static 'images/cross.jpg' %}" style="width:3rem;height:3rem;" class="cross" id="cross_ozon_window">         
+              <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_ozon_window">         
               <div class="modal-dialog">
                 <div class="modal-content">        
                 <form action="{% url 'create_ozon_phone' user.id %}" method='POST'>
@@ -337,23 +332,20 @@ const change_ozon_phone_button = document.querySelector('#change_ozon_phone_butt
 const ozon_phone_outer_modal = document.querySelector('.ozon_phone_outer_modal')
 const cross_ozon_window =document.querySelector('#cross_ozon_window');
 const review_window=document.querySelectorAll('#review_window');
+//============================================================
 const outer_modal_review =document.querySelectorAll('.outer_modal_review');
 const cross_review_window =document.querySelectorAll('#cross_review_window');
 
 
-// for (let i=0; i<review_window.length; i++) {
-//   review_window[i].addEventListener('click', openReviewModal)
-// }
-// function openReviewModal (){
-//     outer_modal_review.classList.add('openModal')
-// }
-// function closeReviewModule () {
-//           outer_modal_review.classList.remove('openModal')
-//   }
 
 for (let i=0; i<review_window.length; i++) {
   review_window[i].addEventListener('click', (e)=> {
     outer_modal_review[i].classList.add('openModal')
+})
+}
+for (let i=0; i<cross_review_window.length; i++) {
+  cross_review_window[i].addEventListener('click', (e)=> {
+    outer_modal_review[i].classList.remove('openModal')
 })
 }
 

@@ -15,42 +15,34 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item delivery_trigger">
+        <!-- =======================Rules Modal Trigger===================== -->
+        <li class="nav-item rules_trigger">
           <a class="nav-link active rounded-2" aria-current="page" href="#">Правила</a>
         </li>
-         <!-- ===========================Delivery Modal Body================================= -->
-            <div class="outer_modal_delivery">
+         <!-- ===========================Rules Modal Body================================= -->
+            <div class="outer_modal_rules ff2">
               <div class="hide">
-                <div class="enterDeliveryModal rounded-5">
+                <div class="rulesModal rounded-5">
                  <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_rules">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel">
+                              <h5 >
                                 <strong>Правила </strong>
-                                <br>
-                                <div class="ff2">
-                                <p>
+                                <br><br>
                                 Осуществляя покупку в нашем интернет магазине, покупатель соглашается с данными Правилами.
                                 В соответствии с данными Правилами доставка товара осуществляется после его оплаты. Доставка осуществляется
                                 в пункт выдачи СДЕК, указанный покупателем, на ФИО, указанное покупателем при оформлении заказа.
                                 Стоимость доставки включена в стоимость заказа. Стоимость доставки можно узнать перед оформлением заказа при указании пункта выдачи СДЕК.
-                                </p>
-                                <p>
+                              <br><br>
                                 Продавец гарантирует возврат денежных средст в случае поломки товара в процессе транспортировки.
                                 Возврат денежных средств осуществляется в течение 5 дней с момента подтверждения поломки товара. 
                                 Подтверждением поломки товара в процессе транспортировки может служить фотография поломанного товара 
                                 в пункте выдачи СДЕК, сделанная покупателем при получении товара и его проверке.
-                                </p>
-                                <p>
+                               <br><br>
                                 Транспортировка товара осуществляется в коробках, изготовленных из пятислойного картона марки П32.
-                                </p>
-                                <p>
+                              <br><br>
                                   В остальном взаимодействие между покупателем и продавцом регулируетя Законом РФ о Защите прав потребителей.
-                                </p>
-                                
-                                
-                                </div>
                               </h5>
                             </div>
                         </div>
@@ -71,20 +63,18 @@
                  <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;"  class='cross' id="cross_contacts" >
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <div class="modal-header">
                             
-                              
-                                <h5 class="modal-title" style="text-align: left;" id="exampleModalLabel">
-                                  e-mail: support@auto-deflector.ru <br>
-                                  <br>
-                                  Реквизиты: ИП Винокуров Сергей Николаевич <br>
-                                  ИНН 526013223435 <br>
-                                  ОГРНИП 322527500137506
-                                  ООО «Банк Точка» <br>
-                                  БИК 044525104 <br>
-                                  р.с.40802810420000006198
-                                </h5>
-                    </div>
+                              <h5 style="text-align: left;" >
+                                e-mail: support@auto-deflector.ru <br>
+                                <br>
+                                Реквизиты: ИП Винокуров Сергей Николаевич <br>
+                                ИНН 526013223435 <br>
+                                ОГРНИП 322527500137506
+                                ООО «Банк Точка» <br>
+                                БИК 044525104 <br>
+                                р.с.40802810420000006198
+                              </h5>
+                 
                   </div>
               </div>
               </div>
@@ -151,9 +141,7 @@
       <div class="row mt-5">
       <a href="{% url 'password_recovery_page' %}" id="password_restore_link">Забыли пароль?</a>
       </div>
-
       </div>
-
     </div>
     </div>
     <!-- =========================End of Login Modal=========================== -->
@@ -175,22 +163,15 @@
                     <label for="first_name" class="text-black">Имя</label>
                     <input type="text" name="first_name" class="form-control" required>
                 </div>
-
-
                 <div class="form-group">
                     <label for="last_name" class="text-black">Фамилия</label>
                     <input type="text" name="last_name" class="form-control" required>
                 </div>
-                <!-- <div class="form-group">
-                    <label for="username" class="text-black">Логин</label>
-                    <input type="text" name="username" class="form-control" required>
-                </div> -->
                 <div class="form-group">
                     <label for="email" class="text-black">Электронная почта</label>
                     <input type="email" name="email" class="form-control" required autocomplete="off"  >
                 </div>
 
-                
                 <div class="form-group">
                     <label for="password" class="text-black">Пароль</label>
                     <input type="password" name="password" class="form-control" required autocomplete="off">
@@ -199,10 +180,11 @@
                     <label for="password2" class="text-black">Подтверждение пароля</label>
                     <input type="password" name="password2" class="form-control" required>
                 </div>
-                <br>
               
-                    <!-- <input type="submit" value="Submit" class="btn btn-info btn-block"> -->
-                    <input type="submit" value="Отправить" class="btn btn-outline-dark btn-block">
+                    <div class="row p-3">
+                      <input type="submit" value="Отправить" class="btn btn-outline-primary btn-block">
+                    </div>
+                 
                 
                 
             </form>
@@ -227,8 +209,8 @@
 <script>
   const outer_modal_contacts =document.querySelector('.outer_modal_contacts');
   const contact_trigger =document.querySelector('.contact_trigger');
-  const outer_modal_delivery =document.querySelector('.outer_modal_delivery');
-  const delivery_trigger =document.querySelector('.delivery_trigger');
+  const outer_modal_rules =document.querySelector('.outer_modal_rules');
+  const rules_trigger =document.querySelector('.rules_trigger');
   const outer_modal_register =document.querySelector('.outer_modal_register');
   const register_trigger =document.querySelector('.register_trigger');
   const register_form =document.querySelector('#register_form');
@@ -245,14 +227,14 @@
 
   
 
-  delivery_trigger.addEventListener('click', openDeliveryModal)
-  cross_rules.addEventListener('click', closeDeliveryModal)
+  rules_trigger.addEventListener('click', openRulesModal)
+  cross_rules.addEventListener('click', closeRulesModal)
 
-  function openDeliveryModal () {
-          outer_modal_delivery.classList.add('openModal')
+  function openRulesModal () {
+          outer_modal_rules.classList.add('openModal')
       }
-  function closeDeliveryModal () {
-          outer_modal_delivery.classList.remove('openModal')
+  function closeRulesModal () {
+          outer_modal_rules.classList.remove('openModal')
   }
 
   contact_trigger.addEventListener('click', openModal)

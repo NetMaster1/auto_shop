@@ -43,7 +43,7 @@
                 <div class="row pl-5">
                     <div class="col">
                         <strong>Рейтинг: </strong>
-                        {{product.av_rating}}
+                          {{product.av_rating}}
                     </div>
                 </div>
                 <div class="row pl-5">
@@ -51,6 +51,7 @@
                         <div class="stars-outer">
                             <div class="stars-inner" style="width: {{product.percent}}"></div>
                         </div>
+
                     </div>
                 </div>
                 <div class="row pl-5">
@@ -66,21 +67,30 @@
                 </div>
 <!-- =====================End of Product Description Modal Trigger========= -->
 <!-- =====================Product Description Modal========= -->
-                    <div class="product_description_modal">
-                        <div class="hide">
-                            <div class="productDescriptionModal rounded-5">
-                                <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_description_modal">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="row">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto iste dolore magnam consequatur, porro tenetur adipisci praesentium reiciendis, molestias ullam quasi reprehenderit aliquam sapiente! Eius nostrum non sint, obcaecati perspiciatis culpa officia vitae enim quisquam incidunt magni pariatur dolorem ab quibusdam? Illo eaque itaque et explicabo vel, minus voluptatum! Nulla?
-                                    
-                                        </div>    
-                                    </div>
+                <div class="product_description_modal">
+                    <div class="hide">
+                        <div class="productDescriptionModal rounded-5">
+                            <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_description_modal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="row ff2">
+                    
+                            Дефлектор капота (мухобойка) разработан специально для {{product.auto_model}}, выполнен из гибкого оргстекла, представляет собой тонкую, просчитанную пластину.
+                            <br><br>
+                            Устанавливается на капот при помощи креплений, которые идут в комплекте, в штатные места в усилителе капота вашего автомобиля.
+                            Расстояние между капотом и дефлектором примерно равно 1 см, оно продувается и промывается на мойке.
+                            <br><br>
+                            Дефлектор защищает фронтальную часть капота от повреждений и царапин. Он отражает камни и песок от впереди идущих машин, сохраняя лакокрасочное покрытие капота целым. Также дефлектор изменяет воздушный поток, уменьшает загрязнение лобового стекла и щёток стеклоочистителя.
+                            В быту дефлектор капота еще называют отбойник или мухобойка, так как помимо камешков он отражает и летящих навстречу машине насекомых.
+                            <br><br>
+                            Цвет дефлектора капота тёмный, тонированный до 20%, на машине он будет выглядеть полностью чёрным. Дефлектор - это не только функциональный атрибут, но и стильный элемент тюнинга, который выгодно выделит на фоне других ваше авто.
+                       
+                                    </div>    
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 <!-- =====================End of Product Description Modal========= -->
 
 <!-- =====================Reviews Modal Trigger==================== -->
@@ -90,36 +100,49 @@
                     </div>
                 </div>
 <!-- =======================End of Reviews Modal Trigger============ -->
-            <!-- ===============================Review Modal===================================== -->
-                    <div class="review_list_modal">
-                        <div class="hide">
-                        <div class="reviewListModal rounded-5">
-                            <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_reviews_list_modal">
-                            
-                            <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="row">
-                                <div class="col-2">
-                                    <a href="{{item.get_url}}">
-                                    <img src="{{item.image.url}}" width="50" alt="" >
-                                </a>
-                                </div>
-                                <div class="col-10">
-                                    {{item.product}}
-                                </div>
-                                </div>
-                                                <div class="row pl-5">
-                                        <div class="col">
-                                            <div class="stars-outer">
-                                                <div class="stars-inner" style="width: {{product.percent}}"></div>
+<!-- ===============================Review Modal===================================== -->
+                <div class="review_list_modal">
+                    <div class="hide">
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="reviewListModal">
+                                    <!-- <div class="reviewListModal rounded-5"> -->
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="row">
+                                                    {% if reviews %}
+                                                        {% for review in reviews %}
+
+                                                            <div style="color: blue; font-weight: 500;">
+                                                                {{review.date_posted}}
+                                                            </div>
+                                                                {{review.content}}
+                                                            <div class="row pl-5">
+                                                                <div class="col">
+                                                                    <div class="stars-outer" >
+                                                                        <div class="stars-inner" style="width: {{review.percent}}"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}    
+
+                                                    {% else%}
+                                                        Отзывы пока отсутвуют
+                                                    {% endif %}
+                                                </div>
+                                    
                                             </div>
                                         </div>
                                     </div>
                             </div>
+                            <div class="col"> 
+                               <img src="{% static 'images/cross_edited.png' %}" style="width:2rem;height:2rem;" class="cross_review" id="cross_reviews_list_modal">
                             </div>
                         </div>
+                       
                     </div>
-                    </div>
+                </div>
             <!-- =========================End of Review List Modal=========================== -->
             </div>
         </div>
