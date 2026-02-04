@@ -263,6 +263,7 @@ font-weight: 900;
     width: 50vw;
     height: 70vh;
     display: block;
+    position: absolute;
 }
 /* ===================== End of Product Description Modal========================= */
 
