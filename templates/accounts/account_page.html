@@ -373,6 +373,7 @@ function openOzonPhoneModule () {
 const stars =document.querySelectorAll('.star');
 const rating =document.querySelector('#rating');//form input element
 
+
 for (let i=0; i<stars.length; i++) {
   stars[i].addEventListener('click', (e)=> {
     //кроме того, я думаю, можно передать параметр (оценку) через data-attribute,
@@ -393,6 +394,36 @@ for (let i=0; i<stars.length; i++) {
 }
 })
 }
+
+for (let i=0; i<stars.length; i++) {
+  stars[i].addEventListener('mouseover', (e)=> {
+    //кроме того, я думаю, можно передать параметр (оценку) через data-attribute,
+    //если заранее в HTML коде каждой зведе прописать свой data-grade='5' (от 1 до 5)
+    //насколько я понимаю, data-attribute представляет собой sting. Но впоследствии можно через 
+    //функцию Number() преобразовать его в число
+    stars[i].starValue = (i + 1);
+    rating.value=i+1
+    console.log(stars[i].starValue);
+    console.log(rating.value);
+    for (let n=0; n<stars.length; n++) {
+      if (n<=i) {
+        stars[n].classList.add('orange')
+      }
+      else {
+        stars[n].classList.remove('orange')
+      }    
+}
+})
+}
+
+// for (let i=0; i<stars.length; i++) {
+//   stars[i].addEventListener('mouseout', (e)=> {
+//     for (let n=0; n<stars.length; n++) {
+//         stars[n].classList.remove('orange')
+//       }    
+// })}
+
+
 //====================End of Star Rating======================================
 
 
