@@ -108,38 +108,36 @@
                             <div class="col"></div>
                             <div class="col">
                                 <div class="reviewListModal">
-                                    <!-- <div class="reviewListModal rounded-5"> -->
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="row">
-                                                    {% if reviews %}
-                                                        {% for review in reviews %}
-                                                            <div style="color: blue; font-weight: 500;">
-                                                                {{review.date_posted}}
-                                                            </div>
-                                                                {{review.content}}
-                                                            <div class="row pl-5">
-                                                                <div class="col">
-                                                                    <div class="stars-outer" >
-                                                                        <div class="stars-inner" style="width: {{review.percent}}"></div>
-                                                                    </div>
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="row">
+                                                {% if reviews %}
+                                                    {% for review in reviews %}
+                                                        <div style="color: blue; font-weight: 500;">
+                                                            {{review.date_posted}}
+                                                        </div>
+                                                            {{review.content}}
+                                                        <div class="row pl-5">
+                                                            <div class="col">
+                                                                <div class="stars-outer" >
+                                                                    <div class="stars-inner" style="width: {{review.percent}}"></div>
                                                                 </div>
                                                             </div>
-                                                        {% endfor %}    
-                                              
-                                                    {% else%}
-                                                    Отзывы пока отсутвуют
-                                                    {% endif %}
-                                                </div>     
-                                            </div>
+                                                        </div>
+                                                    {% endfor %}    
+                                            
+                                                {% else%}
+                                                Отзывы пока отсутвуют
+                                                {% endif %}
+                                            </div>     
                                         </div>
                                     </div>
+                                </div>
                             </div>
                             <div class="col"> 
                                <img src="{% static 'images/cross_edited.png' %}" style="width:2rem;height:2rem;" class="cross_review" id="cross_reviews_list_modal">
                             </div>
                         </div>
-                       
                     </div>
                 </div>
             <!-- =========================End of Review List Modal=========================== -->
