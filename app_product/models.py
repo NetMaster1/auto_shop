@@ -39,6 +39,8 @@ class Product (models.Model):
     length = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
     width = models.IntegerField(null=True, blank=True)
+    manufacturer = models.CharField(max_length=50,  null=True, blank=True)
+    place_of_manufacture = models.CharField(max_length=50, null=True, blank=True)
     #=================rating module================
     percent = models.CharField(max_length=50, default='0%')
     total = models.IntegerField(default=0)  # Общее число баллов
