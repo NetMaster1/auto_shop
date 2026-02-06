@@ -208,7 +208,6 @@ font-weight: 900;
 }
 /* =======================Hide======================================== */
 .hide {
-    display: block;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -322,6 +321,45 @@ font-weight: 900;
 } 
 /* ===================== End of Ozon Phone Modal========================= */
 
+.box_city_choice_outer_modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.box_city_choice {
+    padding: 2rem;
+    background-color: white;
+    width: 30vw;
+    height: 45vh;
+    display: block;
+    position:absolute;
+}
+/* ============================================================= */
+.delivery_cost_outer_modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.deliveryCostModal {
+    padding: 2rem;
+    background-color: white;
+    width: 50vw;
+    height: 30vh;
+    display: block;
+    position:absolute;
+    text-align: center;
+    font-size: large;
+}
+
+
 
 .message_window {
  z-index: 9999;
@@ -403,20 +441,6 @@ font-weight: 900;
   background-color: rgb(204, 212, 214);
   border-radius: 1vmax;
   font-weight: bold;
-}
-
-.box_city_choice {
-  background-color: white;
-  border-radius: 1vmax;
-  padding:1rem;
-  position: absolute;
-  /* position: relative; */
-  top: 15rem;
-  left: 30rem;
-  display: block;
-  z-index: 1;
-  /* align-items: center;
-  justify-content: center; */
 }
 
 /* ============================Payment Button ========================================= */
