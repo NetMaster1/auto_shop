@@ -17,10 +17,12 @@ class AutoModificationAdmin(admin.ModelAdmin):
     search_fields = ('ozon_attribute_id', 'ozon_attribute_value', 'ozon_attribute_info' )
     ordering = ('-ozon_attribute_value',)
     list_per_page=200
+    
+# ==========================================Sdek=========
 
 class SDEK_OfficeAdmin(admin.ModelAdmin):
-    list_display = ('country_code', 'code', 'type', 'address_full', 'city', 'city_code',)
-    search_fields = ('address_full', 'country_code', 'city', 'code', 'country_code')
+    list_display = ('country_code', 'code', 'type', 'address_full', 'city', 'city_code', 'region')
+    search_fields = ('address_full', 'country_code', 'city', 'code', 'country_code', 'region')
     ordering = ('-address_full',)
     list_per_page=100
 

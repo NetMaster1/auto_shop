@@ -12,10 +12,13 @@
         <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" >
       </a>
 
-      <div class="row m-auto">
-        <strong>
-            Стоимость доставки до пункта выдачи СДЕК в городе/поселке {{shipment_city}} составит {{delivery_cost}} руб.
-        </strong>
+      <div class="row m-auto ff2">
+            Стоимость доставки до пункта выдачи СДЕК в городе/поселке {{shipment_city}} составит:
+      </div>
+<br><br>
+      <div class="row m-auto ff2_200" style="color: blue;">
+<div style="text-align: cernter;"> {{delivery_cost}} руб.</div>
+       
       </div>
     </div>
   </div>

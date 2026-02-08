@@ -39,9 +39,7 @@ def get_list_of_sdek_offices (request):
     country_codes=['RU', 'KZ', 'BY']
     for i in json:
         for c in country_codes:
-            # if i['location']['country_code']==c and i['type']=='PVZ' and i['is_handout']==True:
             if i['location']['country_code']==c and i['type']=='PVZ' and i['is_handout']==True:
-                # if i['type']=='PVZ' and i['is_handout']==True:
                 office_codes.append(i['code'])
                 print('===========================')
                 print(i)
@@ -115,19 +113,20 @@ def get_list_of_sdek_cities(request):
             longitude=i['longitude'],
             latitude=i['latitude'],
             country_code=i['country_code'],
-        city_items=SDEK_City.objects.create(
-            code=i['code'],
-            name=i['city'],
-            region=i['region'],
-            city_uuid=i['city_uuid'],
-            longitude=i['longitude'],
-            latitude=i['latitude'],
-            country_code=i['country_code'],
-        )
+            city.save()
+        else:
+            city=SDEK_City.objects.create(
+                code=i['code'],
+                name=i['city'],
+                region=i['region'],
+                city_uuid=i['city_uuid'],
+                longitude=i['longitude'],
+                latitude=i['latitude'],
+                country_code=i['country_code'],
+            )
+        print('===============================')
         print(i)
-        print()
-   
-
+                
     return redirect ('shopfront')
 
 def get_list_of_sdek_locations(request):
@@ -185,7 +184,9 @@ def get_list_of_sdek_tariffs(request):
         print(i)
 
 #========================================================
-#tariffs   
+#tariffs
+#Эта функция исползуется для определения стоимости доставки со страницы product_page.html
+#Финальный расчет стоимости доставки для создания заказа происходит в функции app_purchase def create_final_purchase_order
 def get_sdek_delivery_cost(request, product_id):
     product=Product.objects.get(id=product_id)
     if request.method == 'POST':
@@ -193,7 +194,10 @@ def get_sdek_delivery_cost(request, product_id):
         shipment_region=request.POST["shipment_region"]
         print('======================================')
         print(shipment_region, shipment_city)
-        city=SDEK_City.objects.get(name=shipment_city, region=shipment_region)
+        cities=SDEK_Office.objects.filter(city=shipment_city, region=shipment_region, type='PVZ')
+        #city=SDEK_City.objects.get(name=shipment_city, region=shipment_region)
+        city=cities[0]
+        print(city.city)
 
         #getting valid bearer token
         url="https://api.cdek.ru/v2/oauth/token"
@@ -219,7 +223,7 @@ def get_sdek_delivery_cost(request, product_id):
                         'contragent_type': 'LEGAL_ENTITY'
                         },
                     "to_location" : {
-                        'code' : city.code,
+                        'code' : city.city_code,
                         'contragent_type': 'INDIVIDUAL',
                         },
                     "packages": [
@@ -258,6 +262,9 @@ def get_sdek_delivery_cost(request, product_id):
 #======================================================
 #ЭТА ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ СПРАВОЧНОЙ ИНФОРМАЦИИ ПО СТОИМОСТИ ДОСТАВКИ
 #В РАЗНЫЕ ГОРОДА (ИСПОЛЬЗУЕТСЯ СО СТРАНИЫЦ PRODUCT_PAGE)
+#функция, которая сначала подставляет СТРАНУ, потом РЕГИОН, потом ГОРОД
+#использует таблицу app_reference SDEK_Office
+#по какой-то причине данные в таблице SDEK_City и SDKE_Office не совпадают (города). Все данные приходят с API SDEK
 def delivery_city_choice(request, product_id):
     product=Product.objects.get(id=product_id)
     if request.method=="POST":
@@ -273,14 +280,18 @@ def delivery_city_choice(request, product_id):
                 country_code='KZ'
             else:
                 country_code="BY"
-            regions=SDEK_Office.objects.filter(country_code=country_code)
-            regions=regions.distinct('region')
-            cities=SDEK_Office.objects.filter(region=region)
-            cities=cities.distinct('city')
+            #picks all SDEK_offices within a country
+            offices_in_country=SDEK_Office.objects.filter(country_code=country_code, type='PVZ').order_by('region')
+            #отсекает дубликаты офисов, выбранных на предыдущем шаге. По полю "sdek_office.region"
+            regions=offices_in_country.distinct('region')
+            #picks all SDEK_offices within the region indicated in the post form
+            cities=SDEK_Office.objects.filter(region=region, type='PVZ')
+            #отсекает дубликаты офисов, выбранных на предыдущем шаге
+            cities=cities.distinct('city').order_by('city')
             context = {
                 'product': product,
                 'countries': countries,
-                'regions': regions,
+                'regions': offices_in_country,
                 'cities': cities
             }
             
@@ -295,9 +306,8 @@ def delivery_city_choice(request, product_id):
             else:
                 country_code="BY"
             
-            regions=SDEK_Office.objects.filter(country_code=country_code)
+            regions=SDEK_Office.objects.filter(country_code=country_code, type='PVZ')
             regions=regions.distinct('region')
-          
             context = {
                 'product': product,
                 'countries': countries,
@@ -320,6 +330,7 @@ def delivery_city_choice(request, product_id):
 #функция, которая сначала подставляет СТРАНУ, потом РЕГИОН, потом ГОРОД
 #основная для выбора пункта доставки
 #использует таблицу app.reference SDEK_Office
+#по какой-то причине данные в таблице SDEK_City и SDKE_Office не совпадают (города). Все данные приходят с API SDEK
 def sdek_office_choice(request, order_id):
     order=Order.objects.get(id=order_id)
     order_items=OrderItem.objects.filter(order=order)

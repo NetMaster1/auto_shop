@@ -192,6 +192,8 @@ def delete_order(request, order_id):
     order.delete()
     return redirect ('shopfront')
 
+#Эта функция используется для создания заказа готового к оплате.
+#В ней так же происходит расчет стоимости доставки.
 def create_final_purchase_order(request, order_id):
     if request.method=='POST': 
         order=Order.objects.get(id=order_id)

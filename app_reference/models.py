@@ -26,7 +26,8 @@ class AutoModification (models.Model):
     
     def __int__(self):
         return self.id
-    
+
+# ===============================================SDEK=======================================   
 class SDEK_Office (models.Model):
     code = models.CharField(max_length=25, unique=True, null=True, blank=True)
     type = models.CharField(max_length=25, default="PVZ")
@@ -41,7 +42,10 @@ class SDEK_Office (models.Model):
  
     def __int__(self):
         return self.id
-    
+
+
+#Насколько я понимаю, эта таблица лишняя и нигде не используется
+#Вместо неё данные о городах с PVZ сразу заносятся в таблицу SDEK_Office
 class SDEK_City (models.Model):
     code = models.CharField(max_length=25, unique=True, null=True, blank=True)
     city_uuid = models.CharField(max_length=100, unique=True, null=True, blank=True)
