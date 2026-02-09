@@ -87,30 +87,28 @@
       </ul>
           </li>
 
-<div class="col-2">
+
       <form action="{% url 'search' %}" method="POST" class="d-flex" role="search">
         {% csrf_token %}
-        <input class="form-control me-2" type="text" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
+        <input class="form-control me-2 search_line_width_smartphone" type="text" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
       
 
-        <button type="submit" class="btn btn-md btn-outline-dark mr-2" id="search_button">Поиск</button>
+        <button type="submit" class="btn btn-sm btn-outline-dark mr-2 mt-1" style="height: 2rem;" id="search_button">Поиск</button>
       </form>
-</div> 
-<div class="col-2">
+
+
     <a href="{% url 'shopfront' %}">
-      <input type="button" value="Очистить" class="btn btn-md btn-outline-dark mr-2" id="clear_search_button"> 
+      <input type="button" value="Очистить" class="btn btn-sm btn-outline-dark mr-2" id="clear_search_button"> 
     </a>
-</div>
+
       
 {% if request.user.is_authenticated %}
-<div class="col-2">
+
     <a href="{% url 'account_page' user.id %}"  >{{request.user.first_name}} {{request.user.last_name}}</a>
-</div>
-  
 
 {% else %}
 <!-- ============================Login Modal Trigger========================== -->
-    <button class="btn btn-md btn-outline-dark login_trigger mr-5">Войти</button>
+    <button class="btn btn-sm btn-outline-dark login_trigger mr-5">Войти</button>
 <!-- ===============================Login Modal===================================== -->
     <div class="outer_modal_login">
       <div class="hide">
@@ -147,7 +145,7 @@
     <!-- =========================End of Login Modal=========================== -->
 
 <!-- ============================Register Modal Trigger========================== -->
-    <button class="btn btn-md btn-outline-dark register_trigger mr-5">Регистрация</button>
+    <button class="btn btn-sm btn-outline-dark register_trigger mr-5">Регистрация</button>
 <!-- ===============================Register Modal===================================== -->
     <div class="outer_modal_register">
       <div class="hide">
@@ -197,9 +195,9 @@
     <!-- =========================End of Register Modal=========================== -->
   {% endif %}
 
-<div class="col-2">
+
 <a href="{% url 'cart_detail' %}" class="btn btn-primary"><h3><i class="fas fa-cart-plus"></i></h3></a>
-</div>
+
 
     </div>
   </div>
