@@ -2,8 +2,11 @@
 {% load static %}
 {% block content %}
 
-<!-- <div class="container"> -->
-<div class="row mt-2 ml-5 pt-3 pl-5">
+
+
+<div class="product_page_display_none_at_media_query">
+
+    <div class="row mt-2 ml-5 pt-3 pl-5">
         <div class="col-12">
             <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -12,8 +15,8 @@
             </ol>
             </nav>
         </div>
-</div>
-<div class="product_page_display_none_at_media_query">
+    </div>
+
     <div class="row mt-5 ">
         <div class="col-1 ml-5 mr-5">
             <div style="width: 6rem; justify-self: right;">
@@ -171,46 +174,57 @@
             </div>
         </div>
     </div>
- </div>
+</div>
 
 <div class="product_page_display_at_media_query p-2">
-     <div class="row">
+     <div class="row mt-2">
         <div class="ff2_120">{{product.name}}</div>
     </div>
     <div class="row">
-        <div class="col">
-            <strong> Бренд</strong> {{product.manufacturer}}
-        </div>  
-    </div>
-    <div class="row ff2">
-        <div class="col">
-            <strong>Рейтинг: </strong>{{product.av_rating}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="stars-outer">
-                <div class="stars-inner" style="width: {{product.percent}}"></div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-4">Бренд</div>
+                <div class="col">{{product.manufacturer}}</div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <strong>Покупки:</strong> {{product.transactions}}
-        </div>
-    </div>
-<!-- =========================Product Description Modal Trigger========= -->
-    <div class="row">
-        <div class="col">
-            <a href="#"><strong id="description">Описание</strong></a>  
-        </div>
-    </div>
-<!-- =====================End of Product Description Modal Trigger========= -->
+             <div class="row">
+                <div class="col-4">Покупки</div>
+                <div class="col">{{product.transactions}}</div>
+            </div>
+            <div class="row">
+                <div class="col-4">Рейтинг</div>
+                <div class="col">{{product.av_rating}}</div>
+            </div>
+        </div> 
+        <div class="col-6">
+        <!-- =========================Product Description Modal Trigger========= -->
+            <div class="row">
+                <div class="col">
+                    <a href="#"><strong id="description_media_query">Описание</strong></a>  
+                </div>
+            </div>
+        <!-- =====================End of Product Description Modal Trigger Media Query========= -->
+        <!-- =====================Reviews Modal Trigger==================== -->
+            <div class="row">
+                <div class="col">
+                    <a href="#"> <strong id="reviews_media_query">Отзывы</strong></a>
+                </div>
+            </div>
+        <!-- =======================End of Reviews Modal Trigger Media Query============ -->
+            <div class="row">
+                <div class="col">
+                    <div class="stars-outer">
+                        <div class="stars-inner" style="width: {{product.percent}}"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+
 <!-- =====================Product Description Modal========= -->
-    <div class="product_description_modal">
+    <div class="product_description_modal_media_query">
         <div class="hide">
-            <div class="productDescriptionModal rounded-5">
-                <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_description_modal">
+            <div class="productDescriptionModalMediaQuery rounded-5">
+                <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_description_modal_media_query">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="row ff2">
@@ -232,21 +246,13 @@
         </div>
     </div>
 <!-- =====================End of Product Description Modal========= -->
-
-<!-- =====================Reviews Modal Trigger==================== -->
-    <div class="row">
-        <div class="col">
-            <a href="#"> <strong id="reviews">Отзывы</strong></a>
-        </div>
-    </div>
-<!-- =======================End of Reviews Modal Trigger============ -->
-<!-- ===============================Review Modal===================================== -->
-    <div class="review_list_modal">
+    <!-- ===============================Review Modal===================================== -->
+    <div class="review_list_modal_media_query">
         <div class="hide">
             <div class="row">
                 <div class="col"></div>
                 <div class="col">
-                    <div class="reviewListModal">
+                    <div class="reviewListModalMediaQuery">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="row">
@@ -274,21 +280,18 @@
                     </div>
                 </div>
                 <div class="col"> 
-                    <img src="{% static 'images/Cross_edited.png' %}" style="width:2rem;height:2rem;" class="cross_review" id="cross_reviews_list_modal">
+                    <img src="{% static 'images/Cross_edited.png' %}" style="width:2rem;height:2rem;" class="cross_review_list_modal_media_query" id="cross_reviews_list_modal">
                 </div>
             </div>
         </div>
     </div>
 <!-- =========================End of Review List Modal=========================== -->
-                    
-   
-        <div class="page_box">
-            <div class="row pl-5">
-                    {{product.site_retail_price}} руб.
-            </div>
-        </div>
-  
-            
+    </div>
+    <div class="row mb-2 ml-5 mr-5 pl-5 pr-5">
+          <div class="box_price">{{product.site_retail_price}} руб.</div>
+    </div>
+
+        
     <div class="row m-auto">
         <a href="{% url 'add_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
     </div>
@@ -308,44 +311,65 @@
     <img src="{{product.image_2.url}}" class="card-img-top photo_scale" alt="Placeholder image" id="big_image">
 </div>
 
-           
-    
 </div>
 
-
-
-
-
-
-
 <script>
-const reviews = document.querySelector('#reviews')
+console.log ('script starts')
+
+const reviews = document.querySelector('#reviews')//trigger
+const description = document.querySelector('#description')//trigger
+const reviews_media_query = document.querySelector('#reviews_media_query')//trigger
+const description_media_query = document.querySelector('#description_media_query')//trigger
 const review_list_modal = document.querySelector('.review_list_modal')
-const description = document.querySelector('#description')
+const review_list_modal_media_query = document.querySelector('.review_list_modal_media_query')
 const product_description_modal = document.querySelector('.product_description_modal')
+const product_description_modal_media_query = document.querySelector('.product_description_modal_media_query')
+
+
 const cross_description_modal = document.querySelector('#cross_description_modal')
+const cross_description_modal_media_query = document.querySelector('#cross_description_modal_media_query')
 const cross_reviews_list_modal = document.querySelector('#cross_reviews_list_modal')
+const cross_review_list_modal_media_query = document.querySelector('.cross_review_list_modal_media_query')
 const image_1 = document.querySelector('#image_1')
 const image_2 = document.querySelector('#image_2')
 const big_image = document.querySelector('#big_image')
 
-
+//===================================================
 reviews.addEventListener('click', showReviews)
 function showReviews () {
           review_list_modal.classList.add('openModal')
+}
+cross_reviews_list_modal.addEventListener('click', closeReviews)
+function closeReviews () {
+          review_list_modal.classList.remove('openModal')
+  }
+reviews_media_query.addEventListener('click', showReviewsMediaQuery)
+function showReviewsMediaQuery () {
+          review_list_modal_media_query.classList.add('openModal')
       }
+cross_review_list_modal_media_query.addEventListener('click', closeReviewsMediaQuery)
+function closeReviewsMediaQuery () {
+          review_list_modal_media_query.classList.remove('openModal')
+  }
+//==========================================================
+
 description.addEventListener('click', showDescription)
 function showDescription () {
           product_description_modal.classList.add('openModal')
+      }
+description_media_query.addEventListener('click', showDescriptionMediaQuery)
+function showDescriptionMediaQuery () {
+          product_description_modal_media_query.classList.add('openModal')
       }
 cross_description_modal.addEventListener('click', closeDescription)
 function closeDescription () {
           product_description_modal.classList.remove('openModal')
   }
-cross_reviews_list_modal.addEventListener('click', closeReviews)
-function closeReviews () {
-          review_list_modal.classList.remove('openModal')
+cross_description_modal_media_query.addEventListener('click', closeDescriptionMedialQuery)
+function closeDescriptionMedialQuery () {
+          product_description_modal_media_query.classList.remove('openModal')
   }
+//==========================================================
 
 image_1.addEventListener('mouseover', exchageImages1)
 function exchageImages1 () {
@@ -356,7 +380,7 @@ function exchageImages2 () {
     big_image.src= image_2.src
     }
 
-
+console.log ('script ends')
 </script>
 
 

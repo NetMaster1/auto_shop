@@ -484,7 +484,15 @@ inset rgba(255,255,255,.5) 5px 5px 8px 5px,
 -2px -2px 5px rgba(0,0,0,.5);
 }
 
+.product_page_display_at_media_query {
+  display: none;
+}
+
 @media only screen and (max-device-width: 600px) {
+  .product_page_display_at_media_query {
+    display: block;
+    font-size: 15px;
+}
 
 .enterRegisterModal {
     padding: 3rem;
@@ -534,19 +542,107 @@ inset rgba(255,255,255,.5) 5px 5px 8px 5px,
   font-family: 'Font Awesome 5 Free';
   font-weight: 200;
   color: grey;
-  font-size: 10px;
+  font-size: 15px;
 }
 .stars-inner::before {
   content: '\f005 \f005 \f005 \f005 \f005';
   font-family: 'Font Awesome 5 Free';
   font-weight: 900;
   color: yellow;
-  font-size: 10px;
+  font-size: 15px;
   transition: all .25s;
 }
-  .product_page_display_at_media_query {
-    font-size: 12px;
 
+
+/* ===================== Reviews List Modal Media Query========================= */
+.review_list_modal_media_query {
+  display: none;
 }
+.review_list_modal_media_query.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.reviewListModalMediaQuery{
+    border-radius: 7px 7px 7px 7px;
+    padding: 2rem;
+    background-color: white;
+    width: 80vw;
+    height: 70vh;
+    display: block;
+    overflow-y: scroll;
+ 
+}
+/* ===================== End of Reviews List Modal========================= */
+/* ===================== DescriptionModal Media Query========================= */
+.product_description_modal_media_query {
+  display: none;
+}
+.product_description_modal_media_query.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+.productDescriptionModalMediaQuery{
+    position: absolute;
+    border-radius: 7px 7px 7px 7px;
+    padding: 3rem;
+    background-color: white;
+    width: 85vw;
+    height: 70vh;
+    display: block;
+    overflow-y: scroll;
+    z-index: 9999;
+}
+/* ===================== End of Reviews List Modal========================= */
+.cross_review_list_modal_media_query {
+  position: absolute;
+  top: 10vh;
+  right: 3vw;
+}
+.box_price {
+  position: absolute;
+  top: 10vh;
+  right: 3vw;
+}
+.box_price {
+  position: static;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  background-color:cadetblue;
+  width: 40vw;
+  height: 6vh;
+  border-radius: 5vmax;
+}
+.box_city_choice {
+    padding: 2rem;
+    background-color: white;
+    width: 80vw;
+    height: 45vh;
+    display: block;
+    position:absolute;
+}
+.deliveryCostModal {
+    padding: 2rem;
+    background-color: white;
+    width: 80vw;
+    height: 45vh;
+    display: block;
+    position:absolute;
+    text-align: center;
+    font-size: large;
+    justify-content: center;
+}
+
 
 }
