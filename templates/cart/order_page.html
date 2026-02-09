@@ -3,16 +3,16 @@
 {% block content %}
 
 <div class="container">
-          <div class="row pt-2">
-            <div class="col-12">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Текущая</li>
-                </ol>
-              </nav>
-            </div>
-          </div>
+  <div class="row pt-2">
+    <div class="col-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'shopfront' %}">Главная</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Текущая</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 
 <!-- =====================Alert Messages Module=================== -->
 <div class="container">
@@ -48,10 +48,6 @@
   </div>
 
 </div>
-<!-- <div class="row align-items-center justify-content-right"> -->
-  <!-- <div class="col-8 justify-content-right">
-    <h4>Всего товаров на сумму: <strong>{{total}}&nbsp;руб.</strong></h4>
-  </div> -->
 
 {% for item in order_items %}
 <div class="row p-1">
@@ -78,12 +74,6 @@
 {% endfor %}
 
 </div>
-
-
-
-<!-- https://www.cdek.ru/ru/offices/ -->
-
-
 
 <form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent" class="ff2">
           {% csrf_token %}

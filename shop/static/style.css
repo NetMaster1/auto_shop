@@ -643,6 +643,12 @@ inset rgba(255,255,255,.5) 5px 5px 8px 5px,
     font-size: large;
     justify-content: center;
 }
+.box_client {
+  background-color: rgb(204, 212, 214);
+  border-radius: 1vmax;
+  width: 95vw;
+  font-size: 10px;
+}
 
 
 }
