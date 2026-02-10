@@ -3,9 +3,29 @@
 {% block content %}
 <div class="container">
 
-   <div class="row ff2_150 mt-5 ml-5 pl-5">
+    <div class="row ff2_150 mt-2 ml-3 pl-3">
+        <div class="col-4">
             Заказ № {{order.id}}
         </div>
+
+        <div class="col-8">
+            <div class="final_order_no_display">
+                <div class="boxShadow4 mt-5 ml-5 pl-5">
+                    <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">
+                        <div class="row flex justify-content-center p-2">
+                            Всего к оплате:
+                        </div>
+                        <div class="row flex justify-content-center p-2">
+                        {{order.bill}} руб.
+                        </div>
+                    </a>
+                </div>
+            </div> 
+        </div>
+    </div>
+   
+
+
 <div class="row">
     <div class="col-8">
         <div class="box_client p-3 mt-5">       
@@ -84,28 +104,25 @@
             </div>
         </div>   
     </div>
-
+    
     <div class="col-4 ">
-     <div class="boxShadow4 mt-5 ml-5 pl-5">
-            <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">
-                <div class="row flex justify-content-center p-2">
-                    Всего к оплате:
-                </div>
-                <div class="row flex justify-content-center p-2">
-                   {{order.bill}} руб.
-                </div>
-                
-            </a>
-      
-      
-        </div> 
+        <div class="final_order_media_query">
+            <div class="boxShadow4 mt-5 ml-5 pl-5">
+                <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">
+                    <div class="row flex justify-content-center p-2">
+                        Всего к оплате:
+                    </div>
+                    <div class="row flex justify-content-center p-2">
+                    {{order.bill}} руб.
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
-
-
-
+</div>
 
 </div>
-</div>
+
 
 <script>
     const clear_storage=document.querySelector('#clear_storage');

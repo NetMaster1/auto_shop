@@ -31,7 +31,7 @@
 
 <div class="box_client p-3">
 <div class="row p-1">
-  <div class="col-1 ff2_120">
+  <div class="col-2 ff2_120">
     <strong>Заказ # {{order.id}}</strong>
   </div>
   <div class="col-4 ff2_120">
@@ -50,8 +50,8 @@
 </div>
 
 {% for item in order_items %}
-<div class="row p-1">
-     <div class="col-1">
+<div class="row p-1 ff2">
+     <div class="col-2">
         <!-- <a href="{{cart_item.get_url}}"> -->
           <img src="{{item.image.url}}" width="50" alt="">
         <!-- </a> -->
@@ -75,32 +75,31 @@
 
 </div>
 
-<form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent" class="ff2">
-          {% csrf_token %}
 
-<div class="row ff2_120">
+<div class="row ff2_120 m-auto">
   Пункт доставки:
 </div>
-<div class="box_client p-3">
-  <div class="row mt-2 mb-2">
-  <div class="col-md-4">
-    <label for="country" class="form-label"> <strong>Страна</strong></label>
-     <select name="country" id="country" class='form-control' required>
+<form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent" class="ff2">
+          {% csrf_token %}
+  <div class="box_client p-3">
+    <div class="row mt-2 mb-2">
+    <div class="col-md-4">
+      <label for="country" class="form-label"> <strong>Страна</strong></label>
+      <select name="country" id="country" class='form-control' required>
         <!-- <option selected="true" disabled="disabled">Выберите страну</option> -->
         <option  value="" disabled selected hidden>Выберите страну</option>
         <!-- <option value="">Выберите страну</option> -->
         {% for country in countries %}
-        <option value="{{country}}">{{country}}</option>
+        <option value="{{country}}"> {{country}}</option>
         {% endfor %}
       </select>
     </div>
-    </div>
+  </div>
   
   
   <div class="row mt-2 mb-2">
-  <div class="col-md-4">
-    <label for="region" class="form-label"> <strong>Регион</strong>
-      </label>
+    <div class="col-md-4">
+      <label for="region" class="form-label"> <strong>Регион</strong></label>
        <select name="region" id="region" class='form-control'>
         <option selected="true">Выберите регион</option>
         <!-- <option value="">Выберите регион</option> -->
@@ -111,42 +110,42 @@
     </div>
   </div>
 
- <div class="row mt-2 mb-2">
-  <div class="col-md-6">
-    <label for="city" class="form-label"> <strong>Населенный пункт</strong> </label>
-       <select name="city" id="city" class='form-control'>
-       <!-- <select name="city" id="city" class='form-control' autocomplete="off"> -->
-        <!-- <option selected="true" disabled="disabled">Выберите населенный пункт в пределах вашего региона</option> -->
-        <option value="">Выберите населенный пункт в пределах вашего региона</option>
-        {% for city in cities %}
-        <option value="{{city.city}}">{{city.city}}</option>
-        {% endfor %}
-      </select>
-    </div>
-    </div>
-
-
   <div class="row mt-2 mb-2">
-  <div class="col-md-6">
-    <label for="office" class="form-label"> <strong>Пункт выдачи</strong> </label>
-       <!-- <select name="office" id="office" class='form-control'> -->
-       <select name="office" id="office" class='form-control' autocomplete="off">
-        <option selected="true" disabled="disabled">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option>
-        <!-- <option value="">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option> -->
-        {% for office in offices %}
-        <option value="{{office.address_full}}">{{office.address_full}}</option>
-        {% endfor %}
-      </select>
+    <div class="col-md-6">
+      <label for="city" class="form-label"> <strong>Населенный пункт</strong> </label>
+        <select name="city" id="city" class='form-control'>
+        <!-- <select name="city" id="city" class='form-control' autocomplete="off"> -->
+          <!-- <option selected="true" disabled="disabled">Выберите населенный пункт в пределах вашего региона</option> -->
+          <option value="">Выберите населенный пункт в пределах вашего региона</option>
+          {% for city in cities %}
+          <option value="{{city.city}}">{{city.city}}</option>
+          {% endfor %}
+        </select>
     </div>
   </div>
-  </div>
-</form>
 
+
+    <div class="row mt-2 mb-2">
+    <div class="col-md-6">
+      <label for="office" class="form-label"> <strong>Пункт выдачи</strong> </label>
+        <!-- <select name="office" id="office" class='form-control'> -->
+        <select name="office" id="office" class='form-control' autocomplete="off">
+          <option selected="true" disabled="disabled">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option>
+          <!-- <option value="">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option> -->
+          {% for office in offices %}
+          <option value="{{office.address_full}}">{{office.address_full}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    </div>
+</form>
+  <div class="row ff2_120 m-auto">
+      Получатель:
+  </div>
 <form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form" class="ff2">
    {% csrf_token %}
-    <div class="row ff2_120">
-          Получатель:
-    </div>
+   
   {% if request.user.is_authenticated %}
     <div class="box_client p-3">
       <div class="row p-1">
@@ -206,23 +205,19 @@
     <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
 
     <div class="row m-auto mt-3">
-      <div class="col-2">
-        <input type="submit" value="Сохранить" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
+      <div class="col-1">
+        <input type="submit" value="Сохранить" class="btn btn-sm btn-outline-primary" id="clear_storage" disabled>
       </div>
 </form>
-
-      <div class="col-2">
+    <div class="col-2">
+  </div>
+      <div class="col-1 ff2">
         <a href="{% url 'delete_order' order.id %}" style="text-decoration: none;" >
-         <input type="button" value="Удалить" class="btn btn-block btn-outline-primary" id="order_delete_button"> 
+         <input type="button" value="Удалить" class="btn btn-sm btn-outline-primary" id="order_delete_button"> 
       </div>
     </div>
-
-
     </div>
-
-
 </div>
-
 </div>
 
 
@@ -243,7 +238,8 @@ const country = document.querySelector('#country');
 const region = document.querySelector('#region');
 const city = document.querySelector('#city');
 const office = document.querySelector('#office');
-//const clear_storage = document.querySelector('#clear_storage').disabled//элемент заблокирован
+// const clear_storage = document.querySelector('#clear_storage').disabled//элемент заблокирован
+const clear_storage = document.querySelector('#clear_storage')
 
 
 //===========Name/Phone Module=========================
@@ -336,11 +332,8 @@ office.addEventListener('change', e=>{
         sessionStorage.setItem('office', office_value);
         shipment_office.value = office_value;
         clear_storage.removeAttribute('disabled');
-        // sendShipmentForm();
     }
 )
-
-
 
 //===============Clear Session Storage==================
 shipment_form.addEventListener('submit', e=>{
