@@ -392,11 +392,15 @@ font-weight: 900;
 .stars-outer {
   position: relative;
   display: inline-block;
+  /* position: absolute; */
+  top: 0;
 }
 .stars-inner {
+  display: block;
   position: absolute;
   top: 0;
   overflow: hidden;
+ 
 }
 .stars-outer::before {
   content: '\f005 \f005 \f005 \f005 \f005';
@@ -514,9 +518,6 @@ inset rgba(255,255,255,.5) 5px 5px 8px 5px,
   display: block;
 }
   
-}
-
-
   .product_page_display_at_media_query {
     display: block;
     font-size: 15px;
@@ -779,11 +780,23 @@ font-size: 70%;
   font-size: 15px;
   background-color: black;
   color: white
- 
 }
+
 .cart_price_font_media_query {
   color: greenyellow;
   font-size: 20px;
   font-weight: 999;
 }
+
+.shopfront_buy_button_media_query {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1vmax;
+  color: white;
+  background-color: blue;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  height: 10%;
 }
