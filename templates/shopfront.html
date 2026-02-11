@@ -18,10 +18,8 @@
 </div>
 <!-- ===================End of Alert Messages Module================ -->
 
-
+<div class="shop_front_no_display">
     <div class="row">
-    
-
     {% for product in queryset_list %} 
         {% if product.image_1%}
         <div class="col-sm-3 mt-3">
@@ -84,6 +82,34 @@
         </div>
     </div>
     <!-- ==============================End of pagination module============================ -->
+</div>
+
+<div class="shop_front_display_media_query">
+
+ 
+<div class="row" style="background-color: black;">
+ {% for product in queryset_list %}
+    <div class="col-6 mt-2">
+        {% if product.image_1%}
+      
+            <div class="card">sdfsdfds
+                <a href="{% url 'product_page' product.article %}">
+                <img src="{{product.image_1.url}}" class='rounded-2 img-fluid img_scale' alt="Placeholder image" >
+                </a>
+          
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>
+
+
+
+
+</div>
+
+
+
 
 
 </div>

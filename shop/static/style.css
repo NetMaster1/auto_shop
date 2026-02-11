@@ -491,12 +491,32 @@ inset rgba(255,255,255,.5) 5px 5px 8px 5px,
 .final_order_no_display {
   display: none;
 }
+
 .cart_big_screen_media_query {
+  display: none;
+}
+.shop_front_no_display {
+  display: block;
+}
+.shop_front_display_media_query {
   display: none;
 }
 
 /* ====================================================================== */
+/* ====================================================================== */
+/* ====================================================================== */
+/* ====================================================================== */
 @media only screen and (max-device-width: 600px) {
+.shop_front_no_display {
+  display: none;
+}
+.shop_front_display_media_query {
+  display: block;
+}
+  
+}
+
+
   .product_page_display_at_media_query {
     display: block;
     font-size: 15px;
