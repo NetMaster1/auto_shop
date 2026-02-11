@@ -142,7 +142,7 @@
           {% csrf_token %}
         {% for cart_item in cart_items %}
         <div class="cart_card_media_query">
-          <div class="row pl-2 pt-2 pb-2">
+          <div class="row p-1">
             <div class="col-3">
               <a href="{% url 'product_page' cart_item.article %}">
                 <img src="{{cart_item.image.url}}"  alt="" class='rounded-2 img-fluid img_scale' >
@@ -178,16 +178,20 @@
         {% endfor %}
 
         {% if cart_items %}  
-        <div class="row mb-2 mt-2  ">
-          <div class="ff2">Всего товаров на сумму: {{total}}</div>
-        </div>
+        
         <div class="cart_footer_media_query" id="purchase_cart_item">
-          <input type="submit" value="Перейти к оформлению">
+          <div class="div pt-1" style="font-size: 15px;">
+            Всего товаров на сумму: 
+          </div>
+          <div class="cart_price_font_media_query">{{total}}</div>
+      
+            <input type="submit" value="Перейти к оформлению">
+      
         </div>
  
         {% else %}
-        <div class="cart_footer_media_query" id="footer_go_to_shopfront">
-          <div class="row m-auto">
+        <div class="cart_footer_media_query_no_cart_items" id="footer_go_to_shopfront">
+          <div class="row pt-3">
             <a href="{% url 'shopfront' %}" id="go_to_shop_front">Продолжить покупки</a>
           </div>
         </div>
