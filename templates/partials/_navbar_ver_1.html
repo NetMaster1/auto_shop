@@ -1,0 +1,302 @@
+{% load static %}
+ 
+
+  
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">EvvyAuto</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- =======================Rules Modal Trigger===================== -->
+        <li class="nav-item rules_trigger">
+          <a class="nav-link active rounded-2" aria-current="page" href="#">Правила</a>
+        </li>
+         <!-- ===========================Rules Modal Body================================= -->
+            <div class="outer_modal_rules ff2">
+              <div class="hide">
+                <div class="rulesModal rounded-5">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_rules">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 >
+                                <strong>Правила </strong>
+                                <br><br>
+                                Осуществляя покупку в нашем интернет магазине, покупатель соглашается с данными Правилами.
+                                В соответствии с данными Правилами доставка товара осуществляется после его оплаты. Доставка осуществляется
+                                в пункт выдачи СДЕК, указанный покупателем, на ФИО, указанное покупателем при оформлении заказа.
+                                Стоимость доставки включена в стоимость заказа. Стоимость доставки можно узнать перед оформлением заказа при указании пункта выдачи СДЕК.
+                              <br><br>
+                                Продавец гарантирует возврат денежных средст в случае поломки товара в процессе транспортировки.
+                                Возврат денежных средств осуществляется в течение 5 дней с момента подтверждения поломки товара. 
+                                Подтверждением поломки товара в процессе транспортировки может служить фотография поломанного товара 
+                                в пункте выдачи СДЕК, сделанная покупателем при получении товара и его проверке.
+                               <br><br>
+                                Транспортировка товара осуществляется в коробках, изготовленных из пятислойного картона марки П32.
+                              <br><br>
+                                  В остальном взаимодействие между покупателем и продавцом регулируетя Законом РФ о Защите прав потребителей.
+                              </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!-- =================================End of Modal Body======================================== -->
+
+        <li class="nav-item dropdown contact_trigger ">
+            <a class="nav-link active" aria-current="page" href="#">Контакты</a>
+         </li>
+
+        <!-- ===========================Modal Body================================= -->
+            <div class="outer_modal_contacts ff2">
+              <div class="hide">
+                <div class="enterContactModal rounded-5">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;"  class='cross' id="cross_contacts" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            
+                              <h5 style="text-align: left;" >
+                                e-mail: support@auto-deflector.ru <br>
+                                <br>
+                                Реквизиты: ИП Винокуров Сергей Николаевич <br>
+                                ИНН 526013223435 <br>
+                                ОГРНИП 322527500137506
+                                ООО «Банк Точка» <br>
+                                БИК 044525104 <br>
+                                р.с.40802810420000006198
+                              </h5>
+                 
+                  </div>
+              </div>
+              </div>
+           
+            </div>
+            </div>
+            <!-- =================================End of Modal Body======================================== -->
+       
+          </ul>
+      </ul>
+          </li>
+
+
+      <form action="{% url 'search' %}" method="POST" class="d-flex" role="search">
+        {% csrf_token %}
+        <input class="form-control me-2 search_line_width_smartphone" type="text" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
+      
+
+        <button type="submit" class="btn btn-sm btn-outline-dark mr-2 mt-1" style="height: 2rem;" id="search_button">Поиск</button>
+      </form>
+
+
+    <a href="{% url 'shopfront' %}">
+      <input type="button" value="Очистить" class="btn btn-sm btn-outline-dark mr-2" id="clear_search_button"> 
+    </a>
+
+      
+{% if request.user.is_authenticated %}
+
+    <a href="{% url 'account_page' user.id %}"  >{{request.user.first_name}} {{request.user.last_name}}</a>
+
+{% else %}
+<!-- ============================Login Modal Trigger========================== -->
+    <button class="btn btn-sm btn-outline-dark login_trigger mr-5">Войти</button>
+<!-- ===============================Login Modal===================================== -->
+    <div class="outer_modal_login">
+      <div class="hide">
+        <div class="enterLoginModal rounded-5">
+          <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_login">
+            
+          <div class="modal-dialog">
+            <div class="modal-content">
+                  
+    <form action="{% url 'login_user' %}" method='POST' id="login_form">
+      {% csrf_token %}
+      <div class="form-group">
+        <!-- <label for="username">Имя пользователя</label>
+        <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required> -->
+        <label for="username">Электронная почта</label>
+        <input type="email" name="username" class="form-control" placeholder="Введите имя пользователя" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" name="password" class="form-control" placeholder='Введите пароль' required>
+      </div>
+      <br>
+      <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
+      <input type="submit" value="Войти" class="btn btn-outline-dark btn-block" id="login_button">
+  </form>
+      </div>
+      </div>
+      <div class="row mt-5">
+      <a href="{% url 'password_recovery_page' %}" id="password_restore_link">Забыли пароль?</a>
+      </div>
+      </div>
+    </div>
+    </div>
+    <!-- =========================End of Login Modal=========================== -->
+
+<!-- ============================Register Modal Trigger========================== -->
+    <button class="btn btn-sm btn-outline-dark register_trigger mr-5">Регистрация</button>
+<!-- ===============================Register Modal===================================== -->
+    <div class="outer_modal_register">
+      <div class="hide">
+        <div class="enterRegisterModal rounded-5">
+          <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_register">
+            
+          <div class="modal-dialog">
+            <div class="modal-content">
+                  
+            <form action="{% url 'register_user' %}" method='POST' id="register_form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name" class="text-black">Имя</label>
+                    <input type="text" name="first_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name" class="text-black">Фамилия</label>
+                    <input type="text" name="last_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="text-black">Электронная почта</label>
+                    <input type="email" name="email" class="form-control" required autocomplete="off"  >
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="text-black">Пароль</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password2" class="text-black">Подтверждение пароля</label>
+                    <input type="password" name="password2" class="form-control" required>
+                </div>
+              
+                    <div class="row p-3">
+                      <input type="submit" value="Отправить" class="btn btn-outline-primary btn-block">
+                    </div>
+                 
+                
+                
+            </form>
+          </div>
+      </div>
+      <!-- ================================================================ -->
+      </div>
+    </div>
+    </div>
+    <!-- =========================End of Register Modal=========================== -->
+  {% endif %}
+
+
+<a href="{% url 'cart_detail' %}" class="btn btn-primary"><h3><i class="fas fa-cart-plus"></i></h3></a>
+
+
+    </div>
+  </div>
+</nav>
+
+
+
+
+<script>
+  const outer_modal_contacts =document.querySelector('.outer_modal_contacts');
+  const contact_trigger =document.querySelector('.contact_trigger');
+  const outer_modal_rules =document.querySelector('.outer_modal_rules');
+  const rules_trigger =document.querySelector('.rules_trigger');
+  const outer_modal_register =document.querySelector('.outer_modal_register');
+  const register_trigger =document.querySelector('.register_trigger');
+  const register_form =document.querySelector('#register_form');
+  const outer_modal_login =document.querySelector('.outer_modal_login');
+  const login_trigger =document.querySelector('.login_trigger');
+
+  const cross_contacts =document.querySelector('#cross_contacts');
+  const cross_register =document.querySelector('#cross_register');
+  const cross_login =document.querySelector('#cross_login');
+  const cross_rules =document.querySelector('#cross_rules');
+  const password_restore_link =document.querySelector('#password_restore_link');
+  const search_button =document.querySelector('#search_button');
+  const clear_search_button =document.querySelector('#clear_search_button');
+
+  
+
+  rules_trigger.addEventListener('click', openRulesModal)
+  cross_rules.addEventListener('click', closeRulesModal)
+
+  function openRulesModal () {
+          outer_modal_rules.classList.add('openModal')
+      }
+  function closeRulesModal () {
+          outer_modal_rules.classList.remove('openModal')
+  }
+
+  contact_trigger.addEventListener('click', openModal)
+  cross_contacts.addEventListener('click', closeModal)
+
+  function openModal () {
+          outer_modal_contacts.classList.add('openModal')
+      }
+  function closeModal () {
+          outer_modal_contacts.classList.remove('openModal')
+  }
+
+
+
+  register_trigger.addEventListener('click', openRegisterModal)
+  cross_register.addEventListener('click', closeRegisterModal)
+
+  function openRegisterModal () {
+          outer_modal_register.classList.add('openModal')
+      }
+   function closeRegisterModal () {
+          outer_modal_register.classList.remove('openModal')
+  }
+  login_trigger.addEventListener('click', openLoginModal)
+  cross_login.addEventListener('click', closeLoginModal)
+  function openLoginModal () {
+          outer_modal_login.classList.add('openModal')
+      }
+   function closeLoginModal () {
+          outer_modal_login.classList.remove('openModal')
+  }
+
+//==============blocking login button after pushing it ===============
+const login_form = document.querySelector('#login_form')
+const login_button = document.querySelector('#login_button')
+
+    login_form.addEventListener('submit', blockButton)
+    function blockButton() {
+        login_button.disabled = true;
+    }
+
+    login_button.addEventListener('click', e=>{
+        sessionStorage.clear();
+    }
+  )
+    password_restore_link.addEventListener('click', e=>{
+        sessionStorage.clear();
+    }
+  )
+     
+    search_button.addEventListener('click', e=>{
+        sessionStorage.clear();
+    }
+  )
+    clear_search_button.addEventListener('click', e=>{
+        sessionStorage.clear();
+    }
+  )
+    register_form.addEventListener('submit', e=>{
+        sessionStorage.clear();
+    }
+  )
+
+//===========End of Blockign Login button Module================
+
+</script>
+
+
+

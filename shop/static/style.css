@@ -506,6 +506,10 @@ inset rgba(255,255,255,.5) 5px 5px 8px 5px,
   display: none;
 }
 
+nav {
+  display: block;
+}
+
 /* ====================================================================== */
 /* ====================================================================== */
 /* ====================================================================== */
@@ -799,4 +803,38 @@ font-size: 70%;
   font-size: 1.5rem;
   font-weight: bolder;
   height: 10%;
+}
+nav {
+  display: none;
+  
+
+}
+.my_nav_bar {
+  display: flex;
+  background-color: blue;
+  color: white;
+  height: 10vh;
+  width: 100vw;
+  position: sticky;
+  top: 0;
+  gap: 3vw;
+  align-items: center;
+  justify-content: start;
+  flex-shrink: 1;
+
+
+}
+
+.my_nav_bar_button {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: greenyellow;
+  border-radius: 5px;
+  height: 5vh;
+  width: 15vw;
+
+}
+
+
 }
