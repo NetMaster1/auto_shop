@@ -101,12 +101,13 @@
                     </div>
                 </div>
                
-                 
-
                 <a href="{% url 'product_page' product.article %}">
                 <img src="{{product.image_1.url}}" class='rounded-2 img-fluid img_scale' alt="Placeholder image" >
                 </a>
-                <div class="shopfront_buy_button_media_query">Купить</div>
+
+                <div class="shopfront_buy_button_media_query" id="add_cart_bar">
+                   <a href="{% url 'add_cart' product.id %}" id="cart_link">В корзину</a>
+                </div>
 
             </div>
         {% endif %}
@@ -114,15 +115,26 @@
 {% endfor %}
 </div>
 
-
-
-
+</div>
 </div>
 
 
 
+<script>
+console.log ('Script starts')
+
+const add_cart_bar = document.querySelectorAll('#add_cart_bar');
+const cart_link = document.querySelectorAll('#cart_link');
 
 
-</div>
+for (let i=0; i<add_cart_bar.length; i++) {
+    add_cart_bar[i].addEventListener('click', e=>{
+      cart_link[i].click();
+    });
+}
+     
+
+console.log('Script ends')
+</script>
 
 {% endblock %}

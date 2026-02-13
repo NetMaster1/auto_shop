@@ -804,10 +804,12 @@ font-size: 70%;
   font-weight: bolder;
   height: 10%;
 }
+
+
+/* =============================NabBar Module=================================== */
 nav {
   display: none;
   
-
 }
 .my_nav_bar {
   display: flex;
@@ -819,10 +821,8 @@ nav {
   top: 0;
   gap: 3vw;
   align-items: center;
-  justify-content: start;
+  justify-content: end;
   flex-shrink: 1;
-
-
 }
 
 .my_nav_bar_button {
@@ -836,5 +836,68 @@ nav {
 
 }
 
+.font_awesome_icon_media_query {
+  color: white;
+  font-size: 50px;
+  font-weight: bold;
+
+}
+.menu_module {
+  display: none;
+}
+.menu_module.openModal {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  border-radius: 5px;
+  background-color: black;
+  padding:1rem;
+  top: 2wh;
+  right: 0;
+  width: 40%;
+  height: 20%;
+  z-index: 9999;
+  opacity: 90%;
+}
+
+.navbar_modal_cross_blue_media_query {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+}
+
+.contacts_module {
+  display: none;
+}
+.contacts_module.openModal {
+  display: block;
+  padding: 3px;
+  border-radius: 15px;
+  background-color: black;
+  color: white;
+  position: absolute;
+  top: 10vh;
+  left:10vw;
+  height: 60vh;
+  width: 70vw;
+  opacity: 90%;
+  z-index: 9999;
+}
+
+
+.rules_module_media_query {
+  display: none;
+}
+.rules_module_media_query.openModal {
+  display: block;
+  background-color:aqua;
+  position: absolute;
+  top: 10vh;
+  left:10vw;
+  height: 40vh;
+  width: 40vw;
+  overflow: scroll;
+}
 
 }
