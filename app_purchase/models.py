@@ -41,7 +41,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     brand = models.CharField(max_length=100, blank=True)
-    product = models.CharField(max_length=100)
+    product = models.CharField(max_length=250)
     article = models.CharField(max_length=100,null=True, blank=True )
     image = models.ImageField(upload_to='uploads', blank=True)
     slug = models.SlugField(max_length=100, null=True)
@@ -89,7 +89,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, null=True, on_delete=models.DO_NOTHING)
     #cart field is used to delete cart_items from the cart afer the order has been paid
     cart = models.ForeignKey(Cart, null=True, blank=True, on_delete=models.DO_NOTHING)
-    product = models.CharField(max_length=100, null=True, blank=True)
+    product = models.CharField(max_length=250, null=True, blank=True)
     image = models.ImageField(upload_to='uploads', blank=True)
     article = models.CharField(max_length=50,null=True, blank=True )
     quantity = models.PositiveIntegerField(default=1)
