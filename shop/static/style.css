@@ -509,6 +509,14 @@ inset rgba(255,255,255,.5) 5px 5px 8px 5px,
 nav {
   display: block;
 }
+.password_recovery_page {
+  display: block;
+}
+.password_recovery_page_media_query {
+  display: none;
+}
+
+
 
 /* ====================================================================== */
 /* ====================================================================== */
@@ -827,7 +835,7 @@ nav {
 
 .my_nav_bar_button {
   color: white;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   background-color: greenyellow;
   border-radius: 5px;
@@ -899,5 +907,70 @@ nav {
   width: 40vw;
   overflow: scroll;
 }
+
+.login_page {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.login_form_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 2rem;
+    background-color: white;
+    width: 70vw;
+    height: 40vh;
+}
+.cross_login_media_query {
+  margin: 1rem;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.cross_login_media_query:hover {
+  /* opacity: 2; */
+  transform: scale(1.1);
+}
+.login_button_media_query {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: blue;
+    border-radius: 7px;
+    height: 5vh;
+}
+.password_recovery_page {
+  display: none;
+}
+.password_recovery_page_media_query {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.enterLoginModal_media_query {
+  position:absolute;
+  border-color: greenyellow;
+  border-width: 3px;
+  border-radius: 5px;
+  background-color: white;
+  width: 70vw;
+  height: 30vh;
+  padding: 2rem;
+
+}
+
 
 }

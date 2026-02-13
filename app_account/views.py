@@ -265,3 +265,8 @@ def create_ozon_phone(request, user_id):
     else:
         auth.logout(request)
         return redirect ('shopfront')
+    
+
+
+def login_page_media_query (request):
+    return render(request, 'accounts/login_page.html')
