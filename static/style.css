@@ -535,8 +535,11 @@ nav {
   align-items: center;
   justify-content: end;
   flex-shrink: 1;
+<<<<<<< HEAD
   z-index: 9999;
   opacity: 100%;
+=======
+>>>>>>> 09cf5572e9ab32e89daf6b7aa81c01533c7c857e
 }
 
 .menu_module_outer {
@@ -575,10 +578,15 @@ nav {
 /* ====================================================================== */
 /* ====================================================================== */
 /* ====================================================================== */
+<<<<<<< HEAD
 /* @media only screen and (max-device-width: 600px)  */
 @media (orientation: portrait)
 /* @media (max-aspect-ratio: 20/9)  */
 
+=======
+/* @media only screen and (max-device-width: 1080px)  */
+@media (orientation: portrait) 
+>>>>>>> 09cf5572e9ab32e89daf6b7aa81c01533c7c857e
 {
 .shop_front_no_display {
   display: none;
@@ -1005,9 +1013,13 @@ nav {
     padding: 2rem;
     background-color: white;
     width: 80vw;
+<<<<<<< HEAD
     height: 60vh;
     border-radius: 5px;
     overflow: scroll;
+=======
+    height: 40vh;
+>>>>>>> 09cf5572e9ab32e89daf6b7aa81c01533c7c857e
 }
 .cross_login_media_query {
   margin: 1rem;

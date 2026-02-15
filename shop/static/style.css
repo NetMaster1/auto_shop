@@ -575,10 +575,15 @@ nav {
 /* ====================================================================== */
 /* ====================================================================== */
 /* ====================================================================== */
+<<<<<<< HEAD
 /* @media only screen and (max-device-width: 600px)  */
 @media (orientation: portrait)
 /* @media (max-aspect-ratio: 20/9)  */
 
+=======
+/* @media only screen and (max-device-width: 1080px)  */
+@media (orientation: portrait) 
+>>>>>>> 09cf5572e9ab32e89daf6b7aa81c01533c7c857e
 {
 .shop_front_no_display {
   display: none;
