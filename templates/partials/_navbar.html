@@ -1,27 +1,22 @@
 {% load static %}
-<div class="my_nav_bar rounded">
+<div class="my_nav_bar rounded-3">
   
         <div class="evvy_auto_font_media_query">
             <a href="{% url 'shopfront' %}"  >EvvyAuto</a>
         </div>
    
- 
-    <form action="{% url 'search' %}" method="POST" role="search">
-            {% csrf_token %}     
-        <div class="row">
-        
-            <div class="col">
-                <input class="form-control" type="text" name='brand' style="height: 5vh; width: 35vw;" placeholder="Введите бренд или модель" aria-label="Search"/>
+        <div class="search_field">   
+            <div class="search_input">
+                <form action="{% url 'search' %}" method="POST" role="search" style="display: flex;  justify-content: end">
+                    {% csrf_token %} 
+                <input class="form-control" type="text" name='brand' style="height: 4vh;" placeholder="Введите бренд или модель" aria-label="Search"/>
             </div>
-            <div class="col">
-                <div class="my_nav_bar_button">
+            <div class="search_blank_block"></div>
+            <div class="my_nav_bar_button">
                 <button type="submit" class="my_nav_bar_button" id="search_button">Поиск</button>
-                </div>
+                </form>
             </div>
-        
-        </div>   
-    </form>
-
+        </div>
 <!-- ======================Menu Module Trigger============================= -->
     <div class="font_awesome_icon_media_query pr-3" id="six_points">
             <i class="fa-solid fa-grip"></i>
