@@ -49,9 +49,15 @@ def add_cart(request, product_id):
         else:
             cart=Cart.objects.create(cart_id=key)
     try:
-        cart_item = CartItem.objects.get(product=product.name, cart=cart)
-        cart_item.quantity+=1
-        cart_item.save()
+        if CartItem.objects.filter(product=product.name, cart=cart).exists():
+            cart_items = CartItem.objects.filter(product=product.name, cart=cart)
+            if cart_items.count()>1:
+                for i in cart_items:
+                    i.delete()
+            else:
+                cart_item = CartItem.objects.get(product=product.name, cart=cart)
+                cart_item.quantity+=1
+                cart_item.save()
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(
             product=product.name,

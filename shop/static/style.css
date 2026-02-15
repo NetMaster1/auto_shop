@@ -535,6 +535,8 @@ nav {
   align-items: center;
   justify-content: end;
   flex-shrink: 1;
+  z-index: 9999;
+  opacity: 100%;
 }
 
 .menu_module_outer {
@@ -573,7 +575,11 @@ nav {
 /* ====================================================================== */
 /* ====================================================================== */
 /* ====================================================================== */
-@media only screen and (max-device-width: 600px) {
+/* @media only screen and (max-device-width: 600px)  */
+@media (orientation: portrait)
+/* @media (max-aspect-ratio: 20/9)  */
+
+{
 .shop_front_no_display {
   display: none;
 }
@@ -604,7 +610,7 @@ nav {
       padding: 3rem;
       background-color: white;
       width: 80vw;
-      height: 50vh;
+      height: 60vh;
       display: block;
       position: absolute;
   }
@@ -999,7 +1005,9 @@ nav {
     padding: 2rem;
     background-color: white;
     width: 80vw;
-    height: 40vh;
+    height: 60vh;
+    border-radius: 5px;
+    overflow: scroll;
 }
 .cross_login_media_query {
   margin: 1rem;
@@ -1135,5 +1143,45 @@ nav {
     height: 80vh;
     overflow: scroll;
 }
+
+.order_create_button_media_query {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1vmax;
+  color: blue;
+  background-color: white;
+  border-color: blue;
+  border-width: 1px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  height: 10%;
+}
+.order_create_button_media_query.enabled {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1vmax;
+  color: white;
+  background-color: blue;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  height: 10%;
+}
+.order_delete_button_media_query {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1vmax;
+  color: white;
+  background-color: blue;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  height: 3rem;
+}
+
 
 }

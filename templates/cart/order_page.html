@@ -204,17 +204,19 @@
 
     <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
 
-    <div class="row m-auto mt-3">
-      <div class="col-1">
-        <input type="submit" value="Сохранить" class="btn btn-sm btn-outline-primary" id="clear_storage" disabled>
+    <div class="row m-auto mt-3 pl-2 pr-2">
+     <div class="order_create_button_media_query">
+        <input type="submit" value="Сформировать заказ" id="clear_storage" disabled>
       </div>
+    </div>
 </form>
-    <div class="col-2">
-  </div>
-      <div class="col-1 ff2">
-        <a href="{% url 'delete_order' order.id %}" style="text-decoration: none;" >
-         <input type="button" value="Удалить" class="btn btn-sm btn-outline-primary" id="order_delete_button"> 
+     <div class="row m-auto mt-3 pl-2 pr-2">
+     <div class="order_delete_button_media_query">
+        <a href="{% url 'delete_order' order.id %}" style="text-decoration: none;" > Удалить</a>
       </div>
+    </div>
+
+    
 </div>
 
 
@@ -224,7 +226,7 @@ console.log ('Beginning of the script')
 
 const form_to_be_sent=document.querySelector('#form_to_be_sent');
 const shipment_form = document.querySelector('#shipment_form');
-const order_delete_button = document.querySelector('#order_delete_button');
+const order_delete_button_media_query = document.querySelector('.order_delete_button_media_query');
 const shipment_office = document.querySelector('#shipment_office');
 //const shipment_city = document.querySelector('#shipment_city');
 //const shipment_region = document.querySelector('#shipment_region');
@@ -238,6 +240,7 @@ const city = document.querySelector('#city');
 const office = document.querySelector('#office');
 // const clear_storage = document.querySelector('#clear_storage').disabled//элемент заблокирован
 const clear_storage = document.querySelector('#clear_storage')
+const order_create_button_media_query = document.querySelector('.order_create_button_media_query')
 
 
 //===========Name/Phone Module=========================
@@ -329,7 +332,9 @@ office.addEventListener('change', e=>{
         office_value = office.value;
         sessionStorage.setItem('office', office_value);
         shipment_office.value = office_value;
+        console.log('office changed')
         clear_storage.removeAttribute('disabled');
+        order_create_button_media_query.classList.add('enabled')
     }
 )
 
@@ -338,35 +343,12 @@ shipment_form.addEventListener('submit', e=>{
         sessionStorage.clear();
     }
  )
-order_delete_button.addEventListener('click', e=>{
+order_delete_button_media_query.addEventListener('click', e=>{
        sessionStorage.clear();
    }
 )
 
 
-
-
-// function sendShipmentForm() {
-//         shipment_form.submit();
-//         //e.preventDefault()
-//     };
-
-
-// for (let button of buttons) {
-//         button.addEventListener('click', clearStorage);
-//     }
-//     function clearStorage(e) {
-//         sessionStorage.clear();
-//     };
-
-//     save_button.addEventListener('submit', e=> {
-//         sessionStorage.clear();
-//    })
-
-// office.addEventListener('change', sendJSForm);
-//     function sendJSForm() {
-//         form_to_be_sent.submit();
-//     };
 
 document.addEventListener('DOMContentLoaded', e => {
         if (sessionStorage.getItem('country') === null)
