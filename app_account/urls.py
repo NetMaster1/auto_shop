@@ -16,6 +16,10 @@ urlpatterns = [
     path('recover_password', views.recover_password, name='recover_password'),
     path('create_sdek_phone/<int:user_id>', views.create_sdek_phone, name='create_sdek_phone'),
     path('create_ozon_phone/<int:user_id>', views.create_ozon_phone, name='create_ozon_phone'),
+    path('login_page_media_query', views.login_page_media_query, name='login_page_media_query'),
+    path('register_page_media_query', views.register_page_media_query, name='register_page_media_query'),
+    path('contacts_page_media_query', views.contacts_page_media_query, name='contacts_page_media_query'),
+    path('rules_page_media_query', views.rules_page_media_query, name='rules_page_media_query'),
   
  
 ]

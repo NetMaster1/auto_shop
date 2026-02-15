@@ -4,18 +4,7 @@
 
 <div class="container">
 <!-- =====================Alert Messages Module=================== -->
-<div class="container">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-info" role="alert">
-        <!-- <button class="close" data-dismiss="alert">
-                    <small><sup>x</sup></small>
-                </button> -->
-        {{ message }}
-    </div>
-    {% endfor%}
-    {% endif%}
-</div>
+
 <!-- ===================End of Alert Messages Module================ -->
 
 <div class="shop_front_no_display">
@@ -87,6 +76,18 @@
 <div class="shop_front_display_media_query">
 
 <div class="row" style="background-color: black;">
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+        {{ message }}
+    </div>
+    {% endfor%}
+    {% endif%}
+</div>
+
+
+
  {% for product in queryset_list %}
     <div class="col-6 mt-2">
         {% if product.image_1%}
@@ -114,8 +115,8 @@
     </div>
 {% endfor %}
 </div>
-
 </div>
+
 </div>
 
 

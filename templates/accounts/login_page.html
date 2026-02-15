@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="login_page">
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert">
+            <!-- <button class="close" data-dismiss="alert">
+                        <small><sup>x</sup></small>
+                    </button> -->
+            {{ message }}
+        </div>
+        {% endfor%}
+        {% endif%}
+    </div>
+    <!-- ===============================Login Modal===================================== -->
+     
+      
+<div class="login_form_media_query rounded-5">
+    <a href="{% url 'shopfront' %}">
+        <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross_login_media_query">
+    </a>   
+    <div class="modal-dialog">
+        <div class="modal-content">          
+            <form action="{% url 'login_user' %}" method='POST' id="login_form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Электронная почта</label>
+                    <input type="email" name="username" class="form-control" placeholder="Введите имя пользователя" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" name="password" class="form-control" placeholder='Введите пароль' required>
+                </div>
+                <br>
+                <div class="row pl-2 pr-2">
+                    <div class="login_button_media_query" id="login_button">
+                        <input type="submit" value="Войти">
+                    </div>
+                </div>
+       
+             </form>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <a href="{% url 'password_recovery_page' %}">Забыли пароль?</a>
+    </div>
+</div>
+
+</div>    
+
+<script>
+ const login_button=document.querySelector('#login_button');
+ const login_form=document.querySelector('#login_form');
+
+login_button.addEventListener('click',sendJSForm);
+    function sendJSForm() {
+        login_form.submit();
+    };
+
+
+
+</script>
+
+
+
+{% endblock %}

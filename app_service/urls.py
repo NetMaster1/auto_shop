@@ -11,5 +11,6 @@ urlpatterns = [
     path('db_correct_model_names', views.db_correct_model_names, name='db_correct_model_names'),
     path('delete_cart_items', views.delete_cart_items, name='delete_cart_items'),
     path('delete_carts', views.delete_carts, name='delete_carts'),
+    path('html_test', views.html_test, name='html_test'),
    
 ]

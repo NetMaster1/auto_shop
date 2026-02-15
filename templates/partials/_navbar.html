@@ -2,185 +2,79 @@
 <div class="my_nav_bar rounded">
   
         <div class="cart_price_font_media_query">
-            EvvyAuto
+            <a href="{% url 'shopfront' %}"  >EvvyAuto</a>
         </div>
    
  
-<form action="{% url 'search' %}" method="POST" role="search">
-        {% csrf_token %}     
-<div class="row">
-  
-    <div class="col">
-        <input class="form-control" type="text" style="height: 5vh; width: 40vw;" name="brand" placeholder="Введите бренд или модель" aria-label="Search"/>
-    </div>
-    <div class="col">
-        <div class="my_nav_bar_button">
-        <button type="submit" class="my_nav_bar_button" id="search_button">Поиск</button>
-        </div>
-    </div>
-   
-</div>   
-</form>
+    <form action="{% url 'search' %}" method="POST" role="search">
+            {% csrf_token %}     
+        <div class="row">
+        
+            <div class="col">
+                <input class="form-control" type="text" style="height: 5vh; width: 35vw;" placeholder="Введите бренд или модель" aria-label="Search"/>
+            </div>
+            <div class="col">
+                <div class="my_nav_bar_button">
+                <button type="submit" class="my_nav_bar_button" id="search_button">Поиск</button>
+                </div>
+            </div>
+        
+        </div>   
+    </form>
 
 <!-- ======================Menu Module Trigger============================= -->
- <div class="font_awesome_icon_media_query pr-3" id="six_points">
-        <i class="fa-solid fa-grip"></i></div>
-  </div>
+    <div class="font_awesome_icon_media_query pr-3" id="six_points">
+            <i class="fa-solid fa-grip"></i></div>
+
+    </div>
 <!-- ===========================End of Menu Module Trigger====================== -->
-<div class="menu_module">
-     <img src="{% static 'images/Cross_edited.png' %}" class="navbar_modal_cross_blue_media_query" style="width:2rem;height:2rem;" id="menu_cross_blue">
-    {% if request.user.is_authenticated %}
 
-        <a href="{% url 'account_page' user.id %}"  >{{request.user.first_name}} {{request.user.last_name}}</a>
 
-    {% else %}
-    <!-- ============================Login Modal Trigger========================== -->
-    <div class="item_1" style="color: greenyellow; font-size: 15px;">Войти</div>
-    
-    <!-- ===============================Login Modal===================================== -->
-        <div class="outer_modal_login">
+
+<!-- =================================Start of Menu Modal========================= -->
+    <div class="menu_module_outer">
         <div class="hide">
-            <div class="enterLoginModal rounded-5">
-            <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_login">
+            <div class="menu_module_inner">
+
+                <img src="{% static 'images/Cross_edited.png' %}" class="navbar_modal_cross_blue_media_query" style="width:2rem;height:2rem;" id="menu_cross_blue">
+                {% if request.user.is_authenticated %}
+
+                     <div class="item_1" style="color: greenyellow; font-size: 15px;">
+                    <a href="{% url 'account_page' user.id %}"  >{{request.user.first_name}} {{request.user.last_name}}</a>
+                    </div>
+                     <div class="item_1" style="color: greenyellow; font-size: 15px;">
+                    <a href="{% url 'logout_user' %}"  >Выйти</a>
+                    </div>
+                   
+
+                {% else %}
+                <!-- ============================Login Modal Trigger========================== -->
+                <div class="item_1" style="color: greenyellow; font-size: 15px;">
+                    <a href="{% url 'login_page_media_query' %}">Войти</a>
+                </div>
                 
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    
-        <form action="{% url 'login_user' %}" method='POST' id="login_form">
-        {% csrf_token %}
-        <div class="form-group">
-            <!-- <label for="username">Имя пользователя</label>
-            <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required> -->
-            <label for="username">Электронная почта</label>
-            <input type="email" name="username" class="form-control" placeholder="Введите имя пользователя" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Пароль</label>
-            <input type="password" name="password" class="form-control" placeholder='Введите пароль' required>
-        </div>
-        <br>
-        <!-- <input type="submit" value="Signin" class="btn btn-info btn-block"> -->
-        <input type="submit" value="Войти" class="btn btn-outline-dark btn-block" id="login_button">
-    </form>
-        </div>
-        </div>
-        <div class="row mt-5">
-        <a href="{% url 'password_recovery_page' %}" id="password_restore_link">Забыли пароль?</a>
-        </div>
-        </div>
-        </div>
-        </div>
-        <!-- =========================End of Login Modal=========================== -->
 
-    <!-- ============================Register Modal Trigger========================== -->
-    <div class="item_2" style="color: greenyellow; font-size: 15px;">Регистрация</div>
 
-        <!-- ===============================Register Modal===================================== -->
-        <div class="outer_modal_register">
-        <div class="hide">
-            <div class="enterRegisterModal rounded-5">
-            <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_register">
+                <!-- ============================Register Modal Trigger========================== -->
+                <div class="item_2" style="color: greenyellow; font-size: 15px;">
+                    <a href="{% url 'register_page_media_query' %}">Регистрация</a>
+                </div>
+
                 
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    
-                <form action="{% url 'register_user' %}" method='POST' id="register_form">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="first_name" class="text-black">Имя</label>
-                        <input type="text" name="first_name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="last_name" class="text-black">Фамилия</label>
-                        <input type="text" name="last_name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email" class="text-black">Электронная почта</label>
-                        <input type="email" name="email" class="form-control" required autocomplete="off"  >
-                    </div>
+                {% endif %}
 
-                    <div class="form-group">
-                        <label for="password" class="text-black">Пароль</label>
-                        <input type="password" name="password" class="form-control" required autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="password2" class="text-black">Подтверждение пароля</label>
-                        <input type="password" name="password2" class="form-control" required>
-                    </div>
-                
-                        <div class="row p-3">
-                        <input type="submit" value="Отправить" class="btn btn-outline-primary btn-block">
-                        </div>
-                    
-                    
-                    
-                </form>
-            </div>
-        </div>
-        <!-- ================================================================ -->
-        </div>
-        </div>
-        </div>
-        <!-- =========================End of Register Modal=========================== -->
-    {% endif %}
-
-    <div class="item_3" style="color: greenyellow; font-size: 15px;" id="item_contacts">Контакты</div>
-      
-    <div class="item_4" style="color: greenyellow; font-size: 15px;" id="rules_media_query">Правила</div>
-
-
-</div>
-        <!-- ===========================Modal Body================================= -->
-        <div class="contacts_module">
-           <img src="{% static 'images/Cross_edited.png' %}" id="contacts_cross_blue" class="navbar_modal_cross_blue_media_query" style="width:2rem;height:2rem;" >
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <h5 style="text-align: left;" >
-                    e-mail: support@auto-deflector.ru <br>
-                    <br>
-                    Реквизиты: ИП Винокуров Сергей Николаевич <br>
-                    ИНН 526013223435 <br>
-                    ОГРНИП 322527500137506
-                    ООО «Банк Точка» <br>
-                    БИК 044525104 <br>
-                    р.с.40802810420000006198
-                    </h5>
+                <div class="item_3" style="color: greenyellow; font-size: 15px;">
+                    <a href="{% url 'contacts_page_media_query' %}">Контакты</a>
+                </div>
+                <div class="item_4" style="color: greenyellow; font-size: 15px;">
+                    <a href="{% url 'rules_page_media_query' %}">Правила</a>
                 </div>
             </div>
         </div>
-        <!-- =================================End of Modal Body======================================== -->
-        <!-- ===========================Modal Body================================= -->
-        <div class="rules_module_media_query">
-            <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;"  class='cross' id="cross_contacts" >
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <h5 style="text-align: left;" >
-                        <strong>Правила </strong>
-                        <br><br>
-                        Осуществляя покупку в нашем интернет магазине, покупатель соглашается с данными Правилами.
-                        В соответствии с данными Правилами доставка товара осуществляется после его оплаты. Доставка осуществляется
-                        в пункт выдачи СДЕК, указанный покупателем, на ФИО, указанное покупателем при оформлении заказа.
-                        Стоимость доставки включена в стоимость заказа. Стоимость доставки можно узнать перед оформлением заказа при указании пункта выдачи СДЕК.
-                        <br><br>
-                        Продавец гарантирует возврат денежных средст в случае поломки товара в процессе транспортировки.
-                        Возврат денежных средств осуществляется в течение 5 дней с момента подтверждения поломки товара. 
-                        Подтверждением поломки товара в процессе транспортировки может служить фотография поломанного товара 
-                        в пункте выдачи СДЕК, сделанная покупателем при получении товара и его проверке.
-                        <br><br>
-                        Транспортировка товара осуществляется в коробках, изготовленных из пятислойного картона марки П32.
-                        <br><br>
-                            В остальном взаимодействие между покупателем и продавцом регулируетя Законом РФ о Защите прав потребителей.
-                        </h5>
-                    </h5>
-                </div>
-            </div>
-        </div>
-        <!-- =================================End of Modal Body======================================== -->
+    </div>
+<!-- ===========================Modal Body================================= -->
+ 
 
-
-
-  
-</div>
 
 </div>
 
@@ -189,46 +83,23 @@
 
 
 const six_points = document.querySelector('#six_points');
-const menu_module = document.querySelector('.menu_module');
+const menu_module_outer = document.querySelector('.menu_module_outer');
 const menu_cross_blue = document.querySelector('#menu_cross_blue');
-const contacts_cross_blue = document.querySelector('#contacts_cross_blue');
-const item_contacts = document.querySelector('#item_contacts');
-const contacts_module = document.querySelector('.contacts_module');
-const rules_media_query = document.querySelector('#rules_media_query');
-const rules_module_media_query = document.querySelector('.rules_module_media_query');
+
 
 
  
   six_points.addEventListener('mouseover', showMenu)
   function showMenu () {
           console.log('ok')
-          menu_module.classList.add('openModal')
+          menu_module_outer.classList.add('openModal')
     }
   menu_cross_blue.addEventListener('mouseover', closeMenu)
   function closeMenu () {
           console.log('ok')
-          menu_module.classList.remove('openModal')
-          contacts_module.classList.remove('openModal')
-          rules_module_media_query.classList.remove('openModal')
+          menu_module_outer.classList.remove('openModal')
     }
 
- rules_media_query.addEventListener('click', showRules)
-  function showRules () {
-          console.log('ok')
-          rules_module_media_query.classList.add('openModal')
-  }
-
- item_contacts.addEventListener('click', showContacts)
-  function showContacts () {
-        console.log('ok')
-        contacts_module.classList.add('openModal')
-        // menu_module.classList.remove('openModal')
-  }
-
- contacts_cross_blue.addEventListener('click', closeContacts)
-  function closeContacts () {
-          console.log('ok')
-          contacts_module.classList.remove('openModal')
-  }
+ 
 
 </script>

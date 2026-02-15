@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="register_page">
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert">
+            <!-- <button class="close" data-dismiss="alert">
+                        <small><sup>x</sup></small>
+                    </button> -->
+            {{ message }}
+        </div>
+        {% endfor%}
+        {% endif%}
+    </div>
+    <!-- ===============================Register Modal===================================== -->
+             
+    <div class="register_form_media_query rounded-5">
+        
+        <a href="{% url 'shopfront' %}">
+            <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross_login_media_query">
+        </a>   
+
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+            <form action="{% url 'register_user' %}" method='POST' id="register_form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name" class="text-black">Имя</label>
+                    <input type="text" name="first_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name" class="text-black">Фамилия</label>
+                    <input type="text" name="last_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="text-black">Электронная почта</label>
+                    <input type="email" name="email" class="form-control" required autocomplete="off"  >
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="text-black">Пароль</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password2" class="text-black">Подтверждение пароля</label>
+                    <input type="password" name="password2" class="form-control" required>
+                </div>
+            
+                <div class="row mt-3 pl-2 pr-2">
+                    <div class="register_button_media_query" id="register_button">
+                        <input type="submit" value="Зарегистрироваться">
+                    </div>
+                </div>
+                
+                
+                
+            </form>
+        </div>
+    </div>
+    <!-- ================================================================ -->
+    </div>
+            
+                <!-- =========================End of Register Modal=========================== -->
+</div>    
+
+<script>
+ const login_button=document.querySelector('#resiter_button');
+ const login_form=document.querySelector('#register_form');
+ const cross_register=document.querySelector('#cross_register');
+
+register_button.addEventListener('click',sendJSForm);
+    function sendJSForm() {
+        register_form.submit();
+    };
+
+
+
+</script>
+
+
+
+{% endblock %}

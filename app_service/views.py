@@ -160,3 +160,6 @@ def delete_carts(request):
     for item in carts:
         item.delete()
     return redirect ('shopfront')
+
+def html_test(request):
+    return render (request, 'html_test.html')
