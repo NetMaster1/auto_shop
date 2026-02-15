@@ -573,7 +573,9 @@ nav {
 /* ====================================================================== */
 /* ====================================================================== */
 /* ====================================================================== */
-@media only screen and (max-device-width: 600px) {
+/* @media only screen and (max-device-width: 1080px)  */
+@media (orientation: portrait) 
+{
 .shop_front_no_display {
   display: none;
 }

@@ -89,12 +89,12 @@ const menu_cross_blue = document.querySelector('#menu_cross_blue');
 
 
  
-  six_points.addEventListener('mouseover', showMenu)
+  six_points.addEventListener('click', showMenu)
   function showMenu () {
           console.log('ok')
           menu_module_outer.classList.add('openModal')
     }
-  menu_cross_blue.addEventListener('mouseover', closeMenu)
+  menu_cross_blue.addEventListener('click', closeMenu)
   function closeMenu () {
           console.log('ok')
           menu_module_outer.classList.remove('openModal')
