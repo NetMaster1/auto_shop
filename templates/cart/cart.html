@@ -137,10 +137,10 @@
 
 <!-- =====================================Media Queery 540========================== -->
 <div class="cart_big_screen_media_query ">
-  <div class="container">
+
     <form action="{% url 'purchase_product' %}" method="POST" id="purchase_form">
           {% csrf_token %}
-        {% for cart_item in cart_items %}
+      {% for cart_item in cart_items %}
         <div class="cart_card_media_query">
           <div class="row p-1">
             <div class="col-3">
@@ -149,41 +149,42 @@
               </a>
             </div>
             <div class="col-8">
-              <div class="row cart_price_font_media_query"><div class="col-3">{{cart_item.price}}</div> <div class="col-1" style="text-align:left"><i class="fa-solid fa-ruble-sign"></i></div></div>
+              <div class="row cart_price_font_media_query"><div class="col-4">{{cart_item.price}}</div> <div class="col-1" style="text-align:left"><i class="fa-solid fa-ruble-sign"></i></div></div>
               <div class="row pl-3" style="font-weight: bold">{{cart_item.product}}</div>  
-            </div>
-          </div>
-
-            <div class="row">
-              <div class="col-3" style="font-weight: bold">
-                {{cart_item.quantity}} шт.
-              </div>
-              <div class="col-3 subtotal" style="font-weight: bold">
-                {{cart_item.sub_total}} руб..
-              </div>
-              <div class="col-2">
-                <a href="{% url 'add_cart_item' cart_item.id %}" class="text-info">
-                  <h1 class="text-center"style="font-size: 1.2rem; color: blue;" ><i class="fas fa-cart-plus"></i></h3>
-                </a>
-              </div>
-              <div class="col-2">
-                  <a href="{% url 'remove_cart_item' cart_item.id %}"class="text-info" >
-                    <h3 class="text-center" style="font-size: 1.2rem; color: blue;"><i class="fas fa-minus-circle"></i></h3>
-                  </a>
-              </div>
-              <div class="col-2">
-                <div class="form-check form-switch" style="font-size:1.2rem;" >
-                  <input class="form-check-input switchCheck_media_query" type="checkbox" role="switch"  value='{{cart_item.id}}' name="checkbox" checked>
+              <div class="row mt-3" style="font-weight: bold"> 
+                <div class="col-4">
+                  {{cart_item.quantity}} шт.
                 </div>
-              </div>  
-            </div>
-        
-  </div>
+                <div class="col-5 subtotal" style="font-weight: bold">
+                   {{cart_item.sub_total}} <i class="fa-solid fa-ruble-sign"></i>
+
+                </div>
+              </div> 
+              <div class="row mt-3">
+                <div class="col-2">
+                  <a href="{% url 'add_cart_item' cart_item.id %}" class="text-info">
+                    <h1 class="text-center"style="font-size: 1.2rem; color: blue;" ><i class="fas fa-cart-plus"></i></h3>
+                  </a>
+                </div>
+                <div class="col-2">
+                    <a href="{% url 'remove_cart_item' cart_item.id %}"class="text-info" >
+                      <h3 class="text-center" style="font-size: 1.2rem; color: blue;"><i class="fas fa-minus-circle"></i></h3>
+                    </a>
+                </div>
+                <div class="col-2">
+                  <div class="form-check form-switch" style="font-size:1.2rem;" >
+                    <input class="form-check-input switchCheck_media_query" type="checkbox" role="switch"  value='{{cart_item.id}}' name="checkbox" checked>
+                  </div>
+                </div>  
+              </div>
+
+            </div>           
+          </div>   
+        </div>
  
-        {% endfor %}
+      {% endfor %}
 
         {% if cart_items %}  
-        
         <div class="cart_footer_media_query" id="purchase_cart_item">
           <div class="div pt-1" style="font-size: 15px;">
             Всего товаров на сумму: 
@@ -202,7 +203,7 @@
         </div>
         {% endif %}
        </form> 
-  </div>
+
 
 
 <script>

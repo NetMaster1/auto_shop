@@ -61,6 +61,67 @@
   </div>
 </div>
 
+<div class="box_city_choice_outer_module_media_query">
+
+    <div class="box_city_choice rounded-4">
+      <a href="{% url 'product_page' product.article %}">
+        <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" >
+      </a>
+
+
+      <div class="row">
+            <form action="{% url 'delivery_city_choice' product.id %}" method="POST" id="form_to_be_sent" >
+              {% csrf_token %}
+
+        <div class="row m-auto">
+          <label for="country" class="form-label"> <strong>Страна</strong></label>
+          <select name="country" id="country" class='form-control' required>
+            <!-- <option selected="true" disabled="disabled">Выберите страну</option> -->
+            <option  value="" disabled selected hidden>Выберите страну</option>
+            <!-- <option value="">Выберите страну</option> -->
+            {% for country in countries %}
+            <option value="{{country}}">{{country}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="row m-auto">
+          <label for="region" class="form-label"> <strong>Регион</strong></label>
+          <select name="region" id="region" class='form-control' required>
+            <option selected="true">Выберите регион</option>
+            <!-- <option value="">Выберите регион</option> -->
+            {% for region in regions %}
+            <option value="{{region.region}}">{{region.region}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="row m-auto">
+          <label for="city" class="form-label"> <strong>Населенный пункт</strong> </label>
+          <select name="city" id="city" class='form-control'>
+            <option value="">Выберите населенный пункт в пределах вашего региона</option>
+            {% for city in cities %}
+            <option value="{{city.city}}">{{city.city}}</option>
+            {% endfor %}
+          </select>
+        </div>
+            </form>
+        <form action="{% url 'get_sdek_delivery_cost' product.id %}" method="POST" id="shipment_form" target="_parent">
+      {% csrf_token %}
+            <input type="text" id="shipment_city" name="shipment_city" class='form-control' autocomplete="off" hidden> 
+            <input type="text" id="shipment_region" name="shipment_region" class='form-control' autocomplete="off" hidden> 
+      
+          <div class="row mt-3 p-3">
+            <input type="submit" value="Рассчитать" class="btn btn-block btn-outline-primary" id="clear_storage" disabled>
+          </div>
+        </form>
+        
+      </div>
+
+
+
+
+
+
+ 
 
 
 

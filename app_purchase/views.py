@@ -48,17 +48,28 @@ def add_cart(request, product_id):
             cart=Cart.objects.get(cart_id=key)
         else:
             cart=Cart.objects.create(cart_id=key)
-    try:
-        if CartItem.objects.filter(product=product.name, cart=cart).exists():
-            cart_items = CartItem.objects.filter(product=product.name, cart=cart)
-            if cart_items.count()>1:
-                for i in cart_items:
-                    i.delete()
-            else:
-                cart_item = CartItem.objects.get(product=product.name, cart=cart)
-                cart_item.quantity+=1
-                cart_item.save()
-    except CartItem.DoesNotExist:
+        print(f'Cart: {cart}')
+    if CartItem.objects.filter(product=product.name, cart=cart).exists():
+        cart_items=CartItem.objects.filter(product=product.name, cart=cart)
+        #написал этот лишний код, чтобы избегать ошибок, которые случались при работае с базой
+        #в процессе настройки каким-то образом создавались дубликаты cart_items
+        if cart_items.count()>1:
+            for i in cart_items:
+                i.delete()
+            cart_item= CartItem.objects.create(
+                    product=product.name,
+                    article=product.article,
+                    image=product.image_1,
+                    cart=cart,
+                    quantity=1,
+                    price=product.site_retail_price,
+                )
+        else:
+            cart_item=CartItem.objects.get(product=product.name, cart=cart)
+            cart_item.quantity+=1
+            cart_item.save()
+    # except CartItem.DoesNotExist:
+    else:
         cart_item = CartItem.objects.create(
             product=product.name,
             article=product.article,
@@ -110,6 +121,7 @@ def cart_detail(request):
         }
         return render (request, 'cart/cart.html', context)
 
+#function to add cart items within the cart itself via icon
 def add_cart_item(request, id):
     cart_item=CartItem.objects.get(id=id)
     cart_item.quantity+=1
