@@ -888,11 +888,9 @@ font-size: 70%;
   top: 90vh;
 }
 
-
-
 .cart_price_font_media_query {
   color: greenyellow;
-  font-size: 20px;
+  font-size: 3vh;
   font-weight: 999;
 }
 
