@@ -213,7 +213,7 @@ font-weight: 900;
 }
 /* =======================Hide======================================== */
 .hide {
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
     position: absolute;
@@ -516,6 +516,12 @@ nav {
   display: none;
 }
 
+.email_confirmation {
+  display: block;
+}
+.email_confirmation_media_query {
+  display: none;
+}
 
 
 /* ====================================================================== */
@@ -534,6 +540,12 @@ nav {
     display: block;
     font-size: 15px;
   }
+.email_confirmation {
+  display: none;
+}
+.email_confirmation_media_query {
+  display: flex;
+}
 
 .enterRegisterModal {
     padding: 3rem;
@@ -573,7 +585,7 @@ nav {
       margin-bottom: 0.5rem;
 }
   .img-fluid {
-     width: 100%;
+     max-width: 100%;
 }
   .product_page_display_none_at_media_query {
       display:none;
@@ -850,13 +862,24 @@ nav {
   font-weight: bold;
 
 }
-.menu_module {
+.menu_module_outer {
   display: none;
 }
-.menu_module.openModal {
+
+.menu_module_outer.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+
+.menu_module_inner {
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
   border-radius: 5px;
   background-color: black;
   padding:1rem;
@@ -868,11 +891,11 @@ nav {
   opacity: 90%;
 }
 
+
 .navbar_modal_cross_blue_media_query {
   position: absolute;
   top: 0;
   right: 0;
-
 }
 
 .contacts_module {
@@ -972,5 +995,86 @@ nav {
 
 }
 
+/* ===================================Register Page Media Query==================== */
+.register_page {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.register_form_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 2rem;
+    background-color: white;
+    width: 80vw;
+    height: 65vh;
+}
+.cross_register_media_query {
+  margin: 1rem;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.cross_reister_media_query:hover {
+  /* opacity: 2; */
+  transform: scale(1.1);
+}
+.register_button_media_query {   
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: blue;
+    border-radius: 7px;
+    height: 5vh;
+}
+
+.email_confirm_page {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.email_confirm_form_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 3rem;
+    background-color: white;
+    width: 85vw;
+    height: 30vh;
+}
+
+.contact_page_media_query {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.contacts_page_info_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 3rem;
+    background-color: white;
+    width: 85vw;
+    height: 50vh;
+}
 
 }

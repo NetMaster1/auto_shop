@@ -2,6 +2,8 @@
 {% load static %}
 {% block content %}
 
+<div class="email_confirmation">
+
 <!-- ===============================Login Modal===================================== -->
        
               <div class="hide">
@@ -30,5 +32,62 @@
             </div>
       
     <!-- =========================End of Login Modal=========================== -->
+</div>
 
+
+<div class="email_confirmation_media_query">
+
+  <div class="email_confirm_page">
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert">
+            <!-- <button class="close" data-dismiss="alert">
+                        <small><sup>x</sup></small>
+                    </button> -->
+            {{ message }}
+        </div>
+        {% endfor%}
+        {% endif%}
+    </div>
+    <!-- ===============================Login Modal===================================== -->
+      
+      
+    <div class="email_confirm_form_media_query rounded-5">
+      <a href="{% url 'shopfront' %}">
+          <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross_login_media_query">
+      </a>   
+      <div class="modal-dialog">
+        <div class="modal-content">
+                            
+        <form action="{% url 'confirm_email' user.id %}" method='POST' id="email_confirm_form_media_query">
+          {% csrf_token %}
+          <div class="form-group">
+            <input type="" name="security_string" class="form-control" placeholder="Введите код из вашей почты" required>
+          </div>
+          <br>
+          <div class="row mt-3 pl-2 pr-2">
+              <div class="register_button_media_query" id="email_confirm_button">
+                  <input type="submit" value="Отпрвить">
+              </div>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>    
+
+
+<script>
+ const email_confirm_button=document.querySelector('#email_confirm_button');
+ const email_confirm_form_media_query=document.querySelector('#email_confirm_form_media_query');
+
+email_confirm_button.addEventListener('click',sendJSForm);
+    function sendJSForm() {
+        email_confirm_form_media_query.submit();
+    };
+</script>
 {% endblock %}

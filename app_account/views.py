@@ -270,3 +270,9 @@ def create_ozon_phone(request, user_id):
 
 def login_page_media_query (request):
     return render(request, 'accounts/login_page.html')
+
+def register_page_media_query (request):
+    return render(request, 'accounts/register_page.html')
+
+def contacts_page_media_query (request):
+    return render(request, 'accounts/contacts_page.html')

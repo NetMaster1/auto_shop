@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="login_page">
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert">
+            <!-- <button class="close" data-dismiss="alert">
+                        <small><sup>x</sup></small>
+                    </button> -->
+            {{ message }}
+        </div>
+        {% endfor%}
+        {% endif%}
+    </div>
+    <!-- ===============================Login Modal===================================== -->
+     
+      
+  <div class="contact_page_media_query">
+            
+                <div class="contacts_page_info_media_query rounded-5">
+                 <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;"  class='cross' id="cross_contacts" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            
+                              <h5 style="text-align: left;" >
+                                e-mail: support@auto-deflector.ru <br>
+                                <br>
+                                Реквизиты: ИП Винокуров Сергей Николаевич <br>
+                                ИНН 526013223435 <br>
+                                ОГРНИП 322527500137506
+                                ООО «Банк Точка» <br>
+                                БИК 044525104 <br>
+                                р.с.40802810420000006198
+                              </h5>
+                 
+                  </div>
+              </div>
+              </div>
+           
+         
+            </div>
+            <!-- =================================End of Modal Body======================================== -->
+
+</div>    
+
+
+
+
+
+{% endblock %}
