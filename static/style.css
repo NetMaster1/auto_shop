@@ -213,7 +213,7 @@ font-weight: 900;
 }
 /* =======================Hide======================================== */
 .hide {
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
     position: absolute;
@@ -509,12 +509,77 @@ inset rgba(255,255,255,.5) 5px 5px 8px 5px,
 nav {
   display: block;
 }
+.password_recovery_page {
+  display: block;
+}
+.password_recovery_page_media_query {
+  display: none;
+}
+
+.email_confirmation {
+  display: block;
+}
+.email_confirmation_media_query {
+  display: none;
+}
+
+.my_nav_bar {
+  display: flex;
+  background-color: blue;
+  color: white;
+  height: 10vh;
+  width: 100vw;
+  position: sticky;
+  top: 0;
+  gap: 3vw;
+  align-items: center;
+  justify-content: end;
+  flex-shrink: 1;
+  z-index: 9999;
+  opacity: 100%;
+}
+
+.menu_module_outer {
+  display: none;
+}
+
+.menu_module_outer.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+
+.menu_module_inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  border-radius: 5px;
+  background-color: black;
+  padding:1rem;
+  top: 2wh;
+  right: 0;
+  width: 45%;
+  height: 20%;
+  z-index: 9999;
+  opacity: 90%;
+}
+
+
 
 /* ====================================================================== */
 /* ====================================================================== */
 /* ====================================================================== */
 /* ====================================================================== */
-@media only screen and (max-device-width: 600px) {
+/* @media only screen and (max-device-width: 600px)  */
+@media (orientation: portrait)
+/* @media (max-aspect-ratio: 20/9)  */
+
+{
 .shop_front_no_display {
   display: none;
 }
@@ -526,6 +591,12 @@ nav {
     display: block;
     font-size: 15px;
   }
+.email_confirmation {
+  display: none;
+}
+.email_confirmation_media_query {
+  display: flex;
+}
 
 .enterRegisterModal {
     padding: 3rem;
@@ -539,7 +610,7 @@ nav {
       padding: 3rem;
       background-color: white;
       width: 80vw;
-      height: 50vh;
+      height: 60vh;
       display: block;
       position: absolute;
   }
@@ -565,7 +636,7 @@ nav {
       margin-bottom: 0.5rem;
 }
   .img-fluid {
-     width: 100%;
+     max-width: 100%;
 }
   .product_page_display_none_at_media_query {
       display:none;
@@ -677,8 +748,10 @@ nav {
     justify-content: center;
 }
 .box_client {
-  background-color: rgb(204, 212, 214);
-  border-radius: 1vmax;
+  background-color: black;
+  color: white;
+  border-color: greenyellow;
+  border-width: 3px;
   width: 95vw;
   /* font-size: 15px; */
 }
@@ -735,6 +808,8 @@ font-size: 70%;
 
 .cart_big_screen_media_query {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   min-height: 100vh;
 
 }
@@ -827,7 +902,7 @@ nav {
 
 .my_nav_bar_button {
   color: white;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   background-color: greenyellow;
   border-radius: 5px;
@@ -842,29 +917,41 @@ nav {
   font-weight: bold;
 
 }
-.menu_module {
+.menu_module_outer {
   display: none;
 }
-.menu_module.openModal {
+
+.menu_module_outer.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+
+.menu_module_inner {
   display: flex;
   flex-direction: column;
-  position: absolute;
+  justify-content: space-between;
+  position: fixed;
   border-radius: 5px;
   background-color: black;
   padding:1rem;
   top: 2wh;
   right: 0;
-  width: 40%;
+  width: 45%;
   height: 20%;
   z-index: 9999;
   opacity: 90%;
 }
 
+
 .navbar_modal_cross_blue_media_query {
   position: absolute;
   top: 0;
   right: 0;
-
 }
 
 .contacts_module {
@@ -899,5 +986,202 @@ nav {
   width: 40vw;
   overflow: scroll;
 }
+
+.login_page {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.login_form_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 2rem;
+    background-color: white;
+    width: 80vw;
+    height: 60vh;
+    border-radius: 5px;
+    overflow: scroll;
+}
+.cross_login_media_query {
+  margin: 1rem;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.cross_login_media_query:hover {
+  /* opacity: 2; */
+  transform: scale(1.1);
+}
+.login_button_media_query {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: blue;
+    border-radius: 7px;
+    height: 5vh;
+}
+.password_recovery_page {
+  display: none;
+}
+.password_recovery_page_media_query {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.enterLoginModal_media_query {
+  position:absolute;
+  border-color: greenyellow;
+  border-width: 3px;
+  border-radius: 5px;
+  background-color: white;
+  width: 70vw;
+  height: 30vh;
+  padding: 2rem;
+
+}
+
+/* ===================================Register Page Media Query==================== */
+.register_page {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.register_form_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 2rem;
+    background-color: white;
+    width: 80vw;
+    height: 65vh;
+}
+.cross_register_media_query {
+  margin: 1rem;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.cross_reister_media_query:hover {
+  /* opacity: 2; */
+  transform: scale(1.1);
+}
+.register_button_media_query {   
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: blue;
+    border-radius: 7px;
+    height: 5vh;
+}
+
+.email_confirm_page {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.email_confirm_form_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 3rem;
+    background-color: white;
+    width: 85vw;
+    height: 30vh;
+}
+
+.contact_page_media_query {
+  display: flex;
+  background-color: black;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.contacts_page_info_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 3rem;
+    background-color: white;
+    width: 85vw;
+    height: 50vh;
+}
+.rules_page_info_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 2rem;
+    background-color: white;
+    width: 85vw;
+    height: 80vh;
+    overflow: scroll;
+}
+
+.order_create_button_media_query {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1vmax;
+  color: blue;
+  background-color: white;
+  border-color: blue;
+  border-width: 1px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  height: 10%;
+}
+.order_create_button_media_query.enabled {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1vmax;
+  color: white;
+  background-color: blue;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  height: 10%;
+}
+.order_delete_button_media_query {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1vmax;
+  color: white;
+  background-color: blue;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  height: 3rem;
+}
+
 
 }
