@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
+
 <!-- =====================Alert Messages Module=================== -->
 
 <!-- ===================End of Alert Messages Module================ -->
@@ -74,50 +74,46 @@
 </div>
 
 <div class="shop_front_display_media_query">
-
-<div class="row" style="background-color: black;">
-<div class="container">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-info" role="alert">
-        {{ message }}
-    </div>
-    {% endfor%}
-    {% endif%}
-</div>
-
-
-
- {% for product in queryset_list %}
-    <div class="col-6 mt-2">
-        {% if product.image_1%}
-            <div class="myCard" style="background-color: black; color: greenyellow; font-size: 20px; font-weight: 999;" >
-                <div class="row mt-1 mb-1">
-                    <div class="col-3">{{product.site_retail_price}}</div>
-                    <div class="col-2" style="text-align:left" ><i class="fa-solid fa-ruble-sign"></i></div> 
-                    <div class="col-5">
-                        <div class="stars-outer">
-                            <div class="stars-inner" style="width: {{product.percent}};"></div>     
-                        </div>
-                    </div>
-                </div>
-               
-                <a href="{% url 'product_page' product.article %}">
-                <img src="{{product.image_1.url}}" class='rounded-2 img-fluid img_scale' alt="Placeholder image" >
-                </a>
-
-                <div class="shopfront_buy_button_media_query" id="add_cart_bar">
-                   <a href="{% url 'add_cart' product.id %}" id="cart_link">В корзину</a>
-                </div>
-
+    <div class="row">
+        <div class="container">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">
+                {{ message }}
             </div>
-        {% endif %}
+            {% endfor%}
+            {% endif%}
+        </div>
+        {% for product in queryset_list %}
+            <div class="col-6 mt-2">
+                {% if product.image_1%}
+                    <div class="myCard" style="background-color: black; color: greenyellow; font-size: 20px; font-weight: 999;" >
+                        <div class="row mt-1 mb-1">
+                            <div class="col-3">{{product.site_retail_price}}</div>
+                            <div class="col-2" style="text-align:left" ><i class="fa-solid fa-ruble-sign"></i></div> 
+                            <div class="col-5">
+                                <div class="stars-outer">
+                                    <div class="stars-inner" style="width: {{product.percent}};"></div>     
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <a href="{% url 'product_page' product.article %}">
+                        <img src="{{product.image_1.url}}" class='rounded-2 img-fluid img_scale' alt="Placeholder image" >
+                        </a>
+
+                        <div class="shopfront_buy_button_media_query" id="add_cart_bar">
+                        <a href="{% url 'add_cart' product.id %}" id="cart_link">В корзину</a>
+                        </div>
+
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
-</div>
 </div>
 
-</div>
+
 
 
 
