@@ -523,6 +523,51 @@ nav {
   display: none;
 }
 
+.my_nav_bar {
+  display: flex;
+  background-color: blue;
+  color: white;
+  height: 10vh;
+  width: 100vw;
+  position: sticky;
+  top: 0;
+  gap: 3vw;
+  align-items: center;
+  justify-content: end;
+  flex-shrink: 1;
+}
+
+.menu_module_outer {
+  display: none;
+}
+
+.menu_module_outer.openModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 9999;
+}
+
+.menu_module_inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  border-radius: 5px;
+  background-color: black;
+  padding:1rem;
+  top: 2wh;
+  right: 0;
+  width: 45%;
+  height: 20%;
+  z-index: 9999;
+  opacity: 90%;
+}
+
+
 
 /* ====================================================================== */
 /* ====================================================================== */
@@ -697,8 +742,10 @@ nav {
     justify-content: center;
 }
 .box_client {
-  background-color: rgb(204, 212, 214);
-  border-radius: 1vmax;
+  background-color: black;
+  color: white;
+  border-color: greenyellow;
+  border-width: 3px;
   width: 95vw;
   /* font-size: 15px; */
 }
@@ -755,6 +802,8 @@ font-size: 70%;
 
 .cart_big_screen_media_query {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   min-height: 100vh;
 
 }
@@ -879,13 +928,14 @@ nav {
 .menu_module_inner {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   position: fixed;
   border-radius: 5px;
   background-color: black;
   padding:1rem;
   top: 2wh;
   right: 0;
-  width: 40%;
+  width: 45%;
   height: 20%;
   z-index: 9999;
   opacity: 90%;
@@ -948,7 +998,7 @@ nav {
     position:absolute;
     padding: 2rem;
     background-color: white;
-    width: 70vw;
+    width: 80vw;
     height: 40vh;
 }
 .cross_login_media_query {
@@ -1066,7 +1116,6 @@ nav {
   justify-content: center;
 }
 
-
 .contacts_page_info_media_query {
     border-color: greenyellow;
     border-width: 3px;
@@ -1075,6 +1124,16 @@ nav {
     background-color: white;
     width: 85vw;
     height: 50vh;
+}
+.rules_page_info_media_query {
+    border-color: greenyellow;
+    border-width: 3px;
+    position:absolute;
+    padding: 2rem;
+    background-color: white;
+    width: 85vw;
+    height: 80vh;
+    overflow: scroll;
 }
 
 }

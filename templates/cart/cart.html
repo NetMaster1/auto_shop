@@ -151,30 +151,35 @@
             <div class="col-8">
               <div class="row cart_price_font_media_query"><div class="col-3">{{cart_item.price}}</div> <div class="col-1" style="text-align:left"><i class="fa-solid fa-ruble-sign"></i></div></div>
               <div class="row pl-3" style="font-weight: bold">{{cart_item.product}}</div>  
-              <div class="row mt-3">
-
-            <div class="col-3" style="font-weight: bold">
-              {{cart_item.quantity}} шт.
-            </div>
-            <div class="col-2">
-              <a href="{% url 'add_cart_item' cart_item.id %}" class="text-info">
-                <h1 class="text-center"style="font-size: 1.2rem; color: blue;" ><i class="fas fa-cart-plus"></i></h3>
-              </a>
-            </div>
-            <div class="col-2">
-                <a href="{% url 'remove_cart_item' cart_item.id %}"class="text-info" >
-                  <h3 class="text-center" style="font-size: 1.2rem; color: blue;"><i class="fas fa-minus-circle"></i></h3>
-                </a>
-            </div>
-            <div class="col-2">
-              <div class="form-check form-switch" style="font-size:1.2rem;" >
-                <input class="form-check-input switchCheck"   type="checkbox" role="switch"  value='{{cart_item.id}}' name="checkbox" checked>
-              </div>
-              </div>  
             </div>
           </div>
-        </div>
-        </div>
+
+            <div class="row">
+              <div class="col-3" style="font-weight: bold">
+                {{cart_item.quantity}} шт.
+              </div>
+              <div class="col-3 subtotal" style="font-weight: bold">
+                {{cart_item.sub_total}} руб..
+              </div>
+              <div class="col-2">
+                <a href="{% url 'add_cart_item' cart_item.id %}" class="text-info">
+                  <h1 class="text-center"style="font-size: 1.2rem; color: blue;" ><i class="fas fa-cart-plus"></i></h3>
+                </a>
+              </div>
+              <div class="col-2">
+                  <a href="{% url 'remove_cart_item' cart_item.id %}"class="text-info" >
+                    <h3 class="text-center" style="font-size: 1.2rem; color: blue;"><i class="fas fa-minus-circle"></i></h3>
+                  </a>
+              </div>
+              <div class="col-2">
+                <div class="form-check form-switch" style="font-size:1.2rem;" >
+                  <input class="form-check-input switchCheck_media_query" type="checkbox" role="switch"  value='{{cart_item.id}}' name="checkbox" checked>
+                </div>
+              </div>  
+            </div>
+        
+  </div>
+ 
         {% endfor %}
 
         {% if cart_items %}  
@@ -183,7 +188,7 @@
           <div class="div pt-1" style="font-size: 15px;">
             Всего товаров на сумму: 
           </div>
-          <div class="cart_price_font_media_query">{{total}}</div>
+          <div class="cart_price_font_media_query" id="sum_to_pay_media_query">{{total}}</div>
       
             <input type="submit" value="Перейти к оформлению">
       
@@ -198,14 +203,16 @@
         {% endif %}
        </form> 
   </div>
-</div>
+
 
 <script>
   console.log('Script works');
 
   const switchCheck=document.querySelectorAll(".switchCheck");
+  const switchCheck_media_query=document.querySelectorAll(".switchCheck_media_query");
   const subtotal=document.querySelectorAll(".subtotal");
   const sum_to_pay=document.querySelector('#sum_to_pay');
+  const sum_to_pay_media_query=document.querySelector('#sum_to_pay_media_query');
   const go_to_shop_front=document.querySelector('#go_to_shop_front');
   const footer_go_to_shopfront=document.querySelector('#footer_go_to_shopfront');
   const purchase_cart_item=document.querySelector('#purchase_cart_item');
@@ -213,20 +220,47 @@
 
 // функция выводит сумму заказа в зависимости от положения ползуна каждого наименования
 for (let i=0; i<switchCheck.length; i++) {
+    console.log(switchCheck.length)
     switchCheck[i].addEventListener('change', e=>{
       let sum_counter=0;
-      console.log('Cчетчик:', sum_counter);
+      console.log('Сумма:', sum_counter);
       console.log('Switch:', i)
 
       for (let n=0; n<subtotal.length; n++){
           if (switchCheck[n].checked){
-              // console.log(subtotal[n].innerHTML)
-              sum_counter+=Number(subtotal[n].innerHTML)}}   
-       
+              console.log('Subtotal:', subtotal[n].innerHTML)
+              sum_counter+=Number(subtotal[n].innerHTML)}
+          else {sum_counter=0}
+      }
         console.log(sum_counter)
         sum_to_pay.innerHTML=sum_counter;
 
 })}
+
+
+
+for (let i=0; i<switchCheck_media_query.length; i++) {
+    console.log(switchCheck_media_query.length)
+    switchCheck_media_query[i].addEventListener('change', e=>{
+      let sum_counter=0;
+      console.log('Сумма:', sum_counter);
+      console.log('Switch:', i)
+
+      for (let n=0; n<subtotal.length; n++){
+          if (switchCheck_media_query[n].checked)
+            {
+              console.log('Subtotal:', subtotal[n].innerHTML)
+              sum_counter+=Number(subtotal[n].innerHTML)
+              console.log('Sum_counter:', sum_counter)
+              sum_to_pay_media_query.innerHTML=sum_counter;
+            }
+          } 
+})}
+
+
+
+
+
 
 if (footer_go_to_shopfront) {
   //clicking in any place of the footer activates the hyperlink
