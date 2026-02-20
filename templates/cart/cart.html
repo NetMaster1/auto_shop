@@ -5,7 +5,15 @@
 
 
 <div class="cart_big_screen">
- 
+ <div class="container">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-info" role="alert">
+              {{ message }}
+          </div>
+          {% endfor%}
+          {% endif%}
+      </div>
 <!-- ==============Breadcumbs======================== -->
   <div class="row ml-5 p-3">
     <nav aria-label="breadcrumb">
@@ -137,7 +145,15 @@
 
 <!-- =====================================Media Queery 540========================== -->
 <div class="cart_big_screen_media_query ">
-
+      <div class="container">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-info" role="alert">
+              {{ message }}
+          </div>
+          {% endfor%}
+          {% endif%}
+      </div>
     <form action="{% url 'purchase_product' %}" method="POST" id="purchase_form">
           {% csrf_token %}
       {% for cart_item in cart_items %}

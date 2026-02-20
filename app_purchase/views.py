@@ -145,6 +145,9 @@ def delete_cart_item(request, id):
 def purchase_product(request):
     if request.method == "POST":
         check_boxes=request.POST.getlist("checkbox", None)
+        if len(check_boxes)==0:
+            messages.error(request, 'Вы не выбрали ни одного наименования')
+            return redirect ('cart_detail')
         #identifier=Identifier.objects.create()
         order=Order.objects.create()
         if request.user.is_authenticated:
