@@ -273,7 +273,8 @@ def delivery_city_choice(request, product_id):
         city=request.POST.get('city', False)
         countries=['Россия', 'Казахстан', 'Белоруссия']
         if country and region:
-            # print(country, region, city)
+            print('===============Country & Region & City')
+            print(country, region, city)
             if country=="Россия":
                 country_code="RU"
             elif country=="Казахстан":
@@ -298,7 +299,8 @@ def delivery_city_choice(request, product_id):
             return render (request, 'delivery/delivery_city_choice.html', context )
         
         elif country:
-            # print(country)
+            print('ххххххххххххCountry Onlyххххххххххххх')
+            print(country)
             if country=="Россия":
                 country_code="RU"
             elif country=="Казахстан":
@@ -307,7 +309,10 @@ def delivery_city_choice(request, product_id):
                 country_code="BY"
             
             regions=SDEK_Office.objects.filter(country_code=country_code, type='PVZ')
+            #regions=regions.values('region').distinct()
             regions=regions.distinct('region')
+            for i in regions:
+                print(i.region)
             context = {
                 'product': product,
                 'countries': countries,

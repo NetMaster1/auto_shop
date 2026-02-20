@@ -5,7 +5,15 @@
 
 
 <div class="cart_big_screen">
- 
+ <div class="container">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-info" role="alert">
+              {{ message }}
+          </div>
+          {% endfor%}
+          {% endif%}
+      </div>
 <!-- ==============Breadcumbs======================== -->
   <div class="row ml-5 p-3">
     <nav aria-label="breadcrumb">
@@ -137,7 +145,15 @@
 
 <!-- =====================================Media Queery 540========================== -->
 <div class="cart_big_screen_media_query ">
-
+      <div class="container">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-info" role="alert">
+              {{ message }}
+          </div>
+          {% endfor%}
+          {% endif%}
+      </div>
     <form action="{% url 'purchase_product' %}" method="POST" id="purchase_form">
           {% csrf_token %}
       {% for cart_item in cart_items %}
@@ -196,14 +212,14 @@
         </div>
  
         {% else %}
-        <div class="cart_footer_media_query_no_cart_items" id="footer_go_to_shopfront">
-          <div class="row pt-3">
-            <a href="{% url 'shopfront' %}" id="go_to_shop_front">Продолжить покупки</a>
+          <div class="cart_footer_media_query">
+          <div class="row pt-2 pb-2">
+            <a href="{% url 'shopfront' %}" id="footer_go_to_shopfront">Продолжить покупки</a>
           </div>
         </div>
         {% endif %}
        </form> 
-
+</div>
 
 
 <script>
@@ -253,10 +269,17 @@ for (let i=0; i<switchCheck_media_query.length; i++) {
               console.log('Subtotal:', subtotal[n].innerHTML)
               sum_counter+=Number(subtotal[n].innerHTML)
               console.log('Sum_counter:', sum_counter)
-              sum_to_pay_media_query.innerHTML=sum_counter;
+              
             }
-          } 
-})}
+            else {
+              sum_counter+=0;
+            }
+          sum_to_pay_media_query.innerHTML=sum_counter
+
+          }
+          })
+          
+}
 
 
 
