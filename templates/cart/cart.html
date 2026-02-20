@@ -253,14 +253,13 @@ for (let i=0; i<switchCheck_media_query.length; i++) {
               console.log('Subtotal:', subtotal[n].innerHTML)
               sum_counter+=Number(subtotal[n].innerHTML)
               console.log('Sum_counter:', sum_counter)
-              sum_to_pay_media_query.innerHTML=sum_counter;
               
             }
             else {
-              sum_counter=0;
-              sum_to_pay_media_query.innerHTML=sum_counter
-
+              sum_counter+=0;
             }
+          sum_to_pay_media_query.innerHTML=sum_counter
+
           }
           })
           
