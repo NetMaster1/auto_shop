@@ -200,27 +200,35 @@ font-weight: 900;
   left: 0;
   width: 100%;
   height: 100%;
-  display: block;
+  display: flec;
   z-index: 9999;
 }
 .reviewModal {
     padding: 3rem;
     background-color: white;
-    width: 50vw;
-    height: 55vh;
-    display: block;
-    position: absolute
+    width: 80vw;
+    max-height: 55vh;
+    position: absolute;
+    overflow-y: scroll;
 }
 /* =======================Hide======================================== */
 .hide {
-    display: block;
+    display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: scroll;
+    opacity: 100%;
+}
+.hide_shopfront {
+    display: block;
+    align-items: center;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     overflow-y: scroll;
     opacity: 100%;
@@ -296,7 +304,7 @@ font-weight: 900;
 .sdek_phone_modal {
     padding: 3rem;
     background-color: white;
-    width: 30vw;
+    max-width: 80%;
     height: 30vh;
     display: block;
     position:absolute;
@@ -319,7 +327,7 @@ font-weight: 900;
 .ozon_phone_modal {
     padding: 3rem;
     background-color: white;
-    width: 30vw;
+    max-width: 80vw;
     height: 30vh;
     display: block;
     position:absolute;
@@ -337,12 +345,15 @@ font-weight: 900;
 }
 .box_city_choice {
     padding: 2rem;
+    position: relative;
     background-color: white;
     width: 30vw;
     height: 45vh;
     display: block;
-    position:absolute;
+  
 }
+
+
 /* ============================================================= */
 .delivery_cost_outer_modal {
   position: fixed;
@@ -353,6 +364,11 @@ font-weight: 900;
   display: block;
   z-index: 9999;
 }
+
+.delivery_cost_modal_media_query {
+  display: none;
+}
+
 .deliveryCostModal {
     padding: 2rem;
     background-color: white;
@@ -387,6 +403,20 @@ font-weight: 900;
 .cross_review:hover {
    transform: scale(1.1);
 }
+
+.email_confirm_cross {
+  position: absolute;
+  top: 1vh;
+  right: 1vw;
+}
+
+.email_confirm_cross:hover {
+   transform: scale(1.1);
+}
+
+
+
+
 
 /*==========================Displaying Rating Stars=====================*/
 .stars-outer {
@@ -583,6 +613,43 @@ nav {
 .box_city_choice_outer_module_media_query {
   display: none;
 }
+.final_order_display_page {
+  display: block;
+}
+.final_order_display_page_media_query {
+  display: none;
+}
+
+.nav_bar_big_screen {
+  display: block;
+
+}
+.nav_bar_media_query {
+  display: none;
+
+}
+.emailConfirmForm {
+  position: relative;
+  background-color: white;
+  padding: 2rem;
+  width: 25%;
+  height: 20%
+}
+
+.email_cofirm_button {
+  background-color: blue;
+  border-radius: 5px;
+  color: white;
+  height: 2.3rem;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.email_cofirm_button:hover {
+  transform: scale(1.1);
+}
+
 
 
 /* ====================================================================== */
@@ -594,15 +661,76 @@ nav {
 /* @media (max-aspect-ratio: 20/9)  */
 
 {
+.nav_bar_big_screen {
+  display: none;
+
+}
+.nav_bar_media_query {
+  display: block;
+
+}
+
+.password_change_media_query {
+  display: flex;
+  justify-content: end;
+}
+
+.pay_button_media_query {
+  background-color: blue;
+  border-radius: 5px;
+  margin-top: 1rem;
+  color: white;
+  font-size: 2rem;
+  font-weight:700;
+  width: 96vw;
+/* font-family:'Courier New', Courier, monspace */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 
+.pay_button_media_query:hover {
+  transform: scale(1.1);
+} */
+
+
+.final_order_display_page {
+  display: none;
+}
+.final_order_display_page_media_query {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: black;
+  height: 92vh;
+  width: 100vw;
+
+}
+
+.delivery_cost_outer_modal {
+  display: none;
+}
+
+.delivery_cost_modal_media_query {
+  display: flex;
+  background-color: black;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 92vh;
+}
+
 
 .box_city_choice_outer_modal {
   display: none;
 }
 .box_city_choice_outer_module_media_query {
   display: flex;
+  flex-direction: column;
   font-size: 12px;
   background-color: black;
-  color: white;
   align-items: center;
   justify-content: center;
   height: 100vh;
@@ -764,13 +892,13 @@ nav {
   height: 6vh;
   border-radius: 5vmax;
 }
-.box_city_choice {
+.box_city_choice_media_query {
     padding: 2rem;
     background-color: white;
     width: 80vw;
-    height: 45vh;
-    display: block;
-    position:absolute;
+    /* height: auto; */
+    display: flex;
+    
 }
 .deliveryCostModal {
     padding: 2rem;
@@ -871,8 +999,13 @@ font-size: 70%;
 
 .cart_footer_media_query {
   /* position: fixed; */
+  margin: 0.5vh;
   position: sticky;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
 
   /* vertical-align: center; */
   border-radius: 1vmax;
@@ -1259,5 +1392,9 @@ nav {
   height: 3rem;
 }
 
+.page_container {
+  display: flex;
+
+}
 
 }

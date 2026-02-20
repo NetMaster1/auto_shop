@@ -13,7 +13,7 @@ def shopfront(request):
    
     print(products.count())
     #============paginator module=================
-    paginator = Paginator(products, 12)
+    paginator = Paginator(products, 2)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)
     #=============end of paginator module===============

@@ -114,10 +114,10 @@
         {% endfor %}
     </div>
 
-
-    <!-- ========================Pagination  module=============================== -->
-    <div class="row mt-3">
-        <div class="col-5 m-auto">
+<!-- ========================Pagination  module=============================== -->
+<div class="page_container">
+     <div class="page_container_content">
+     
             {% if queryset_list.has_other_pages %}
             <ul class="pagination">
                 {% if queryset_list.has_previous %}
@@ -159,9 +159,9 @@
                 {% endif %}
             </ul>
             {% endif %}
-        </div>
     </div>
-    <!-- ==============================End of pagination module============================ -->
+</div>
+<!-- ==============================End of pagination module============================ -->
 
 </div>
 
