@@ -122,10 +122,6 @@
 </div>
 
 <div class="final_order_display_page_media_query">
-
-
-
-
     <div class="pay_button_media_query">
         <a href="{% url 'make_payment' order.id %}"  target="_blank" id="clear_storage">
             <div class="row flex justify-content-center p-2">
@@ -134,13 +130,10 @@
             <div class="row flex justify-content-center p-2" style="color: greenyellow">
                 <div class="col">    {{order.bill}}</div>
                 <div class="col" >  <i class="fa-solid fa-ruble-sign"></i></div>
-        
             </div>
         </a>
     </div>
-      
-
-        <div class="box_client p-3 mt-5">       
+        <div class="box_client p-3 mt-1">       
             {% for item in order_items%}
             <div class="row m-auto">
                 <div class="col-6 ff2_120">

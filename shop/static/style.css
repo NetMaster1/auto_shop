@@ -345,6 +345,7 @@ font-weight: 900;
 }
 .box_city_choice {
     padding: 2rem;
+    position: relative;
     background-color: white;
     width: 30vw;
     height: 45vh;
@@ -674,13 +675,10 @@ nav {
   justify-content: end;
 }
 
-
-
 .pay_button_media_query {
   background-color: blue;
   border-radius: 5px;
   margin-top: 1rem;
-
   color: white;
   font-size: 2rem;
   font-weight:700;
@@ -692,10 +690,10 @@ nav {
   align-items: center;
 }
 
-
+/* 
 .pay_button_media_query:hover {
   transform: scale(1.1);
-}
+} */
 
 
 .final_order_display_page {

@@ -45,7 +45,7 @@
           </select>
         </div>
             </form>
-        <form action="{% url 'get_sdek_delivery_cost' product.id %}" method="POST" id="shipment_form" target="_parent">
+        <form action="{% url 'get_sdek_delivery_cost' product.id %}" method="POST" id="shipment_form">
       {% csrf_token %}
             <input type="text" id="shipment_city" name="shipment_city" class='form-control' autocomplete="off" hidden> 
             <input type="text" id="shipment_region" name="shipment_region" class='form-control' autocomplete="off" hidden> 
@@ -101,7 +101,7 @@
             </select>
           </div>
         </form>
-        <form action="{% url 'get_sdek_delivery_cost' product.id %}" method="POST" id="shipment_form" target="_parent">
+        <form action="{% url 'get_sdek_delivery_cost' product.id %}" method="POST" id="shipment_form_media_query" target="_parent">
       {% csrf_token %}
             <input type="text" id="shipment_city_media_query" name="shipment_city" class='form-control' autocomplete="off" hidden> 
             <input type="text" id="shipment_region_media_query" name="shipment_region" class='form-control' autocomplete="off" hidden> 
@@ -117,24 +117,22 @@
 </div>
 
 
-
-
-  
-
 <script>
     const form_to_be_sent=document.querySelector('#form_to_be_sent');
-    const form_to_be_sent_media_query=document.querySelector('#form_to_be_sent_media_query');
     const country = document.querySelector('#country');
-    const country_media_query = document.querySelector('#country_media_query');
     const region = document.querySelector('#region');
-    const region_media_query = document.querySelector('#region_media_query');
     const city = document.querySelector('#city');
-    const city_media_query = document.querySelector('#city_media_query');
     const shipment_city = document.querySelector('#shipment_city');
-    const shipment_city_media_query = document.querySelector('#shipment_city_media_query');
-    const shipment_region_media_query = document.querySelector('#shipment_region_media_query');
     const shipment_region = document.querySelector('#shipment_region');
     const clear_storage = document.querySelector('#clear_storage');
+
+
+    const form_to_be_sent_media_query=document.querySelector('#form_to_be_sent_media_query');
+    const country_media_query = document.querySelector('#country_media_query');
+    const region_media_query = document.querySelector('#region_media_query');
+    const city_media_query = document.querySelector('#city_media_query');
+    const shipment_city_media_query = document.querySelector('#shipment_city_media_query');
+    const shipment_region_media_query = document.querySelector('#shipment_region_media_query');
     const clear_storage_media_query = document.querySelector('#clear_storage_media_query');
 
 
@@ -201,10 +199,6 @@ region_media_query.addEventListener('change', sendJSFormMQ);
         form_to_be_sent_media_query.submit();
     };
 
-
-
-
-
 //===============Office Module======================
 city.addEventListener('change', e=>{
         city_value = city.value;
@@ -240,6 +234,7 @@ document.addEventListener('DOMContentLoaded', e => {
               region.value = region_value
               region_media_query.value = region_value
               shipment_region_media_query.value = region_value
+              shipment_region.value = region_value
              
         }
         if (sessionStorage.getItem('city') === null)
