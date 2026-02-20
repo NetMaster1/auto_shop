@@ -741,7 +741,9 @@ nav {
   display: none;
 }
 .shop_front_display_media_query {
-  display: block;
+  display: flex;
+  flex-direction: column;
+justify-content: center;
   background-color: black;
   padding: 1rem;
   border-radius: 7px;
@@ -1392,4 +1394,22 @@ nav {
   height: 3rem;
 }
 
+<<<<<<< HEAD
+=======
+
+.page_containner {
+  display: flex;
+  justify-content: center;
+
+
+}
+
+.page_container_content {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  
+}
+
+>>>>>>> 03d727cf90f550a0ab59e8641052052b16308b7e
 }

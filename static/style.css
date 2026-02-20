@@ -345,6 +345,7 @@ font-weight: 900;
 }
 .box_city_choice {
     padding: 2rem;
+    position: relative;
     background-color: white;
     width: 30vw;
     height: 45vh;
@@ -674,13 +675,10 @@ nav {
   justify-content: end;
 }
 
-
-
 .pay_button_media_query {
   background-color: blue;
   border-radius: 5px;
   margin-top: 1rem;
-
   color: white;
   font-size: 2rem;
   font-weight:700;
@@ -692,10 +690,10 @@ nav {
   align-items: center;
 }
 
-
+/* 
 .pay_button_media_query:hover {
   transform: scale(1.1);
-}
+} */
 
 
 .final_order_display_page {
@@ -743,7 +741,9 @@ nav {
   display: none;
 }
 .shop_front_display_media_query {
-  display: block;
+  display: flex;
+  flex-direction: column;
+justify-content: center;
   background-color: black;
   padding: 1rem;
   border-radius: 7px;
@@ -1392,6 +1392,21 @@ nav {
   font-size: 1.5rem;
   font-weight: bolder;
   height: 3rem;
+}
+
+
+.page_containner {
+  display: flex;
+  justify-content: center;
+
+
+}
+
+.page_container_content {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  
 }
 
 }
