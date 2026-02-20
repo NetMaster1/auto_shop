@@ -403,6 +403,20 @@ font-weight: 900;
    transform: scale(1.1);
 }
 
+.email_confirm_cross {
+  position: absolute;
+  top: 1vh;
+  right: 1vw;
+}
+
+.email_confirm_cross:hover {
+   transform: scale(1.1);
+}
+
+
+
+
+
 /*==========================Displaying Rating Stars=====================*/
 .stars-outer {
   position: relative;
@@ -613,6 +627,28 @@ nav {
   display: none;
 
 }
+.emailConfirmForm {
+  position: relative;
+  background-color: white;
+  padding: 2rem;
+  width: 25%;
+  height: 20%
+}
+
+.email_cofirm_button {
+  background-color: blue;
+  border-radius: 5px;
+  color: white;
+  height: 2.3rem;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.email_cofirm_button:hover {
+  transform: scale(1.1);
+}
+
 
 
 /* ====================================================================== */
