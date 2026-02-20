@@ -605,7 +605,14 @@ nav {
   display: none;
 }
 
+.nav_bar_big_screen {
+  display: block;
 
+}
+.nav_bar_media_query {
+  display: none;
+
+}
 
 
 /* ====================================================================== */
@@ -617,7 +624,14 @@ nav {
 /* @media (max-aspect-ratio: 20/9)  */
 
 {
+.nav_bar_big_screen {
+  display: none;
 
+}
+.nav_bar_media_query {
+  display: block;
+
+}
 
 .password_change_media_query {
   display: flex;
