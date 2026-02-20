@@ -467,7 +467,7 @@ font-weight: 900;
 .box_price {
   background-color:cadetblue;
   width: 20rem;
-  height: 5rem;
+  height:5rem;
   border-radius: 5vmax;
 }
 .box_client {
@@ -877,12 +877,7 @@ justify-content: center;
   top: 10vh;
   right: 3vw;
 }
-/* .box_price {
-  position: absolute;
-  color: greenyellow;
-  top: 10vh;
-  right: 3vw;
-} */
+
 .box_price {
   position: static;
   font-size: 2rem;
@@ -891,7 +886,7 @@ justify-content: center;
   text-align: center;
   background-color:cadetblue;
   width: 40vw;
-  height: 6vh;
+  /* height: 6vh; */
   border-radius: 5vmax;
 }
 .box_city_choice_media_query {

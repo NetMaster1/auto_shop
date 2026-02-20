@@ -884,14 +884,17 @@ justify-content: center;
   right: 3vw;
 } */
 .box_price {
+  display: flex;
   position: static;
+margin-bottom: 1vh;
   font-size: 2rem;
   font-weight: 900;
   color: greenyellow;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
   background-color:cadetblue;
-  width: 40vw;
-  height: 6vh;
+  width: 95vw;
+  min-height: 5vh;
   border-radius: 5vmax;
 }
 .box_city_choice_media_query {
@@ -1408,5 +1411,6 @@ nav {
   justify-content: center;
   
 }
+
 
 }
