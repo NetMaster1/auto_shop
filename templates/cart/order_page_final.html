@@ -3,13 +3,108 @@
 {% block content %}
 <div class="container">
 
-    <div class="row ff2_150 mt-2 ml-3 pl-3">
-        <div class="col-4">
-            Заказ № {{order.id}}
+    <div class="final_order_display_page">
+        <div class="row ff2_150 mt-2 ml-3 pl-3">
+            <div class="col-4">
+                Заказ № {{order.id}}
+            </div>
+
+            <div class="col-8">
+                <div class="final_order_no_display">
+                    <div class="boxShadow4 mt-5 ml-5 pl-5">
+                        <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">
+                            <div class="row flex justify-content-center p-2">
+                                Всего к оплате:
+                            </div>
+                            <div class="row flex justify-content-center p-2">
+                            {{order.bill}} руб.
+                            </div>
+                        </a>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="box_client p-3 mt-5">       
+                {% for item in order_items%}
+                <div class="row m-auto">
+                    <div class="col-6 ff2_120">
+                        Наименование:
+                    </div>
+                    <div class="col-6">
+                        {{item.product}}
+                    </div>
+                </div>
+                {% endfor%}
+                <div class="row m-auto">
+                    <div class="col-6 ff2_120">
+                        Cумма заказа (без доставки): 
+                    </div>
+                    <div class="col-6">
+                        {{order.sum}} руб.
+                    </div> 
+                </div>
+            </div>
+            <br>
+            <div class="box_client p-3">
+                <div class="row m-auto">
+                    <div class="col-6 ff2_120">
+                        Логистическая компания:
+                    </div>
+                    <div class="col-6">
+                        СДЕК
+                    </div>
+                </div>
+                <div class="row m-auto">
+                    <div class="col-6 ff2_120">
+                        Адрес пункта выдачи СДЕК:
+                    </div>
+                    <div class="col-6">
+                        {{order.delivery_point}}
+                    </div>
+                </div>
+
+                <div class="row m-auto">
+                    <div class="col-6 ff2_120">
+                        Стоимость доставки:
+                    </div>
+                    <div class="col-6">
+                        {{order.delivery_cost}} руб.
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="box_client p-3">
+                <div class="row m-auto">
+                    <div class="col-6 ff2_120">
+                        Получатель:
+                    </div>
+                    <div class="col-6">
+                        {{order.receiver_firstName}} {{order.receiver_lastName}}
+                    </div> 
+                </div>
+                <div class="row m-auto">
+                    <div class="col-6 ff2_120">
+                        Телефон получателя:
+                    </div>
+                    <div class="col-6">
+                        {{order.receiver_phone}} 
+                    </div>            
+                </div>
+                <div class="row m-auto">
+                    <div class="col-6 ff2_120">
+                        Email для чека: 
+                    </div>
+                    <div class="col-6">
+                        {{order.receiver_email}} 
+                    </div>
+                </div>
+            </div>   
         </div>
 
-        <div class="col-8">
-            <div class="final_order_no_display">
+        <div class="col-4 ">
+            <div class="final_order_media_query">
                 <div class="boxShadow4 mt-5 ml-5 pl-5">
                     <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">
                         <div class="row flex justify-content-center p-2">
@@ -20,14 +115,31 @@
                         </div>
                     </a>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
-   
+    </div>
+</div>
+
+<div class="final_order_display_page_media_query">
 
 
-<div class="row">
-    <div class="col-8">
+
+
+    <div class="pay_button_media_query">
+        <a href="{% url 'make_payment' order.id %}"  target="_blank" id="clear_storage">
+            <div class="row flex justify-content-center p-2">
+                Оплатить:
+            </div>
+            <div class="row flex justify-content-center p-2" style="color: greenyellow">
+                <div class="col">    {{order.bill}}</div>
+                <div class="col" >  <i class="fa-solid fa-ruble-sign"></i></div>
+        
+            </div>
+        </a>
+    </div>
+      
+
         <div class="box_client p-3 mt-5">       
             {% for item in order_items%}
             <div class="row m-auto">
@@ -48,7 +160,7 @@
                 </div> 
             </div>
         </div>
-        <br>
+
         <div class="box_client p-3">
             <div class="row m-auto">
                 <div class="col-6 ff2_120">
@@ -76,7 +188,8 @@
                 </div>
             </div>
         </div>
-        <br>
+
+
         <div class="box_client p-3">
             <div class="row m-auto">
                 <div class="col-6 ff2_120">
@@ -103,25 +216,14 @@
                 </div>
             </div>
         </div>   
-    </div>
-    
-    <div class="col-4 ">
-        <div class="final_order_media_query">
-            <div class="boxShadow4 mt-5 ml-5 pl-5">
-                <a href="{% url 'make_payment' order.id %}" class="boxShadow4" target="_blank" id="clear_storage">
-                    <div class="row flex justify-content-center p-2">
-                        Всего к оплате:
-                    </div>
-                    <div class="row flex justify-content-center p-2">
-                    {{order.bill}} руб.
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+
+
+
+   
 
 </div>
+
+
 
 
 <script>
