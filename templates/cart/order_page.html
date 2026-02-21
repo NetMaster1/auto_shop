@@ -14,209 +14,205 @@
     </div>
   </div>
 
-<!-- =====================Alert Messages Module=================== -->
-<div class="container">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-info" role="alert">
-        <!-- <button class="close" data-dismiss="alert">
-                    <small><sup>x</sup></small>
-                </button> -->
-        {{ message }}
-    </div>
-    {% endfor%}
-    {% endif%}
-</div>
-<!-- ===================End of Alert Messages Module================ -->
-
-<div class="box_client p-3 rounded-4">
-<div class="row p-1">
-  <div class="col-2 ff2_120">
-    <strong>Заказ # {{order.id}}</strong>
-  </div>
-  <div class="col-4 ff2_120">
-    <strong>Наименование товара</strong>
-  </div>
-  <div class="col-2 ff2_120">
-    <strong>Кол-во товара (шт.)</strong>
-  </div>
-  <div class="col-2 ff2_120">
-    <strong>Цена</strong>
-  </div>
-  <div class="col-2 ff2_120">
-    <strong>Всего</strong>
-  </div>
-
-</div>
-
-{% for item in order_items %}
-<div class="row p-1 ff2">
-     <div class="col-2">
-        <!-- <a href="{{cart_item.get_url}}"> -->
-          <img src="{{item.image.url}}" width="50" alt="">
-        <!-- </a> -->
+  <!-- =====================Alert Messages Module=================== -->
+  <div class="container">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-info" role="alert">
+          <!-- <button class="close" data-dismiss="alert">
+                      <small><sup>x</sup></small>
+                  </button> -->
+          {{ message }}
       </div>
+      {% endfor%}
+      {% endif%}
+  </div>
+  <!-- ===================End of Alert Messages Module================ -->
 
-    <div class="col-4 ff2">
-    <strong>{{item.product}}</strong> 
-    </div>
-    <div class="col-2">
-      <strong>{{item.quantity}}</strong>
-    </div>
-    <div class="col-2">
-      <strong>{{item.price}}</strong>
-        
-    </div>
-    <div class="col-2">
-      <strong>{{item.sub_total}}</strong> 
-    </div>
-</div>
-{% endfor %}
-
-</div>
-
-
-<div class="row ff2_120 m-auto">
-  Пункт доставки:
-</div>
-<form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent" class="ff2">
-          {% csrf_token %}
   <div class="box_client p-3 rounded-4">
-    <div class="row mt-2 mb-2">
-    <div class="col-md-4">
-      <label for="country" class="form-label"> <strong>Страна</strong></label>
-      <select name="country" id="country" class='form-control' required >
-        <!-- <option selected="true" disabled="disabled">Выберите страну</option> -->
-        <option  value="" disabled selected hidden>Выберите страну</option>
-        <!-- <option value="">Выберите страну</option> -->
-        {% for country in countries %}
-        <option value="{{country}}"> {{country}}</option>
-        {% endfor %}
-      </select>
+  <div class="row p-1">
+    <div class="col-2 ff2_120">
+      <strong>Заказ # {{order.id}}</strong>
     </div>
-  </div>
-  
-  
-  <div class="row mt-2 mb-2">
-    <div class="col-md-4">
-      <label for="region" class="form-label"> <strong>Регион</strong></label>
-       <select name="region" id="region" class='form-control'   >
-        <option selected="true">Выберите регион</option>
-        <!-- <option value="">Выберите регион</option> -->
-        {% for region in regions %}
-        <option value="{{region.region}}">{{region.region}}</option>
-        {% endfor %}
-      </select>
+    <div class="col-4 ff2_120">
+      <strong>Наименование товара</strong>
     </div>
+    <div class="col-2 ff2_120">
+      <strong>Кол-во товара (шт.)</strong>
+    </div>
+    <div class="col-2 ff2_120">
+      <strong>Цена</strong>
+    </div>
+    <div class="col-2 ff2_120">
+      <strong>Всего</strong>
+    </div>
+
   </div>
 
-  <div class="row mt-2 mb-2">
-    <div class="col-md-6">
-      <label for="city" class="form-label"> <strong>Населенный пункт</strong> </label>
-        <select name="city" id="city" class='form-control'  >
-        <!-- <select name="city" id="city" class='form-control' autocomplete="off"> -->
-          <!-- <option selected="true" disabled="disabled">Выберите населенный пункт в пределах вашего региона</option> -->
-          <option value="">Выберите населенный пункт в пределах вашего региона</option>
-          {% for city in cities %}
-          <option value="{{city.city}}">{{city.city}}</option>
-          {% endfor %}
-        </select>
-    </div>
+  {% for item in order_items %}
+  <div class="row p-1 ff2">
+      <div class="col-2">
+          <!-- <a href="{{cart_item.get_url}}"> -->
+            <img src="{{item.image.url}}" width="50" alt="">
+          <!-- </a> -->
+        </div>
+
+      <div class="col-4 ff2">
+      <strong>{{item.product}}</strong> 
+      </div>
+      <div class="col-2">
+        <strong>{{item.quantity}}</strong>
+      </div>
+      <div class="col-2">
+        <strong>{{item.price}}</strong>
+          
+      </div>
+      <div class="col-2">
+        <strong>{{item.sub_total}}</strong> 
+      </div>
   </div>
+  {% endfor %}
 
-
-    <div class="row mt-2 mb-2">
-    <div class="col-md-6">
-      <label for="office" class="form-label"> <strong>Пункт выдачи</strong> </label>
-        <!-- <select name="office" id="office" class='form-control'> -->
-        <select name="office" id="office" class='form-control' autocomplete="off"  >
-          <option selected="true" disabled="disabled">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option>
-          <!-- <option value="">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option> -->
-          {% for office in offices %}
-          <option value="{{office.address_full}}">{{office.address_full}}</option>
+  </div>
+  <div class="row ff2_120 m-auto">
+    Пункт доставки:
+  </div>
+  <form action="{% url 'sdek_office_choice' order.id %}" method="POST" id="form_to_be_sent" class="ff2">
+            {% csrf_token %}
+    <div class="box_client p-3 rounded-4">
+      <div class="row mt-2 mb-2">
+      <div class="col-md-4">
+        <label for="country" class="form-label"> <strong>Страна</strong></label>
+        <select name="country" id="country" class='form-control' required >
+          <!-- <option selected="true" disabled="disabled">Выберите страну</option> -->
+          <option  value="" disabled selected hidden>Выберите страну</option>
+          <!-- <option value="">Выберите страну</option> -->
+          {% for country in countries %}
+          <option value="{{country}}"> {{country}}</option>
           {% endfor %}
         </select>
       </div>
     </div>
+    
+    
+    <div class="row mt-2 mb-2">
+      <div class="col-md-4">
+        <label for="region" class="form-label"> <strong>Регион</strong></label>
+        <select name="region" id="region" class='form-control'   >
+          <option selected="true">Выберите регион</option>
+          <!-- <option value="">Выберите регион</option> -->
+          {% for region in regions %}
+          <option value="{{region.region}}">{{region.region}}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
-</form>
+
+    <div class="row mt-2 mb-2">
+      <div class="col-md-6">
+        <label for="city" class="form-label"> <strong>Населенный пункт</strong> </label>
+          <select name="city" id="city" class='form-control'  >
+          <!-- <select name="city" id="city" class='form-control' autocomplete="off"> -->
+            <!-- <option selected="true" disabled="disabled">Выберите населенный пункт в пределах вашего региона</option> -->
+            <option value="">Выберите населенный пункт в пределах вашего региона</option>
+            {% for city in cities %}
+            <option value="{{city.city}}">{{city.city}}</option>
+            {% endfor %}
+          </select>
+      </div>
+    </div>
+
+
+      <div class="row mt-2 mb-2">
+      <div class="col-md-6">
+        <label for="office" class="form-label"> <strong>Пункт выдачи</strong> </label>
+          <!-- <select name="office" id="office" class='form-control'> -->
+          <select name="office" id="office" class='form-control' autocomplete="off"  >
+            <option selected="true" disabled="disabled">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option>
+            <!-- <option value="">Выберите пункт выдачи СДЕК в пределах вашего населенного пункта</option> -->
+            {% for office in offices %}
+            <option value="{{office.address_full}}">{{office.address_full}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      </div>
+  </form>
   <div class="row ff2_120 m-auto">
       Получатель:
   </div>
-<form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form" class="ff2">
-   {% csrf_token %}
-   
-  {% if request.user.is_authenticated %}
-    <div class="box_client rounded-4 p-3">
-      <div class="row p-1">
-        <div class="col-md-4">
-        <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
-        <input type="text" class="form-control" id="firstName" name="f_name" value="{{user.first_name}}" required autocomplete="off">
-        </div>
-      </div>
-      <div class="row p-1">
-        <div class="col-md-4">
-          <input type="text" class="form-control" id="lastName" name="l_name" value="{{user.last_name}}" required autocomplete="off">
-        </div>
-      </div>
-      <div class="row p-1">
-        <div class="col-md-4">
-          {% if extended_user.sdek_phone %}
-          <input type="tel" class="form-control" id="phone" name="phone" value="{{extended_user.sdek_phone}}" required autocomplete="off">
-          {% else%}
-          <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required autocomplete="off">
-          {% endif %}  
-        </div>
-      </div>
-      <div class="row p-1">
-        <div class="col-md-4">
-          <input type="email" class="form-control" id="email" name="email" value="{{user.email}}" required>
-        </div>
-      </div>
-    </div>
-  {% else %}
-    <div class="box_client p-3 rounded-4">
-      <div class="row p-1">
-          <div class="col-md-4">
-            <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
-            <input type="text" class="form-control" id="firstName" name="f_name" placeholder="Имя" required autocomplete="off">
-          </div>
-      </div>
-      <div class="row p-1">
-        <div class="col-md-4">
-          <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
-          <input type="text" class="form-control" id="lastName" name="l_name" placeholder="Фамилия" required autocomplete="off" >
-        </div>
-      </div>
-      <div class="row p-1">
-        <div class="col-md-4">
-          <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required autocomplete="off" >
-        </div>
-      </div>
-      <div class="row p-1">
-        <div class="col-md-4">
-          <!-- <label for="email" class="form-label">Email</label> -->
-          <input type="email" class="form-control" id="email" name="email" placeholder="email" required autocomplete="off">
-        </div>
-      </div>
-    </div>
-{% endif %}
-
-    <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
-
-    <div class="row m-auto mt-3 pl-2 pr-2">
-     <div class="order_create_button_media_query">
-        <input type="submit" value="Сформировать заказ" id="clear_storage" disabled>
-      </div>
-    </div>
-</form>
-     <div class="row m-auto mt-3 pl-2 pr-2">
-     <div class="order_delete_button_media_query">
-        <a href="{% url 'delete_order' order.id %}" style="text-decoration: none;" > Удалить</a>
-      </div>
-    </div>
-
+  <form action="{% url 'create_final_purchase_order' order.id %}" method="POST" id="shipment_form" class="ff2">
+    {% csrf_token %}
     
+    {% if request.user.is_authenticated %}
+      <div class="box_client rounded-4 p-3">
+        <div class="row p-1">
+          <div class="col-md-4">
+          <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
+          <input type="text" class="form-control" id="firstName" name="f_name" value="{{user.first_name}}" required autocomplete="off">
+          </div>
+        </div>
+        <div class="row p-1">
+          <div class="col-md-4">
+            <input type="text" class="form-control" id="lastName" name="l_name" value="{{user.last_name}}" required autocomplete="off">
+          </div>
+        </div>
+        <div class="row p-1">
+          <div class="col-md-4">
+            {% if extended_user.sdek_phone %}
+            <input type="tel" class="form-control" id="phone" name="phone" value="{{extended_user.sdek_phone}}" required autocomplete="off">
+            {% else%}
+            <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required autocomplete="off">
+            {% endif %}  
+          </div>
+        </div>
+        <div class="row p-1">
+          <div class="col-md-4">
+            <input type="email" class="form-control" id="email" name="email" value="{{user.email}}" required>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="box_client p-3 rounded-4">
+        <div class="row p-1">
+            <div class="col-md-4">
+              <!-- <label for="inputFirstName" class="form-label">Имя</label> -->
+              <input type="text" class="form-control" id="firstName" name="f_name" placeholder="Имя" required autocomplete="off">
+            </div>
+        </div>
+        <div class="row p-1">
+          <div class="col-md-4">
+            <!-- <label for="inputLastName" class="form-label">Фамилия</label> -->
+            <input type="text" class="form-control" id="lastName" name="l_name" placeholder="Фамилия" required autocomplete="off" >
+          </div>
+        </div>
+        <div class="row p-1">
+          <div class="col-md-4">
+            <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}"  placeholder="Телефон с кодом страны (11 знаков). Для РФ: 7" required autocomplete="off" >
+          </div>
+        </div>
+        <div class="row p-1">
+          <div class="col-md-4">
+            <!-- <label for="email" class="form-label">Email</label> -->
+            <input type="email" class="form-control" id="email" name="email" placeholder="email" required autocomplete="off">
+          </div>
+        </div>
+      </div>
+  {% endif %}
+
+      <input type="text" id="shipment_office" name="shipment_office" class='form-control' autocomplete="off" hidden> 
+
+      <div class="row m-auto mt-3 pl-2 pr-2">
+      <div class="order_create_button_media_query">
+          <input type="submit" value="Сформировать заказ" id="clear_storage" disabled>
+        </div>
+      </div>
+  </form>
+
+  <div class="order_delete_button_media_query">
+    <a href="{% url 'delete_order' order.id %}" style="text-decoration: none;" > Удалить</a>
+  </div>
+  
 </div>
 
 

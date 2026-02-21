@@ -553,7 +553,7 @@ nav {
   display: none;
 }
 
-.my_nav_bar {
+/* .my_nav_bar {
   display: flex;
   background-color: blue;
   color: white;
@@ -564,10 +564,10 @@ nav {
   gap: 3vw;
   align-items: center;
   justify-content: start;
-  /* flex-shrink: 1; */
+  /* flex-shrink: 1; 
   z-index: 9999;
   opacity: 100%;
-}
+} */
 .search_field {
   display: flex;
   flex-grow: 1;
@@ -667,6 +667,9 @@ nav {
 }
 .nav_bar_media_query {
   display: block;
+  position: relative;
+  width: 100vw;
+  
 
 }
 
@@ -679,6 +682,7 @@ nav {
   background-color: blue;
   border-radius: 5px;
   margin-top: 1rem;
+  margin-bottom: 1rem;
   color: white;
   font-size: 2rem;
   font-weight:700;
@@ -690,10 +694,6 @@ nav {
   align-items: center;
 }
 
-/* 
-.pay_button_media_query:hover {
-  transform: scale(1.1);
-} */
 
 
 .final_order_display_page {
@@ -704,8 +704,11 @@ nav {
   flex-direction: column;
   align-items: center;
   background-color: black;
+  position: absolute;
+  top: 8vh;
   height: 92vh;
   width: 100vw;
+  border-radius: 5px;
 
 }
 
@@ -743,10 +746,12 @@ nav {
 .shop_front_display_media_query {
   display: flex;
   flex-direction: column;
-justify-content: center;
+  justify-content: center;
   background-color: black;
   padding: 1rem;
   border-radius: 7px;
+  position: absolute;
+  top: 8vh;
 
 }
 .product_page_display_at_media_query {
@@ -755,6 +760,9 @@ justify-content: center;
     background-color: black;
     width: 100%;
     color: white;
+    position: absolute;
+    top: 8vh;
+    border-radius: 5px;
   }
 .email_confirmation {
   display: none;
@@ -981,6 +989,8 @@ font-size: 70%;
   flex-direction: column;
   align-items: end;
   justify-content: end;
+  position: absolute;
+  top: 8vh;
   /* min-height: 100vh; */
 }
 .cart_card_media_query {
@@ -1072,12 +1082,13 @@ nav {
   color: white;
   height: 8vh;
   width: 100vw;
-  position: sticky;
+  position: fixed;
   top: 0;
   gap: 3vw;
   align-items: center;
   justify-content: end;
   flex-shrink: 1;
+  z-index: 9999;
 }
 
 .evvy_auto_font_media_query
@@ -1386,15 +1397,15 @@ nav {
 }
 .order_delete_button_media_query {
   display: block;
-  justify-content: center;
-  align-items: center;
+  margin-top: 1vh;
   border-radius: 1vmax;
   color: white;
   background-color: blue;
   text-align: center;
   font-size: 1.5rem;
   font-weight: bolder;
-  height: 3rem;
+  height: 2.5rem;
+  width: 93vw;
 }
 
 
@@ -1412,5 +1423,13 @@ nav {
   
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vh;
+  position: absolute;
+  top: 8vh;
+}
 
 }
