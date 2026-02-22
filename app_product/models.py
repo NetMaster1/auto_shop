@@ -11,7 +11,8 @@ class ProductCategory (models.Model):
 class Product (models.Model):
     created = models.DateTimeField(auto_now=True)
     emumerator = models.IntegerField(null=True, blank=True)
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, null=True,)
+    search_name = models.CharField(max_length=250, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.DO_NOTHING, null=True, blank=True)
     auto_model = models.CharField(max_length=160, null=True, blank=True)
