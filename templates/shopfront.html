@@ -76,16 +76,18 @@
 </div>
 
 <div class="shop_front_display_media_query">
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+        {{ message }}
+    </div>
+    {% endfor%}
+    {% endif%}
+</div>
+
     <div class="row">
-        <div class="container">
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">
-                {{ message }}
-            </div>
-            {% endfor%}
-            {% endif%}
-        </div>
+
         {% for product in queryset_list %}
             <div class="col-6 mt-2">
                 {% if product.image_1%}

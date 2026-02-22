@@ -25,7 +25,7 @@
     </a>   
     <div class="modal-dialog">
         <div class="modal-content">          
-            <form action="{% url 'login_user' %}" method='POST' id="login_form">
+            <form action="{% url 'login_user' %}" method='POST' id="login_form_at_login_page">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="username">Электронная почта</label>
@@ -37,7 +37,7 @@
                 </div>
                 <br>
                 <div class="row pl-2 pr-2 mb-2">
-                    <div class="login_button_media_query" id="login_button">
+                    <div class="login_button_media_query" id="login_button_at_login_page">
                         <input type="submit" value="Войти">
                     </div>
                 </div>
@@ -57,12 +57,12 @@
 </div>    
 
 <script>
- const login_button=document.querySelector('#login_button');
- const login_form=document.querySelector('#login_form');
+ const login_button_at_login_page=document.querySelector('#login_button_at_login_page');
+ const login_form_at_login_page=document.querySelector('#login_form_at_login_page');
 
-login_button.addEventListener('click',sendJSForm);
+login_button_at_login_page.addEventListener('click',sendJSForm);
     function sendJSForm() {
-        login_form.submit();
+        login_form_at_login_page.submit();
     };
 
 

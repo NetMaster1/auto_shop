@@ -67,7 +67,7 @@
 <!-- =========================Product Description Modal Trigger========= -->
                 <div class="row pl-5">
                     <div class="col">
-                        <a href="#"><strong id="description">Описание</strong></a>  
+                        <a href="#" class="link-underline link-primary"><strong id="description">Описание</strong></a>  
                     </div>
                 </div>
 <!-- =====================End of Product Description Modal Trigger========= -->
@@ -101,7 +101,7 @@
 <!-- =====================Reviews Modal Trigger==================== -->
                 <div class="row pl-5">
                     <div class="col">
-                        <a href="#"> <strong id="reviews">Отзывы</strong></a>
+                        <a href="#" class="link-underline link-primary"> <strong id="reviews">Отзывы</strong></a>
                     </div>
                 </div>
 <!-- =======================End of Reviews Modal Trigger============ -->
@@ -199,14 +199,14 @@
         <!-- =========================Product Description Modal Trigger========= -->
             <div class="row">
                 <div class="col">
-                    <a href="#"><strong id="description_media_query">Описание</strong></a>  
+                    <a href="#" class="link-underline link-primary"><strong id="description_media_query">Описание</strong></a>  
                 </div>
             </div>
         <!-- =====================End of Product Description Modal Trigger Media Query========= -->
         <!-- =====================Reviews Modal Trigger==================== -->
             <div class="row">
                 <div class="col">
-                    <a href="#"> <strong id="reviews_media_query">Отзывы</strong></a>
+                    <a href="#"class="link-underline link-primary" > <strong id="reviews_media_query">Отзывы</strong></a>
                 </div>
             </div>
         <!-- =======================End of Reviews Modal Trigger Media Query============ -->
@@ -287,8 +287,10 @@
     </div>
 <!-- =========================End of Review List Modal=========================== -->
     </div>
-    <div class="row mb-2 ml-5 mr-5 pl-5 pr-5">
-          <div class="box_price">{{product.site_retail_price}} <i class="fa-solid fa-ruble-sign"></i></div> </div>
+    
+        <div class="box_price">
+            <div class="div"> {{product.site_retail_price}} <i class="fa-solid fa-ruble-sign"></i></div> 
+        </div>  
    
 
         
