@@ -422,7 +422,7 @@
     </label>
 
    
-    <form action="{% url 'get_order_status' %}" method="POST" >
+    <form action="{% url 'get_order_status' %}" method="POST">
         {% csrf_token %}
     
         <input type="text" class='form-control' id="uuid" name="uuid" required>
@@ -430,6 +430,21 @@
             <input type="submit" value="Check"
                 class="btn btn-sm btn-block btn-outline-dark clear_storage">
     
+    </form>
+    <br>
+    ======================Заполнить Поле для поиска =================================================
+    <label for="file_name">
+        <h5>
+            Заполнить поле для поиска
+        </h5>
+    </label>
+
+   
+    <form action="{% url 'fill_in_search_name_col' %}" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+    
+        <input type="file" class='form-control' id="file_name" name="file_name" required>
+        <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
     </form>
     <br>
 

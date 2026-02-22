@@ -163,3 +163,17 @@ def delete_carts(request):
 
 def html_test(request):
     return render (request, 'html_test.html')
+
+def fill_in_search_name_col(request):
+    if request.method == "POST":
+        file = request.FILES["file_name"]
+        print('ok')
+        df1 = pandas.read_excel(file)
+        cycle = len(df1)
+        for i in range(cycle):
+            row = df1.iloc[i]#reads each row of the df1 one by one
+            article=row.Article
+            product=Product.objects.get(article=article)
+            product.search_name=row.Search_name
+            product.save()
+        return redirect ('shopfront')

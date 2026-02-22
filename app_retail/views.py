@@ -26,8 +26,8 @@ def shopfront(request):
 def search (request):
     if request.method == "POST":
         keyword = request.POST["brand"]
-        keyword=keyword.upper()
-        products=Product.objects.filter(name__contains=keyword, site_true=True).order_by('name')
+        keyword=keyword.lower()
+        products=Product.objects.filter(search_name__contains=keyword, site_true=True).order_by('name')
 
         context = {
             'queryset_list': products,
