@@ -309,7 +309,9 @@ cross_contacts.addEventListener('click', closeContacts)
 const register_trigger = document.querySelector('.register_trigger');
 const outer_modal_register = document.querySelector('.outer_modal_register');
 const cross_register = document.querySelector('#cross_register');
-register_trigger.addEventListener('click',showRegisterForm)
+
+if (register_trigger) {
+  register_trigger.addEventListener('click',showRegisterForm)
   function showRegisterForm () {
           console.log('ok')
           outer_modal_register.classList.add('openModal')
@@ -320,11 +322,16 @@ cross_register.addEventListener('click', closeRegisterForm)
           outer_modal_register.classList.remove('openModal')
     }
 
+}
+
+
 
 const login_trigger = document.querySelector('.login_trigger');
 const outer_modal_login = document.querySelector('.outer_modal_login');
 const cross_login = document.querySelector('#cross_login');
-login_trigger.addEventListener('click',showLoginForm)
+
+if (login_trigger) {
+  login_trigger.addEventListener('click',showLoginForm)
   function showLoginForm () {
           console.log('ok')
           outer_modal_login.classList.add('openModal')
@@ -334,6 +341,10 @@ cross_login.addEventListener('click', closeLoginForm)
           console.log('ok')
           outer_modal_login.classList.remove('openModal')
     }
+
+}
+
+
 
 
 

@@ -28,7 +28,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 
-            <form action="{% url 'register_user' %}" method='POST' id="register_form">
+            <form action="{% url 'register_user' %}" method='POST' id="register_form_media_query">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="first_name" class="text-black">Имя</label>
@@ -53,7 +53,7 @@
                 </div>
             
                 <div class="row mt-3 pl-2 pr-2">
-                    <div class="register_button_media_query" id="register_button">
+                    <div class="register_button_media_query" id="register_button_at_register_page">
                         <input type="submit" value="Зарегистрироваться">
                     </div>
                 </div>
@@ -70,13 +70,13 @@
 </div>    
 
 <script>
- const login_button=document.querySelector('#resiter_button');
- const login_form=document.querySelector('#register_form');
- const cross_register=document.querySelector('#cross_register');
+ const register_button_at_register_page=document.querySelector('#register_button_at_register_page');
+ const register_form_media_query=document.querySelector('#register_form_media_query');
+//  const cross_registerdocument.querySelector('#cross_register');
 
-register_button.addEventListener('click',sendJSForm);
+register_button_at_register_page.addEventListener('click',sendJSForm);
     function sendJSForm() {
-        register_form.submit();
+        register_form_media_query.submit();
     };
 
 

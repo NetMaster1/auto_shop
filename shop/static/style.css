@@ -1020,9 +1020,6 @@ font-size: 70%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-
-  /* vertical-align: center; */
   border-radius: 1vmax;
   color: white;
   background-color: blue;
@@ -1030,7 +1027,7 @@ font-size: 70%;
   font-size: 1.5rem;
   font-weight: bolder;
   height: 15%;
-  width: 100%;
+  width: 99%;
   bottom: 0;
 
 }
@@ -1195,8 +1192,10 @@ nav {
   flex-direction: column;
   background-color: black;
   position:absolute;
-  height: 90vh;
+  height: 92vh;
   width: 100%;
+  top: 8vh;
+  border-radius: 5px;
   align-items: center;
   justify-content: center;
 
@@ -1272,8 +1271,10 @@ nav {
   flex-direction: column;
   background-color: black;
   position:absolute;
-  height: 100%;
+  top:8vh;
+  height: 92%;
   width: 100%;
+  border-radius: 5px;
   align-items: center;
   justify-content: center;
 
@@ -1365,7 +1366,7 @@ nav {
     padding: 2rem;
     background-color: white;
     width: 85vw;
-    height: 80vh;
+    height: 60vh;
     overflow: scroll;
 }
 
