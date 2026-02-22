@@ -74,9 +74,13 @@
         <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
           <div class="accordion-body">
             <div class="row">
-              <div class="col-10">
-                {{user.password}}  
+          
+              <div class="col-8">
+                <div class="password_media_query">
+                  {{user.password}}  
+                </div>
               </div>
+            
               <div class="col-2">
               <a href="{% url 'send_random_code' user.id %}" id="a_send_code" >
         <input type="button" value="Изменить пароль" class="btn btn-sm btn-block btn-outline-primary" id="send_code_button" > 
@@ -311,7 +315,8 @@
         </div>
     </div>
 
-    </div>
+  </div>
+
 </div>
 
 

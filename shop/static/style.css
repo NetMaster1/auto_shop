@@ -674,9 +674,10 @@ nav {
 }
 
 .password_change_media_query {
-  display: flex;
-  justify-content: end;
+  display: block;
+  /* justify-content: start; */
 }
+
 
 .pay_button_media_query {
   background-color: blue;
@@ -1371,9 +1372,13 @@ nav {
 }
 
 .order_create_button_media_query {
-  display: block;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+margin-top: 1vw;
+  /* justify-content: center;
+  align-items: center; */
   border-radius: 1vmax;
   color: blue;
   background-color: white;
@@ -1382,10 +1387,12 @@ nav {
   text-align: center;
   font-size: 1.5rem;
   font-weight: bolder;
-  height: 10%;
+  height: 5vh;
+  width: 95vw;
 }
 .order_create_button_media_query.enabled {
-  display: block;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 1vmax;
@@ -1394,10 +1401,13 @@ nav {
   text-align: center;
   font-size: 1.5rem;
   font-weight: bolder;
-  height: 10%;
+  height: 5vh;
+  width: 95vw;
 }
 .order_delete_button_media_query {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin-top: 1vh;
   border-radius: 1vmax;
   color: white;
@@ -1405,8 +1415,8 @@ nav {
   text-align: center;
   font-size: 1.5rem;
   font-weight: bolder;
-  height: 2.5rem;
-  width: 93vw;
+  height: 5vh;
+  width: 95vw;
 }
 
 
@@ -1427,10 +1437,24 @@ nav {
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100vh;
+  top: 5vh;
+  justify-content: center;
   position: absolute;
-  top: 8vh;
+width: 100vw;
+ 
+}
+.changePassword {
+    padding: 3rem;
+    background-color: white;
+    width: 80vw;
+    height: 55vh;
+    display: block;
+    position: absolute;
+}
+
+.password_media_query {
+    display: none;
+
 }
 
 }
