@@ -15,6 +15,7 @@ from django.http import HttpResponse, JsonResponse
 def product_page(request, article):
     product = Product.objects.get(article=article)
     if Review.objects.filter(product=product).exists():
+        print('Product reviews exists.')
         reviews=Review.objects.filter(product=product).order_by('-date_posted')
         context = {
             'product': product,
