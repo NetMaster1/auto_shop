@@ -120,14 +120,17 @@
                                             <div style="color: blue; font-weight: 500;">
                                                 {{review.date_posted}}
                                             </div>
-                                                {{review.content}}
+                                            <div>
+                                                {{review.content}} 
+                                            </div>
+                                               
                                             <div class="row pl-5">
                                                 <div class="col">
                                                     <div class="stars-outer" >
                                                         <div class="stars-inner" style="width: {{review.percent}}"></div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div><br><br><br>
                                         {% endfor %}    
                                 
                                     {% else%}
@@ -227,8 +230,7 @@
                 <img src="{% static 'images/cross.jpg' %}" style="width:2rem;height:2rem;" class="cross" id="cross_description_modal_media_query">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="row ff2">
-        
+                        <div class="row ff2"> 
                 Дефлектор капота (мухобойка) разработан специально для {{product.auto_model}}, выполнен из гибкого оргстекла, представляет собой тонкую, просчитанную пластину.
                 <br><br>
                 Устанавливается на капот при помощи креплений, которые идут в комплекте, в штатные места в усилителе капота вашего автомобиля.
@@ -252,16 +254,18 @@
             <div class="row">
                 <div class="col"></div>
                 <div class="col">
-                    <div class="reviewListModalMediaQuery">
+                    <div class="reviewListModalMediaQuery rounded-5">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="row">
                                     {% if reviews %}
                                         {% for review in reviews %}
-                                            <div style="color: blue; font-weight: 500;">
+                                            <div style="font-weight: 500;">
                                                 {{review.date_posted}}
                                             </div>
+                                            <div class="div">
                                                 {{review.content}}
+                                            </div>   
                                             <div class="row pl-5">
                                                 <div class="col">
                                                     <div class="stars-outer" >
@@ -269,6 +273,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+<br><br>
                                         {% endfor %}    
                                 
                                     {% else%}

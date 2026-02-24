@@ -467,7 +467,7 @@ font-weight: 900;
 .box_price {
   background-color:cadetblue;
   width: 20rem;
-  height:5rem;
+  height: 5rem;
   border-radius: 5vmax;
 }
 .box_client {
@@ -553,7 +553,7 @@ nav {
   display: none;
 }
 
-.my_nav_bar {
+/* .my_nav_bar {
   display: flex;
   background-color: blue;
   color: white;
@@ -564,10 +564,10 @@ nav {
   gap: 3vw;
   align-items: center;
   justify-content: start;
-  /* flex-shrink: 1; */
+  /* flex-shrink: 1; 
   z-index: 9999;
   opacity: 100%;
-}
+} */
 .search_field {
   display: flex;
   flex-grow: 1;
@@ -667,18 +667,23 @@ nav {
 }
 .nav_bar_media_query {
   display: block;
+  position: relative;
+  width: 100vw;
+  
 
 }
 
 .password_change_media_query {
-  display: flex;
-  justify-content: end;
+  display: block;
+  /* justify-content: start; */
 }
+
 
 .pay_button_media_query {
   background-color: blue;
   border-radius: 5px;
   margin-top: 1rem;
+  margin-bottom: 1rem;
   color: white;
   font-size: 2rem;
   font-weight:700;
@@ -690,10 +695,6 @@ nav {
   align-items: center;
 }
 
-/* 
-.pay_button_media_query:hover {
-  transform: scale(1.1);
-} */
 
 
 .final_order_display_page {
@@ -704,8 +705,11 @@ nav {
   flex-direction: column;
   align-items: center;
   background-color: black;
+  position: absolute;
+  top: 8vh;
   height: 92vh;
   width: 100vw;
+  border-radius: 5px;
 
 }
 
@@ -743,18 +747,23 @@ nav {
 .shop_front_display_media_query {
   display: flex;
   flex-direction: column;
-justify-content: center;
+  justify-content: center;
   background-color: black;
   padding: 1rem;
   border-radius: 7px;
+  position: absolute;
+  top: 8vh;
 
 }
 .product_page_display_at_media_query {
     display: block;
     font-size: 15px;
     background-color: black;
-    width: 100%;
+    width: 100vw;
     color: white;
+    position: absolute;
+    top: 8vh;
+    border-radius: 5px;
   }
 .email_confirmation {
   display: none;
@@ -840,6 +849,7 @@ justify-content: center;
     border-radius: 7px 7px 7px 7px;
     padding: 2rem;
     background-color: white;
+    color: blue;
     width: 80vw;
     height: 70vh;
     display: block;
@@ -858,12 +868,13 @@ justify-content: center;
   width: 100%;
   height: 100%;
   display: block;
-  z-index: 9999;
+  z-index: 9998;
 }
 .productDescriptionModalMediaQuery{
     position: absolute;
     border-radius: 7px 7px 7px 7px;
     padding: 3rem;
+    color: blue;
     background-color: white;
     width: 85vw;
     height: 70vh;
@@ -877,16 +888,24 @@ justify-content: center;
   top: 10vh;
   right: 3vw;
 }
-
+/* .box_price {
+  position: absolute;
+  color: greenyellow;
+  top: 10vh;
+  right: 3vw;
+} */
 .box_price {
+  display: flex;
   position: static;
+margin-bottom: 1vh;
   font-size: 2rem;
   font-weight: 900;
   color: greenyellow;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
   background-color:cadetblue;
-  width: 40vw;
-  /* height: 6vh; */
+  width: 95vw;
+  min-height: 5vh;
   border-radius: 5vmax;
 }
 .box_city_choice_media_query {
@@ -973,6 +992,8 @@ font-size: 70%;
   flex-direction: column;
   align-items: end;
   justify-content: end;
+  position: absolute;
+  top: 8vh;
   /* min-height: 100vh; */
 }
 .cart_card_media_query {
@@ -1002,9 +1023,6 @@ font-size: 70%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-
-  /* vertical-align: center; */
   border-radius: 1vmax;
   color: white;
   background-color: blue;
@@ -1012,7 +1030,7 @@ font-size: 70%;
   font-size: 1.5rem;
   font-weight: bolder;
   height: 15%;
-  width: 100%;
+  width: 99%;
   bottom: 0;
 
 }
@@ -1064,12 +1082,13 @@ nav {
   color: white;
   height: 8vh;
   width: 100vw;
-  position: sticky;
+  position: fixed;
   top: 0;
   gap: 3vw;
   align-items: center;
   justify-content: end;
   flex-shrink: 1;
+  z-index: 9999;
 }
 
 .evvy_auto_font_media_query
@@ -1176,8 +1195,10 @@ nav {
   flex-direction: column;
   background-color: black;
   position:absolute;
-  height: 90vh;
+  height: 92vh;
   width: 100%;
+  top: 8vh;
+  border-radius: 5px;
   align-items: center;
   justify-content: center;
 
@@ -1253,8 +1274,10 @@ nav {
   flex-direction: column;
   background-color: black;
   position:absolute;
-  height: 100%;
+  top:8vh;
+  height: 92%;
   width: 100%;
+  border-radius: 5px;
   align-items: center;
   justify-content: center;
 
@@ -1346,14 +1369,18 @@ nav {
     padding: 2rem;
     background-color: white;
     width: 85vw;
-    height: 80vh;
+    height: 60vh;
     overflow: scroll;
 }
 
 .order_create_button_media_query {
-  display: block;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+margin-top: 1vw;
+  /* justify-content: center;
+  align-items: center; */
   border-radius: 1vmax;
   color: blue;
   background-color: white;
@@ -1362,10 +1389,12 @@ nav {
   text-align: center;
   font-size: 1.5rem;
   font-weight: bolder;
-  height: 10%;
+  height: 5vh;
+  width: 95vw;
 }
 .order_create_button_media_query.enabled {
-  display: block;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 1vmax;
@@ -1374,19 +1403,22 @@ nav {
   text-align: center;
   font-size: 1.5rem;
   font-weight: bolder;
-  height: 10%;
+  height: 5vh;
+  width: 95vw;
 }
 .order_delete_button_media_query {
-  display: block;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  margin-top: 1vh;
   border-radius: 1vmax;
   color: white;
   background-color: blue;
   text-align: center;
   font-size: 1.5rem;
   font-weight: bolder;
-  height: 3rem;
+  height: 5vh;
+  width: 95vw;
 }
 
 
@@ -1402,6 +1434,29 @@ nav {
   display: flex;
   justify-content: center;
   
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  top: 5vh;
+  justify-content: center;
+  position: absolute;
+width: 100vw;
+ 
+}
+.changePassword {
+    padding: 3rem;
+    background-color: white;
+    width: 80vw;
+    height: 55vh;
+    display: block;
+    position: absolute;
+}
+
+.password_media_query {
+    display: none;
+
 }
 
 }
