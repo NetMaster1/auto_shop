@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from app_product.models import Product, ProductCategory, RemainderHistory, DocumentType
 from app_purchase.models import Cart, CartItem
+from app_reviews.models import Review
 import pandas
 import xlwt
 from django.contrib import messages
@@ -177,3 +178,61 @@ def fill_in_search_name_col(request):
             product.search_name=row.Search_name
             product.save()
         return redirect ('shopfront')
+    
+
+def upload_reviews_from_ozon(request):
+    check=True
+    last_id = ''
+    count=0
+    while check:
+        headers = {
+            "Client-Id": "1711314",
+            "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+        }
+        task = {
+                "last_id": last_id,
+                "limit": 100,
+                "sort_dir": "ASC",
+                "status": "ALL"
+            }
+        response=requests.post('https://api-seller.ozon.ru/v1/review/list', json=task, headers=headers)
+        status_code=response.status_code
+        json=response.json()
+        reviews=json['reviews']
+        if len(reviews) > 0:
+            qnty=len(reviews)
+            print(qnty)
+            for i in reviews:
+                count+=1
+                print(count)
+                print(i['id'])
+                if Review.objects.filter(ozon_id=i['id']).exists():
+                    continue
+                if Product.objects.filter(ozon_sku=i['sku']).exists():
+                    product=Product.objects.get(ozon_sku=i['sku'])
+                    review= Review.objects.create(
+                        content=i['text'],
+                        rating=i['rating'],
+                        product=product,
+                        date_posted=i['published_at'],
+                        ozon_id=i['id']        
+                    )
+                    last_id = i['id']
+                    print(i['published_at'])
+                    print('next cycle')
+            print('===========================')
+            time.sleep(3)
+        else:
+            print ('end of cycle')
+            check=False
+            print('===========================')
+            time.sleep(3)
+             
+    return redirect ('shopfront')
+
+def delete_reviews(request):
+    reviews = Review.objects.all()
+    for review in reviews:
+        review.delete()
+    return redirect ('shopfront')
+        
