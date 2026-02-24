@@ -217,6 +217,8 @@ def upload_reviews_from_ozon(request):
                         date_posted=i['published_at'],
                         ozon_id=i['id']        
                     )
+                    review.caclulate_percent()
+                    review.save()
                     last_id = i['id']
                     print(i['published_at'])
                     print('next cycle')
@@ -234,5 +236,35 @@ def delete_reviews(request):
     reviews = Review.objects.all()
     for review in reviews:
         review.delete()
+    return redirect ('shopfront')
+
+
+def fill_in_product_percent_field(request):
+    products=Product.objects.all()
+    for product in products:
+        if Review.objects.filter(product=product).exists():
+            reviews=Review.objects.filter(product=product)
+            counter=reviews.count()
+            print('==========================')
+            print(product.name)
+            print(counter)
+            rating=0
+            for review in reviews:
+                rating+= review.rating
+            product_rating=rating/counter
+            product_rating=round(product_rating, 2)
+            print(product_rating)
+            percent=product_rating /5 * 100
+            percent=round(percent, 2)
+            print(percent)
+            percent=f'{percent}'
+            percent=percent + '%'
+            print(f'final percent: {percent}')
+            product.total=rating
+            product.quantity=counter
+            product.transactions=counter
+            product.percent=percent
+            product.av_rating=product_rating
+            product.save()
     return redirect ('shopfront')
         
