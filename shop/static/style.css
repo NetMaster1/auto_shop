@@ -747,12 +747,13 @@ nav {
 .shop_front_display_media_query {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: top;
   background-color: black;
   padding: 1rem;
   border-radius: 7px;
   position: absolute;
   top: 8vh;
+  min-height: 92vh;
 
 }
 .product_page_display_at_media_query {
@@ -1442,7 +1443,17 @@ margin-top: 1vw;
   top: 5vh;
   justify-content: center;
   position: absolute;
-width: 100vw;
+  width: 100vw;
+ 
+}
+
+.container_small_screen {
+  display: flex;
+  flex-direction: column;
+  top: 5vh;
+  justify-content: center;
+  position: absolute;
+  width: 95vw;
  
 }
 .changePassword {
