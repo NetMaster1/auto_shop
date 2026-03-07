@@ -3,12 +3,28 @@
 {% block content %}
 
 
-<!-- =====================Alert Messages Module=================== -->
 
-<!-- ===================End of Alert Messages Module================ -->
+
+
 
 <div class="shop_front_no_display">
+
+<!-- =====================Alert Messages Module=================== -->
     <div class="container">
+           <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert">
+            <!-- <button class="close" data-dismiss="alert">
+                        <small><sup>x</sup></small>
+                    </button> -->
+            {{ message }}
+        </div>
+        {% endfor%}
+        {% endif%}
+    </div>
+<!-- ===================End of Alert Messages Module================ -->
+
     <div class="row">
     {% for product in queryset_list %} 
         {% if product.image_1%}
@@ -76,7 +92,7 @@
 </div>
 
 <div class="shop_front_display_media_query">
-<div class="container">
+<div class="container_small_screen">
     {% if messages %}
     {% for message in messages %}
     <div class="alert alert-info" role="alert">

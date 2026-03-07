@@ -27,10 +27,18 @@ def search (request):
     if request.method == "POST":
         keyword = request.POST["brand"]
         keyword=keyword.lower()
-        products=Product.objects.filter(search_name__contains=keyword, site_true=True).order_by('name')
-
-        context = {
-            'queryset_list': products,
-        }
-
-        return render(request, 'shopfront.html', context)
+        words = keyword.split()
+        for word in words:
+            if Product.objects.filter(search_name__contains=word, site_true=True).exists():
+                products=Product.objects.filter(search_name__contains=word, site_true=True).order_by('name')       
+                context = {
+                    'queryset_list': products,
+                }
+                return render(request, 'shopfront.html', context)
+            else:
+                pass
+        
+        else:
+            messages.error(request, "К сожалению совпадений не найдено. Попробуйте изменить вводимый текст.")
+            return redirect ('shopfront')
+          
