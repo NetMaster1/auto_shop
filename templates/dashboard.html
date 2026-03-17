@@ -382,7 +382,6 @@
         </h5>
     </label>
 
-   
     <form action="{% url 'update_product_name' %}" method="POST" enctype="multipart/form-data" >
         {% csrf_token %}
     
@@ -401,7 +400,6 @@
         </h5>
     </label>
 
-   
     <form action="{% url 'update_hood_deflector_attributes' %}" method="POST" enctype="multipart/form-data" >
         {% csrf_token %}
     
@@ -438,12 +436,24 @@
             Заполнить поле для поиска
         </h5>
     </label>
-
-   
     <form action="{% url 'fill_in_search_name_col' %}" method="POST" enctype="multipart/form-data" >
         {% csrf_token %}
     
         <input type="file" class='form-control' id="file_name" name="file_name" required>
+        <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
+    </form>
+    <br>
+
+    ======================Выборка по производителю=================================================
+    <label for="manufacturer">
+        <h5>
+            Заполнить поле для поиска
+        </h5>
+    </label>
+    <form action="{% url 'sort_by_manufacturer' %}" method="POST" >
+        {% csrf_token %}
+    
+        <input type="text" class='form-control' id="manufacturer" name="manufacturer" required>
         <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
     </form>
     <br>

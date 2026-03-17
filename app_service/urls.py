@@ -16,5 +16,6 @@ urlpatterns = [
     path('upload_reviews_from_ozon', views.upload_reviews_from_ozon, name='upload_reviews_from_ozon'),
     path('delete_reviews', views.delete_reviews, name='delete_reviews'),
     path('fill_in_product_percent_field', views.fill_in_product_percent_field, name='fill_in_product_percent_field'),
+    path('sort_by_manufacturer', views.sort_by_manufacturer, name='sort_by_manufacturer'),
    
 ]
