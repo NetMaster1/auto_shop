@@ -9,6 +9,7 @@ import requests
 import time
 import os
 import time
+from django.http import HttpResponse
 
 def db_correct(request):
     if request.user.is_authenticated:
@@ -268,3 +269,41 @@ def fill_in_product_percent_field(request):
             product.save()
     return redirect ('shopfront')
         
+
+def sort_by_manufacturer(request):
+       if request.method == "POST":
+            manufacturer = request.POST["manufacturer"]
+            if Product.objects.filter(manufacturer=manufacturer).exists():
+                products=Product.objects.filter(manufacturer=manufacturer)
+            else:
+                messages.error(request, "К сожалению совпадений не найдено. Попробуйте изменить вводимый текст.")
+                return redirect ('dashboard')
+            
+            #=======================Uploading to Excel Module===================================
+            response = HttpResponse(content_type="application/ms-excel")
+            response["Content-Disposition"] = (
+                "attachment; filename=Product_" + 'Manufacturer_report'+ ".xls"
+            )
+
+            wb = xlwt.Workbook(encoding="utf-8")
+            ws = wb.add_sheet("Manufacturer")
+
+            # sheet header in the first row
+            row_num = 0
+            font_style = xlwt.XFStyle()
+
+            columns = ["Article", "Title", "Av_price",]
+            for col_num in range(len(columns)):
+                ws.write(row_num, col_num, columns[col_num], font_style)
+
+            # sheet body, remaining rows
+            font_style = xlwt.XFStyle()
+            query = products.values_list("article", "name",'av_price' )
+
+            for row in query:
+                row_num += 1
+                for col_num in range(len(row)):
+                    ws.write(row_num, col_num, str(row[col_num]), font_style)
+            wb.save(response)
+            return response
+        #=======================End of Excel Upload Module================================
