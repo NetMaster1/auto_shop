@@ -292,13 +292,13 @@ def sort_by_manufacturer(request):
             row_num = 0
             font_style = xlwt.XFStyle()
 
-            columns = ["Article", "Title", "Av_price",]
+            columns = ["Article", "Title", "Av_price", "Length", "Width", "Height"]
             for col_num in range(len(columns)):
                 ws.write(row_num, col_num, columns[col_num], font_style)
 
             # sheet body, remaining rows
             font_style = xlwt.XFStyle()
-            query = products.values_list("article", "name",'av_price' )
+            query = products.values_list("article", "name","av_price", "length", "width", "height" )
 
             for row in query:
                 row_num += 1
