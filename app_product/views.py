@@ -1825,9 +1825,10 @@ def general_report (request):
 
 
 #=================================WB Functions==============================
+#наименование не должно содержать более 60 символов. В противном случае API пропускает эти строки
 def wb_create_product (request):
     url=f'https://content-api.wildberries.ru/content/v2/cards/upload'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     params=[]
     if request.method == "POST":
         file = request.FILES["file_name"]
@@ -2114,7 +2115,7 @@ def wb_create_product (request):
 #getting wb id & saving it in Product model
 def wb_get_id (request):
   url=f'https://content-api.wildberries.ru/content/v2/get/cards/list'
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
 
   params = {
         "settings": {
@@ -2157,7 +2158,7 @@ def wb_add_media_files (request):
   if request.method == "POST":
     #100 requests per minute
     url=f'https://content-api.wildberries.ru/content/v3/media/save'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     params_dict={}
     file = request.FILES["file_name"]
     df1 = pandas.read_excel(file)
@@ -2228,7 +2229,7 @@ def wb_update_prices(request):
     #Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
 	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
     url=f'https://discounts-prices-api.wildberries.ru/api/v2/upload/task'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     if request.method == "POST":
         file = request.FILES["file_name"]
         df1 = pandas.read_excel(file)
@@ -2288,8 +2289,7 @@ def wb_update_prices_ver_1(request):
     #Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
 	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
     url=f'https://discounts-prices-api.wildberries.ru/api/v2/upload/task'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-    task_arr=[]
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     products=Product.objects.all()
     for product in products:
         if product.wb_id:
@@ -2323,7 +2323,7 @@ def synchronize_qnty_wb_ver_1(request):
 
     #one request contains from 1 to 1000 items
     #max 300 requests per minute
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     stock_arr=[]
 
@@ -2361,7 +2361,7 @@ def synchronize_qnty_wb_warehouse(request):
 
     #one request contains from 1 to 1000 items
     #max 300 requests per minute
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     stock_arr=[]
 
@@ -2427,7 +2427,7 @@ def synchronize_qnty_SDEK_warehouse(request):
     warehouseId=1512363
     #one request contains from 1 to 1000 items
     #max 300 requests per minute
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     stock_arr=[]
 
     # the list should not contain negative quantities. Otherwise WB declines the request & sends status 400 (wrong request)
@@ -2470,7 +2470,7 @@ def zero_wb_warehouse_qnty (request):
     products=Product.objects.all()
     warehouseId=1368124
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     stock_arr=[]
     for product in products:
         if product.wb_bar_code:
@@ -2504,7 +2504,7 @@ def zero_sdek_warehouse_qnty (request):
     products=Product.objects.all()
     warehouseId=1512363
     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     stock_arr=[]
     for product in products:
         if product.wb_bar_code:
@@ -2541,7 +2541,7 @@ def wb_ozon_sync(request):
 	#Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
 	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
     url=f'https://marketplace-api.wildberries.ru/api/v3/orders/new'
-    headers_wb = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers_wb = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
    
     response = requests.get(url, headers=headers_wb)
     status_code=response.status_code
