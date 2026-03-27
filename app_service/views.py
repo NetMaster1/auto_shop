@@ -180,7 +180,6 @@ def fill_in_search_name_col(request):
             product.save()
         return redirect ('shopfront')
     
-
 def upload_reviews_from_ozon(request):
     check=True
     last_id = ''
@@ -239,7 +238,6 @@ def delete_reviews(request):
         review.delete()
     return redirect ('shopfront')
 
-
 def fill_in_product_percent_field(request):
     products=Product.objects.all()
     for product in products:
@@ -269,7 +267,6 @@ def fill_in_product_percent_field(request):
             product.save()
     return redirect ('shopfront')
         
-
 def sort_by_manufacturer(request):
        if request.method == "POST":
             manufacturer = request.POST["manufacturer"]
@@ -307,3 +304,96 @@ def sort_by_manufacturer(request):
             wb.save(response)
             return response
         #=======================End of Excel Upload Module================================
+        
+#при внесении изменений в карточку товара нужно заново прогружать все характеристики, так как карточка обновляется полностью
+def update_wb_card(request):
+    if request.user.is_authenticated:
+        url=f'https://content-api.wildberries.ru/content/v2/cards/upload'
+        headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        params=[]
+        if request.method == "POST":
+            file = request.FILES["file_name"]
+            df1 = pandas.read_excel(file)
+            cycle = len(df1)
+            for i in range(cycle):
+                row = df1.iloc[i]#reads each row of the df1 one by one
+                article=row.Article
+                if Product.objects.filter(article=article).exists():
+                    product=Product.objects.get(article=article)
+                    if product.wb_bar_code:
+                        pass
+
+            
+            return redirect('dashboard')
+
+    return redirect ('login_page')
+
+def update_wb_quantity(request):
+    if request.user.is_authenticated:
+        warehouseId='1744108'
+        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+        headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        params=[]
+        array_of_items=[]
+        if request.method == "POST":
+            file = request.FILES["file_name"]
+            df1 = pandas.read_excel(file)
+            cycle = len(df1)
+            for i in range(cycle):
+                row = df1.iloc[i]#reads each row of the df1 one by one
+                article=row.Article
+                if Product.objects.filter(article=article).exists():
+                    product=Product.objects.get(article=article)
+                    if product.wb_id:
+                        item={
+                                "chrtId": int(product.wb_id),
+                                "amount": 5,
+                            }
+                        array_of_items.append(item)
+              
+            params={
+                "stocks": array_of_items
+            }
+
+            response = requests.put(url, json=params, headers=headers)
+            status_code=response.status_code
+            print(status_code)
+            a=response.json()
+            print(a)
+            return redirect('dashboard')
+
+    return redirect ('login_page')
+
+def create_list_of_wb_barcodes(request):
+    if request.user.is_authenticated:
+        products=Product.objects.all()
+        #=======================Uploading to Excel Module===================================
+        response = HttpResponse(content_type="application/ms-excel")
+        response["Content-Disposition"] = (
+            "attachment; filename=Product_" + 'WB_bar_codes' + ".xls"
+        )
+
+        wb = xlwt.Workbook(encoding="utf-8")
+        ws = wb.add_sheet("WB_bar_codes")
+
+        # sheet header in the first row
+        row_num = 0
+        font_style = xlwt.XFStyle()
+
+        columns = ["Article", "Name", "WB_bar_code"]
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+
+        # sheet body, remaining rows
+        font_style = xlwt.XFStyle()
+        query = products.values_list("article", "name", "wb_bar_code" )
+
+        for row in query:
+            row_num += 1
+            for col_num in range(len(row)):
+                ws.write(row_num, col_num, str(row[col_num]), font_style)
+        wb.save(response)
+        return response
+    #=======================End of Excel Upload Module================================  
+
+    return redirect ('login_page')

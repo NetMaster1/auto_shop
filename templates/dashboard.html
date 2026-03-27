@@ -447,13 +447,27 @@
     ======================Выборка по производителю=================================================
     <label for="manufacturer">
         <h5>
-            Заполнить поле для поиска
+            Выборка по производителю
         </h5>
     </label>
     <form action="{% url 'sort_by_manufacturer' %}" method="POST" >
         {% csrf_token %}
     
         <input type="text" class='form-control' id="manufacturer" name="manufacturer" required>
+        <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
+    </form>
+    <br>
+
+    ======================Изменить кол-во на WB=================================================
+    <label for="manufacturer">
+        <h5>
+             Изменить кол-во на wb
+        </h5>
+    </label>
+    <form action="{% url 'update_wb_quantity' %}" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+    
+        <input type="file" class='form-control' id="file_name" name="file_name" required>
         <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
     </form>
     <br>
