@@ -340,7 +340,7 @@ def create_list_of_wb_barcodes(request):
     return redirect ('login_page')
 
 def change_VT_article (request):
-    products=Product.objects.filer(manufacturer='VITAL TECHNOLOGIES')
+    products=Product.objects.filter(manufacturer='VITAL TECHNOLOGIES')
     for product in products:
         article = product.article
         article_modified = article[:-1]
