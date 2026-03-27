@@ -2114,45 +2114,92 @@ def wb_create_product (request):
 
 #getting wb id & saving it in Product model
 def wb_get_id (request):
-  url=f'https://content-api.wildberries.ru/content/v2/get/cards/list'
-  headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+    url=f'https://content-api.wildberries.ru/content/v2/get/cards/list'
+    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
 
-  params = {
-        "settings": {
-              "sort": {
-                  "ascending": False
-                  },
-              "filter": {
-                  "withPhoto": -1
-              },
-              "cursor": {
-                'limit':100
-              }
-        }
-  }
+    params = {
+            "settings": {
+                "sort": {
+                    "ascending": False
+                    },
+                "filter": {
+                    "withPhoto": -1
+                },
+                "cursor": {
+                    'limit':100
+                }
+            }
+    }
   
-  response = requests.post(url, json=params, headers=headers)
-  status_code=response.status_code
-  a=response.json()
-  print(f'status_code: {status_code}')
-  a=a['cards']
+    response = requests.post(url, json=params, headers=headers)
+    status_code=response.status_code
+    a=response.json()
+    print(f'status_code: {status_code}')
+    cards=a['cards']
+    counter=0
+    for i in cards:
+        counter+=1
+        wb_id=i['nmID']
+        wb_bar_code=i['sizes'][0]['skus'][0]#sku
+        article=i['vendorCode']
+        print(article)
+        if Product.objects.filter(article=article).exists():
+            product=Product.objects.get(article=article)
+            product.wb_id=wb_id
+            product.wb_bar_code=wb_bar_code
+            product.save()
+            print(f'{product.name} : {product.article} : {product.wb_id} : {product.wb_id}')
+            print(f'Counter:  {counter}')
+            print('======================')
+            time.sleep(0.3)
+    if counter==100:
+        cursor=a['cursor']
+        updatedAt=cursor['updatedAt']
+        nmID=cursor['nmID']
+        total=cursor['total']
 
-  for i in a:
-    wb_id=i['nmID']
-    wb_bar_code=i['sizes'][0]['skus'][0]#sku
-    article=i['vendorCode']
-    print(article)
-    if Product.objects.filter(article=article).exists():
-      product=Product.objects.get(article=article)
-      product.wb_id=wb_id
-      product.wb_bar_code=wb_bar_code
-      product.save()
-      print(f'{product.name} : {product.article} : {product.wb_id} : {product.wb_id}')
-      print('======================')
-      time.sleep(1)
+        url=f'https://content-api.wildberries.ru/content/v2/get/cards/list'
+        headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        params = {
+            "settings": {
+                "sort": {
+                    "ascending": False
+                    },
+                "filter": {
+                    "withPhoto": -1
+                },
+                "cursor": {
+                    "updatedAt": updatedAt,
+                    "nmID": nmID,
+                    "total": total
+                    }
+                }
+            }
+        response = requests.post(url, json=params, headers=headers)
+        status_code=response.status_code
+        a=response.json()
+        print(f'status_code: {status_code}')
+        cards=a['cards']
+        for i in cards:
+            counter+=1
+            wb_id=i['nmID']
+            wb_bar_code=i['sizes'][0]['skus'][0]#sku
+            article=i['vendorCode']
+            print(article)
+            if Product.objects.filter(article=article).exists():
+                product=Product.objects.get(article=article)
+                product.wb_id=wb_id
+                product.wb_bar_code=wb_bar_code
+                product.save()
+                print(f'{product.name} : {product.article} : {product.wb_id} : {product.wb_id}')
+                print(f'Counter: {counter}')
+                print('======================')
 
-      # messages.error(request,f'WB Product: {product.name} : {product.article} : {product.wb_id}')
-  return redirect ('dashboard')
+        time.sleep(0.3)
+
+
+    # messages.error(request,f'WB Product: {product.name} : {product.article} : {product.wb_id}')
+    return redirect ('dashboard')
 
 def wb_add_media_files (request):
   if request.method == "POST":
