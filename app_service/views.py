@@ -338,17 +338,3 @@ def create_list_of_wb_barcodes(request):
     #=======================End of Excel Upload Module================================  
 
     return redirect ('login_page')
-
-def change_VT_article (request):
-    products=Product.objects.filter(manufacturer='VITAL TECHNOLOGIES')
-    for product in products:
-        article = product.article
-        article_modified = article[:-1]
-        product.article=article_modified
-        product.save()
-        if RemainderHistory.objects.filter(article=article).exists():
-            rhos=RemainderHistory.objects.filter(article=article)
-            for rho in rhos:
-                rho.article=article_modified
-                rho.save()
-    return redirect ('dashboard')

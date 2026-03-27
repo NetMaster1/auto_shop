@@ -18,6 +18,6 @@ urlpatterns = [
     path('fill_in_product_percent_field', views.fill_in_product_percent_field, name='fill_in_product_percent_field'),
     path('sort_by_manufacturer', views.sort_by_manufacturer, name='sort_by_manufacturer'),
     path('create_list_of_wb_barcodes', views.create_list_of_wb_barcodes, name='create_list_of_wb_barcodes'),
-    path('change_VT_article', views.change_VT_article, name='change_VT_article'),
+ 
    
 ]
