@@ -17,5 +17,8 @@ urlpatterns = [
     path('delete_reviews', views.delete_reviews, name='delete_reviews'),
     path('fill_in_product_percent_field', views.fill_in_product_percent_field, name='fill_in_product_percent_field'),
     path('sort_by_manufacturer', views.sort_by_manufacturer, name='sort_by_manufacturer'),
+    path('update_wb_card', views.update_wb_card, name='update_wb_card'),
+    path('update_wb_quantity', views.update_wb_quantity, name='update_wb_quantity'),
+    path('create_list_of_wb_barcodes', views.create_list_of_wb_barcodes, name='create_list_of_wb_barcodes'),
    
 ]
