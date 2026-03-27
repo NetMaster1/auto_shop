@@ -268,101 +268,42 @@ def fill_in_product_percent_field(request):
     return redirect ('shopfront')
         
 def sort_by_manufacturer(request):
-       if request.method == "POST":
-            manufacturer = request.POST["manufacturer"]
-            if Product.objects.filter(manufacturer=manufacturer).exists():
-                products=Product.objects.filter(manufacturer=manufacturer)
-            else:
-                messages.error(request, "К сожалению совпадений не найдено. Попробуйте изменить вводимый текст.")
-                return redirect ('dashboard')
-            
-            #=======================Uploading to Excel Module===================================
-            response = HttpResponse(content_type="application/ms-excel")
-            response["Content-Disposition"] = (
-                "attachment; filename=Product_" + 'Manufacturer_report'+ ".xls"
-            )
-
-            wb = xlwt.Workbook(encoding="utf-8")
-            ws = wb.add_sheet("Manufacturer")
-
-            # sheet header in the first row
-            row_num = 0
-            font_style = xlwt.XFStyle()
-
-            columns = ["Article", "Title", "Av_price", "Length", "Width", "Height"]
-            for col_num in range(len(columns)):
-                ws.write(row_num, col_num, columns[col_num], font_style)
-
-            # sheet body, remaining rows
-            font_style = xlwt.XFStyle()
-            query = products.values_list("article", "name","av_price", "length", "width", "height" )
-
-            for row in query:
-                row_num += 1
-                for col_num in range(len(row)):
-                    ws.write(row_num, col_num, str(row[col_num]), font_style)
-            wb.save(response)
-            return response
-        #=======================End of Excel Upload Module================================
+    if request.method == "POST":
+        manufacturer = request.POST["manufacturer"]
+        if Product.objects.filter(manufacturer=manufacturer).exists():
+            products=Product.objects.filter(manufacturer=manufacturer)
+        else:
+            messages.error(request, "К сожалению совпадений не найдено. Попробуйте изменить вводимый текст.")
+            return redirect ('dashboard')
         
-#при внесении изменений в карточку товара нужно заново прогружать все характеристики, так как карточка обновляется полностью
-def update_wb_card(request):
-    if request.user.is_authenticated:
-        url=f'https://content-api.wildberries.ru/content/v2/cards/upload'
-        headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
-        params=[]
-        if request.method == "POST":
-            file = request.FILES["file_name"]
-            df1 = pandas.read_excel(file)
-            cycle = len(df1)
-            for i in range(cycle):
-                row = df1.iloc[i]#reads each row of the df1 one by one
-                article=row.Article
-                if Product.objects.filter(article=article).exists():
-                    product=Product.objects.get(article=article)
-                    if product.wb_bar_code:
-                        pass
+        #=======================Uploading to Excel Module===================================
+        response = HttpResponse(content_type="application/ms-excel")
+        response["Content-Disposition"] = (
+            "attachment; filename=Product_" + 'Manufacturer_report'+ ".xls"
+        )
 
-            
-            return redirect('dashboard')
+        wb = xlwt.Workbook(encoding="utf-8")
+        ws = wb.add_sheet("Manufacturer")
 
-    return redirect ('login_page')
+        # sheet header in the first row
+        row_num = 0
+        font_style = xlwt.XFStyle()
 
-def update_wb_quantity(request):
-    if request.user.is_authenticated:
-        warehouseId='1744108'
-        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-        headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
-        params=[]
-        array_of_items=[]
-        if request.method == "POST":
-            file = request.FILES["file_name"]
-            df1 = pandas.read_excel(file)
-            cycle = len(df1)
-            for i in range(cycle):
-                row = df1.iloc[i]#reads each row of the df1 one by one
-                article=row.Article
-                if Product.objects.filter(article=article).exists():
-                    product=Product.objects.get(article=article)
-                    if product.wb_id:
-                        item={
-                                "chrtId": int(product.wb_id),
-                                "amount": 5,
-                            }
-                        array_of_items.append(item)
-              
-            params={
-                "stocks": array_of_items
-            }
+        columns = ["Article", "Title", "Av_price", "Length", "Width", "Height"]
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
 
-            response = requests.put(url, json=params, headers=headers)
-            status_code=response.status_code
-            print(status_code)
-            a=response.json()
-            print(a)
-            return redirect('dashboard')
+        # sheet body, remaining rows
+        font_style = xlwt.XFStyle()
+        query = products.values_list("article", "name","av_price", "length", "width", "height" )
 
-    return redirect ('login_page')
+        for row in query:
+            row_num += 1
+            for col_num in range(len(row)):
+                ws.write(row_num, col_num, str(row[col_num]), font_style)
+        wb.save(response)
+        return response
+    #=======================End of Excel Upload Module================================
 
 def create_list_of_wb_barcodes(request):
     if request.user.is_authenticated:
@@ -397,3 +338,17 @@ def create_list_of_wb_barcodes(request):
     #=======================End of Excel Upload Module================================  
 
     return redirect ('login_page')
+
+def change_VT_article (request):
+    products=Product.objects.filer(manufacturer='VITAL TECHNOLOGIES')
+    for product in products:
+        article = product.article
+        article_modified = article[:-1]
+        product.article=article_modified
+        product.save()
+        if RemainderHistory.objects.filter(article=article).exists():
+            rhos=RemainderHistory.objects.filter(article=article)
+            for rho in rhos:
+                rho.article=article_modified
+                rho.save()
+    return redirect ('dashboard')
