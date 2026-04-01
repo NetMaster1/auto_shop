@@ -1948,7 +1948,6 @@ def sign_off_product (request):
     else:
         return render ("dashboard")
 
-
 def general_report (request):
     products=Product.objects.all()
     report_identifier = Identifier.objects.create()

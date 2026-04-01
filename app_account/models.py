@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class ExtendedUser (models.Model):
+    created = models.DateTimeField(auto_now=True, blank=True, null=True)
     # first_name = models.CharField(max_length=50, null=True, blank=True)
     # last_name = models.CharField(max_length=50, null=True, blank=True)
     # password = models.CharField(max_length=50, null=True, blank=True)

@@ -122,9 +122,9 @@ def ozon_push(request):#receives a notification from ozon on a new order
             if product.length < 120:
               warehouseId=1368124
             else:
-              warehouseId=1512363
+              warehouseId=1744108
             url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-            headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+            headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
             stock_arr=[]
             wb_bar_code=str(product.wb_bar_code)
             qnty=rho.current_remainder
@@ -140,11 +140,82 @@ def ozon_push(request):#receives a notification from ozon on a new order
             #status_code=response.status_code
             #Status Code: 204 No Content
             #There is no content to send for this request except for headers.
-
-
           json_data = {
             "result": True
             }
+          
+        elif message_type=="TYPE_POSTING_CANCELLED": 
+          status='initiated by ozon'
+          shipment_id=data['posting_number']
+          
+          tdelta=datetime.timedelta(hours=3)
+          dateTime=datetime.datetime.now()
+          dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+          dateTime=dT_utcnow+tdelta
+          
+          products=data['products']
+          item=products[0]
+      
+          sku=item['sku']
+          quantity=item['quantity']
+          doc_type = DocumentType.objects.get(name="Отмена заказа")
+          product=Product.objects.get(ozon_sku=sku)
+
+          if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
+            rho_latest_before = RemainderHistory.objects.filter(article=product.article,  created__lt=dateTime).latest('created')
+            pre_remainder=rho_latest_before.current_remainder
+          else:
+            pre_remainder=0
+          rho = RemainderHistory.objects.create(
+            rho_type=doc_type,
+            created=dateTime,
+            article=product.article,
+            ozon_id=product.ozon_id,
+            ozon_sku=sku,
+            name=product.name,
+            status=status,
+            shipment_id=shipment_id,
+            pre_remainder=pre_remainder,
+            incoming_quantity=int(quantity),
+            outgoing_quantity=0,
+            current_remainder=pre_remainder + int(quantity),
+            #retail_price=int(retail_price),
+            # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+            )
+
+          #editing current quatityt in product table for future reports
+          #taking current qunatity report based on rho table takes too much time
+          product.quantity=rho.current_remainder
+          product.total_sum=rho.current_remainder * product.av_price
+          product.save()
+
+          #changing qnty at WB
+          if product.wb_bar_code:
+            if product.length < 120:
+              warehouseId=1368124
+            else:
+              warehouseId=1744108
+            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+            headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+            stock_arr=[]
+            wb_bar_code=str(product.wb_bar_code)
+            qnty=rho.current_remainder
+            stock_dict={
+                "sku": wb_bar_code,#WB Barcode
+                "amount": qnty,
+            }
+            stock_arr.append(stock_dict)
+            params= {
+                "stocks": stock_arr
+            }
+            response = requests.put(url, json=params, headers=headers)
+            #status_code=response.status_code
+            #Status Code: 204 No Content
+            #There is no content to send for this request except for headers.
+          json_data = {
+            "result": True
+            }
+
         else:
           json_data = {
               "error": {
