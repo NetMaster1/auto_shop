@@ -650,6 +650,25 @@ nav {
   transform: scale(1.1);
 }
 
+.menu_block {
+  position: relative;
+  background-color: cornflowerblue;
+  display: flex;
+  flex-direction: column;
+}
+
+.body_container {
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+
+}
+.big_screen_container {
+  width: 70%;
+  /* background-color: cornflowerblue; */
+  display: flex;
+  flex-direction: column;
+}
 
 
 /* ====================================================================== */
@@ -1426,7 +1445,6 @@ margin-top: 1vw;
 .page_containner {
   display: flex;
   justify-content: center;
-
 
 }
 

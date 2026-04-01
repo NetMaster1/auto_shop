@@ -1,464 +1,471 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="body_container">
     <!-- =====================Alert Messages Module=================== -->
-<div class="container">
-    {% if messages %}
-    {% for message in messages %}
- 
-        <h3><tag style="color:red"> {{ message }} </style></h3>
-        <!-- <button class="close" data-dismiss="alert">
-                    <small><sup>x</sup></small>
-                </button> -->
-    {% endfor%}
-    {% endif%}
-</div>
-<!-- ===================End of Alert Messages Module================ -->
-    <div class="row m-auto mt-3 ">
-        <div class="col-2">
-            Title
-            <form action="{% url 'create_product' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-
-              
-                        <label for="file_name">
-                            <h5>Введите файл в формате Excel для Оzon <br>
-                            Если наименование с таким артикулом отсутсвует в erms, то создаёт новое наименование в таблице<br>
-                            Product. Одновременно создаёт новое или обновляет существующее наименование на mp ozon. Обновляет<br>
-                            поля: image, price, name;
-                        </h5>
-
-                        </label>
-                  
-             
-                        <input type="file" class='form-control' id="file_name" name="file_name" required>
-                
-            <input type="submit" value="Создать позицию на озон"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-        </div>
-    </form>
-    <br>
-    ===================================================================
-    <!-- ============================================================= -->
-    <div class="row m-auto mt-3 ">
-        <div class="col-2">
-            Title
-            <form action="{% url 'wb_create_product' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-
-              
-                        <label for="file_name">
-                            <h5>Введите файл в формате Excel для WB <br>
-                            Если наименование с таким артикулом отсутсвует в erms, то создаёт новое наименование в таблице<br>
-                            Product. Создаёт только наименование с характеристиками. Если наименование с таким артикулом уже есть,
-                            выдаёт ошибку в ответе.
-                        </h5>
-
-                        </label>
-                  
-             
-                        <input type="file" class='form-control' id="file_name" name="file_name" required>
-                
-            <input type="submit" value="Создать позицию на WB"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-        </div>
-    </form>
-    <br>
-    ===================================================================
-    <!-- ============================================================= -->
-    <br>
-    <div class="row m-auto mt-3 ">
-        <div class="col-2">
-            <form action="{% url 'update_prices' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-
-              
-                        <label for="file_name">
-                            <h5>Введите файл в формате Excel <br>
-                        </h5>
-
-                        </label>
-                  
-             
-                        <input type="file" class='form-control' id="file_name" name="file_name" required>
-                
-            <input type="submit" value="Изменить цены для Ozon "
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-        </div>
-    </form>
-    <br>
-    ======================================================================
-    <!-- ============================================================= -->
-    <br>
-    <div class="row m-auto mt-3 ">
-        <div class="col-2">
-            <form action="{% url 'wb_update_prices' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-
-              
-                        <label for="file_name">
-                            <h5>Введите файл в формате Excel <br>
-                        </h5>
-
-                        </label>
-                  
-             
-                        <input type="file" class='form-control' id="file_name" name="file_name" required>
-                
-            <input type="submit" value="Изменить цены для WB "
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-        </div>
-    </form>
-    <br>
-    ======================================================================
-    <br>
-     <div class="row m-auto mt-3 ">
-    Изменяет цены для сайта auto-deflector.ru
-    <!-- ============================================================= -->
-    <br>
-    <div class="row m-auto mt-3 ">
-        <div class="col-2">
-            <form action="{% url 'change_site_retail_price' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-
-              
-                        <label for="file_name">
-                            <h5>Введите файл в формате Excel <br>
-                        </h5>
-
-                        </label>
-                  
-             
-                        <input type="file" class='form-control' id="file_name" name="file_name" required>
-                
-            <input type="submit" value="Изменить цены для auto-deflector.ru "
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-        </div>
-    </form>
-    <br>
-    ======================================================================
+{% if messages %}
+{% for message in messages %}
+    <div class="container">
+       
+    
+            <h3><tag style="color:red"> {{ message }} </style></h3>
+            <!-- <button class="close" data-dismiss="alert">
+                        <small><sup>x</sup></small>
+                    </button> -->   
     </div>
+{% endfor%}
+{% endif%}
+<!-- ===================End of Alert Messages Module================ -->
 
+    {% for group in request.user.groups.all %}
+        {% if group.name == 'admin' %}
+    <div class="container">
+        ===============================CREATE OZON PRODUCT==============================
+        <div class="row m-auto mt-3 ">
+            <div class="col-2">
+                Title
+                <form action="{% url 'create_product' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
 
-
-
-
-
-    <!-- ============================================================= -->
-
-     <br>
-    <div class="row m-auto mt-3 ">
-        <div class="col-2">
-            <form action="{% url 'update_images' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-
-              
-                        <label for="file_name">
-                            <h5>Введите файл в формате Excel <br>
-                        </h5>
-
-                        </label>
-                  
-             
-                        <input type="file" class='form-control' id="file_name" name="file_name" required>
                 
-            <input type="submit" value="Обновить медиа для Ozon"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-        </div>
-    </form>
-    <br>
+                            <label for="file_name">
+                                <h5>Введите файл в формате Excel для Оzon <br>
+                                Если наименование с таким артикулом отсутсвует в erms, то создаёт новое наименование в таблице<br>
+                                Product. Одновременно создаёт новое или обновляет существующее наименование на mp ozon. Обновляет<br>
+                                поля: image, price, name;
+                            </h5>
 
-
-
-     <br>
-    <div class="row m-auto mt-3 ">
-        <div class="col-2">
-            <form action="{% url 'wb_add_media_files' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-
-              
-                        <label for="file_name">
-                            <h5>Введите файл в формате Excel <br>
-                        </h5>
-
-                        </label>
-                  
-             
-                        <input type="file" class='form-control' id="file_name" name="file_name" required>
+                            </label>
+                    
                 
-            <input type="submit" value="Создать медиа для WB"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-        </div>
-    </form>
-    <br>
-
-
-    ======================================================================
-    <!-- ============================================================= -->
-
-    <form action="{% url 'getting_ozon_id_and_ozon_sku' %}" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
-    
-
-        <label for="file_name">
-            <h5>Введите файл в формате Excel
-                <br>
-                Если артикул существует в таблице Product и на mp ozon, то загружает ozon_id и ozon_sku для соответствующего <br>
-                артикула и вносит его в таблицу Product в erms. <br>
-                Таким образом у нас есть артикул, ozon_id и ozon_sku в таблице Product.
-            </h5>
-        </label>
-        <input type="file" class='form-control' id="file_name" name="file_name" required>
-            <input type="submit" value="Получить ozon_id"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-        </div></form>
-    <br>
-        ======================================================================
-    <label for="file_name">
-        <h5>Введите файл в формате Excel
-            <br>
-            Создает записи в таблице RemainderHistory (Поступление ТМЦ) при условии, что наименование с данным артикулом<br>
-            существует в таблице Product. Cинхронизирует current_remainder из таблицы RemainderHistory с кол-вом на mp ozon при<br>
-            условии, что наименование содержит ozon_id. Не создаёт нового наименования ни в erms ни на ozon. Столбец Title <br>
-            для ввода названия вообще не используется.
-        </h5>
-    </label>
-
-   
-    <form action="{% url 'delivery_auto' %}" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
-    
-        <input type="file" class='form-control' id="file_name" name="file_name" required>
-   
-            <input type="submit" value="Ввести кол-во"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-    <br>
-    ==================================================================================
-  
-            <!-- <a href="{% url 'synchronize_qnty' %}" target="_blank"> -->
-            <form action="{% url 'synchronize_qnty' %}" method="POST">
-            {% csrf_token %}
-
-            <select name="category" id="category" required>
-                <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
-                <option value="">Выберите категорию</option>
-                {% for category in categories %}
-                <option value="{{category.id}}">{{category.name}}</option>
-                {% endfor %}
-            </select>
-            
-                <!-- <input type="button" value="Обновить остатки на озон из erms" class="btn btn-lg btn-block btn-outline-danger"> 
-                </a> -->
-
-            <input type="submit" value="Обновить остатки на озон из erms" class="btn btn-sm btn-block btn-outline-dark">
+                            <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    
+                <input type="submit" value="Создать позицию на озон"
+                    class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </div>
             </form>
-  </div>
-  
-    <br>
-        =====================================================================
-
-
-    <label for="file_name">
-        <h5>Продажа
             <br>
-            Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
-        </h5>
-    </label>
+        </div>
+        ========================CREATE WB PRODUCT=======================================
+        <div class="row m-auto mt-3 ">
+            <div class="col-2">
+                Title
+                <form action="{% url 'wb_create_product' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
 
-    <form action="{% url 'sale' %}" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
-    
-        <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
-        <input type="number" class='form-control' id="retail_price" name="retail_price" placeholder="Введите цену" required >
-   
-            <input type="submit" value="Продажа"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-    <br>
-    ============================================================================
-    <!-- ==================================================================== -->
+                
+                            <label for="file_name">
+                                <h5>Введите файл в формате Excel для WB <br>
+                                Если наименование с таким артикулом отсутсвует в erms, то создаёт новое наименование в таблице<br>
+                                Product. Создаёт только наименование с характеристиками. Если наименование с таким артикулом уже есть,
+                                выдаёт ошибку в ответе.
+                            </h5>
 
-    <label for="file_name">
-        <h5>Оприходование
+                            </label>
+                    
+                
+                            <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    
+                <input type="submit" value="Создать позицию на WB"
+                    class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </div>
+            </form>
             <br>
-            Содаёт запись в таблице RemainderHistory (Оприходование ТМЦ)
-        </h5>
-    </label>
+        </div>
+        ========================UPDATE OZON PRICES======================================
+        <div class="row m-auto mt-3 ">
+            <div class="col-2">
+                <form action="{% url 'update_prices' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
 
-    <form action="{% url 'recognition' %}" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
-    
-        <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
-        <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите кол-во" required >
-   
-            <input type="submit" value="Оприходование ТМЦ"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-    <br>
-    ============================================================================
-    <!-- ==================================================================== -->
-    <label for="file_name">
-        <h5>Возврат ТМЦ
+                
+                            <label for="file_name">
+                                <h5>Введите файл в формате Excel <br>
+                            </h5>
+
+                            </label>
+                    
+                
+                            <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    
+                <input type="submit" value="Изменить цены для Ozon "
+                    class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </div>
+            </form>
             <br>
-            Содаёт запись в таблице RemainderHistory (Возврат ТМЦ)
-        </h5>
-    </label>
-
-    <form action="" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
-    
-        <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
-   
-            <input type="submit" value="Возврат"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-  
-    ====================================================================
-    <!-- =============================================================== -->
-    <label for="file_name">
-        <h5>Отчеты по остаткам</h5>
-    </label>
-
-    <div class="col">
-        <a href="{% url 'general_report' %}" target="_blank">
-           <input type="button" value="Создать отчет в Excel" class="btn btn-lg btn-block btn-outline-danger"> 
-         </a>
-  </div>
-  
-      ======================================================================
-    <label for="file_name">
-        <h5>Введите файл в формате Excel
+        </div>
+        ============================UPDATE WB PRICES====================================
+        <div class="row m-auto mt-3 ">
+            <div class="col-2">
+                <form action="{% url 'wb_update_prices' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
+                    <label for="file_name">
+                        <h5>Введите файл в формате Excel <br>
+                        </h5>
+                    </label>
+                    <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    <input type="submit" value="Изменить цены для WB "
+                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
+                </div>
+            </form>
             <br>
-            Функция исправляет базу данных, которая не видит русских символов в названии товара и в rho.
-        </h5>
-    </label>
+        </div>
+        =======================CHANGE PRICES FOR AUTO-DEFLECTOR.RU======================
+        <div class="row m-auto mt-3 ">
+            <div class="col-2">
+                <form action="{% url 'change_site_retail_price' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
 
-   
-    <form action="{% url 'db_correct' %}" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
-    
-        <input type="file" class='form-control' id="file_name" name="file_name" required>
-   
-            <input type="submit" value="Исправить"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-    <br>
-    ==================================================================================
-    
-    <label for="file_name">
-        <h5>Введите файл в формате Excel
+                
+                            <label for="file_name">
+                                <h5>Введите файл в формате Excel <br>
+                            </h5>
+
+                            </label>
+                    
+                
+                            <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    
+                <input type="submit" value="Изменить цены для auto-deflector.ru "
+                    class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </div>
+            </form>
             <br>
-            Функция дополняет базу данных названиями марки, модели на английском и русском (для хэштэгов)
-        </h5>
-    </label>
+        </div>
+        =========================UPDATE IMAGES==========================================
+        <div class="row m-auto mt-3 ">
+            <div class="col-2">
+                <form action="{% url 'update_images' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
 
-   
-    <form action="{% url 'db_correct_model_names' %}" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
-    
-        <input type="file" class='form-control' id="file_name" name="file_name" required>
-   
-            <input type="submit" value="Дополнить"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-    <br>
-    ======================Update Name=================================================
-    <label for="file_name">
-        <h5>Введите файл в формате Excel
+                
+                            <label for="file_name">
+                                <h5>Введите файл в формате Excel <br>
+                            </h5>
+
+                            </label>
+                    
+                
+                            <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    
+                <input type="submit" value="Обновить медиа для Ozon"
+                    class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </div>
+            </form>
             <br>
-            Функция изменяет название товара
-        </h5>
-    </label>
+        </div>
+        ==========================ADD WB MEDIA FILES====================================
+        <div class="row m-auto mt-3 ">
+            <div class="col-2">
+                <form action="{% url 'wb_add_media_files' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
 
-    <form action="{% url 'update_product_name' %}" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
+                
+                            <label for="file_name">
+                                <h5>Введите файл в формате Excel <br>
+                            </h5>
+
+                            </label>
+                    
+                
+                            <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    
+                <input type="submit" value="Создать медиа для WB"
+                    class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </div>
+            </form>
+                <br>
+        </div>
+        ==========================GETTING OZON ID & SKU==================================
+        <div class="row m-auto mt-3 ">
+            <form action="{% url 'getting_ozon_id_and_ozon_sku' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+                <label for="file_name">
+                    <h5>Введите файл в формате Excel
+                        <br>
+                        Если артикул существует в таблице Product и на mp ozon, то загружает ozon_id и ozon_sku для соответствующего <br>
+                        артикула и вносит его в таблицу Product в erms. <br>
+                        Таким образом у нас есть артикул, ozon_id и ozon_sku в таблице Product.
+                    </h5>
+                </label>
+                <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    <input type="submit" value="Получить ozon_id"
+                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
+                </form>
+                <br>
+        </div>
+        ========================СЕРВИСНАЯ ФУНКЦИЯ========================================
+        <div class="row m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Введите файл в формате Excel
+                    <br>
+                    Функция исправляет базу данных, которая не видит русских символов в названии товара и в rho.
+                </h5>
+            </label>
+            <form action="{% url 'db_correct' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            
+                <input type="file" class='form-control' id="file_name" name="file_name" required>
+        
+                    <input type="submit" value="Исправить"
+                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </form>
+                <br>
+        </div>
+        =======================СЕРВИСНАЯ ФУНКЦИЯ=========================================
+        <div class="row m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Введите файл в формате Excel
+                    <br>
+                    Функция дополняет базу данных названиями марки, модели на английском и русском (для хэштэгов)
+                </h5>
+            </label>
+
     
-        <input type="file" class='form-control' id="file_name" name="file_name" required>
-   
-            <input type="submit" value="Изменить"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-    <br>
-    ======================Update Model Field=================================================
-    <label for="file_name">
-        <h5>Введите файл в формате Excel
+            <form action="{% url 'db_correct_model_names' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            
+                <input type="file" class='form-control' id="file_name" name="file_name" required>
+        
+                    <input type="submit" value="Дополнить"
+                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            
+            </form>
             <br>
-            Функция изменяет названи модели
-        </h5>
-    </label>
+        </div>
+        ======================Update Name=================================================
+        <div class="row m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Введите файл в формате Excel
+                    <br>
+                    Функция изменяет название товара
+                </h5>
+            </label>
 
-    <form action="{% url 'update_hood_deflector_attributes' %}" method="POST" enctype="multipart/form-data" >
+            <form action="{% url 'update_product_name' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            
+                <input type="file" class='form-control' id="file_name" name="file_name" required>
+        
+                    <input type="submit" value="Изменить"
+                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            
+            </form>
+            <br>
+        </div>
+        ======================Update Model Field==========================================
+        <div class="row m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Введите файл в формате Excel
+                    <br>
+                    Функция изменяет названи модели
+                </h5>
+            </label>
+            <form action="{% url 'update_hood_deflector_attributes' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            
+                <input type="file" class='form-control' id="file_name" name="file_name" required>
+        
+                    <input type="submit" value="Изменить"
+                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </form>
+            <br>
+        </div>
+        ======================Check SDEK Order Status ====================================
+        <div class="row m-auto mt-3 ">
+            <label for="file_name">
+                <h5>
+                    Узнать статус заказа СДЕК
+                </h5>
+            </label>
+            <form action="{% url 'get_order_status' %}" method="POST">
+                {% csrf_token %}
+            
+                <input type="text" class='form-control' id="uuid" name="uuid" required>
+        
+                    <input type="submit" value="Check"
+                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </form>
+            <br>
+        </div>
+        ======================Заполнить Поле для поиска ==================================
+        <div class="row m-auto mt-3 ">
+            <label for="file_name">
+                <h5>
+                    Заполнить поле для поиска
+                </h5>
+            </label>
+            <form action="{% url 'fill_in_search_name_col' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            
+                <input type="file" class='form-control' id="file_name" name="file_name" required>
+                <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
+            </form>
+            <br>
+        </div>
+        ======================Выборка по производителю====================================
+        <div class="row m-auto mt-3 ">
+            <label for="manufacturer">
+                <h5>
+                    Выборка по производителю
+                </h5>
+            </label>
+            <form action="{% url 'sort_by_manufacturer' %}" method="POST" >
+                {% csrf_token %}
+            
+                <input type="text" class='form-control' id="manufacturer" name="manufacturer" required>
+                <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
+            </form>
+            <br>
+        </div>
+    </div>
+        {% endif %}
+    {% endfor %}
+
+    <div class="big_screen_container">
+        =============================ОТЧЕТ ПО ОСТАТКАМ===============================
+        <!-- <div class="col">
+            <label for="file_name">
+                <h5>Отчеты по остаткам</h5>
+            </label>
+        </div> -->     
+        <br>
+        <div class="col">
+            <a href="{% url 'general_report' %}" target="_blank">
+                <input type="button" value="Отчет по остаткам" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
+            </a>
+        </div>
+        ==========================ОБНУЛИТЬ ОСТАТКИ НА OZON=========================================
+            <br>
+            <a href="{% url 'zero_ozon_qnty' %}">
+            <input type="button" value="Обнулить ozon" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
+        </a>
+        ===============================СИНХРОНИЗИРУЕТ КОЛ-ВО С OZON И WB===============
+        <form action="{% url 'synchronize_qnty' %}" method="POST">
+
         {% csrf_token %}
+        <div class="row">
+            <div class="col-2">
+                <select name="category" id="category" required>
+                        <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
+                        <option value="">Выберите категорию</option>
+                        {% for category in categories %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+
+            <div class="col-4">
+                <input type="submit" value="Обновить остатки на озон из erms" class="btn btn-block btn-outline-primary" style="width: 17rem">
+            </div>
+        </div>           
+        </form>
     
-        <input type="file" class='form-control' id="file_name" name="file_name" required>
-   
-            <input type="submit" value="Изменить"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-    <br>
 
 
-    ======================Check SDEK Order Status =================================================
-    <label for="file_name">
-        <h5>
-            Узнать статус заказа СДЕК
-        </h5>
-    </label>
+        ===============================ПОСТУПЛЕНИЕ ТМЦ================================
+        <!-- <div class="menu_block m-auto mt-3 "> -->
+            <!-- <label for="file_name">
+                <h5>Введите файл в формате Excel
+                    <br>
+                    Создает записи в таблице RemainderHistory (Поступление ТМЦ) при условии, что наименование с данным артикулом<br>
+                    существует в таблице Product. Cинхронизирует current_remainder из таблицы RemainderHistory с кол-вом на mp ozon при<br>
+                    условии, что наименование содержит ozon_id. Не создаёт нового наименования ни в erms ни на ozon. Столбец Title <br>
+                    для ввода названия вообще не используется.
+                </h5>
+            </label> --> 
+        <form action="{% url 'delivery_auto' %}" method="POST" enctype="multipart/form-data" >
+              <br>
+            {% csrf_token %}
+                <div class="row">
+            
+                <div class="col-4">
+                    <input type="file" class='form-control' id="file_name" name="file_name" required>
+                </div>
+                <div class="col">
+                    <input type="submit" value="Поступление" class="btn btn-block btn-outline-primary"style="width: 10rem" >
+                </div>
+            </div>
+          <br>
+        </form>
+      
+        <!-- </div> -->
+        ==========================ПРОДАЖА ТМЦ==========================================
+        <!-- <div class="menu_block m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Продажа
+                    <br>
+                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
+                </h5>
+            </label> -->
+            <form action="{% url 'sale' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            <div class="row mt-1 mb-1">
+                <div class="col-2">
+                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
+                </div>
+                <div class="col-2">
+                   <input type="number" class='form-control' id="retail_price" name="retail_price" placeholder="Введите цену" required >
+                </div>
+                <div class="col-2">
+                    <input type="submit" value="Продажа"class="btn btn-block btn-outline-primary" style="width: 10rem">
+                </div>
+            </div>
+            </form>
+            <br>
+        <!-- </div> -->
+        ============================ОПРИХОДОВАНИЕ ТМЦ==================================
+        <!-- <div class="menu_block m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Продажа
+                    <br>
+                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
+                </h5>
+            </label> -->
+            <form action="{% url 'recognition' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            <div class="row mt-1 mb-1">
+                <div class="col-2">
+                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
+                </div>
+                <div class="col-2">
+                   <input type="number" class='form-control' id="retail_price" name="retail_price" placeholder="Введите цену" required >
+                </div>
+                <div class="col-2">
+                    <input type="submit" value="Оприходование"class="btn btn-block btn-outline-primary" style="width: 10rem">
+                </div>
+            </div>
+            </form>
+            <br>
+        <!-- </div> -->
+        =============================СПИСАНИЕ ТМЦ======================================
+        <!-- <div class="menu_block m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Продажа
+                    <br>
+                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
+                </h5>
+            </label> -->
+            <form action="#" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            <div class="row mt-1 mb-1">
+                <div class="col-2">
+                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
+                </div>
+                <div class="col-2">
+                   <input type="number" class='form-control' id="retail_price" name="retail_price" placeholder="Введите цену" required >
+                </div>
+                <div class="col-2">
+                    <input type="submit" value="Списание"class="btn btn-block btn-outline-primary" style="width: 10rem">
+                </div>
+            </div>
+            </form>
+            <br>
+        <!-- </div> -->
+      
 
-   
-    <form action="{% url 'get_order_status' %}" method="POST">
-        {% csrf_token %}
-    
-        <input type="text" class='form-control' id="uuid" name="uuid" required>
-   
-            <input type="submit" value="Check"
-                class="btn btn-sm btn-block btn-outline-dark clear_storage">
-    
-    </form>
-    <br>
-    ======================Заполнить Поле для поиска =================================================
-    <label for="file_name">
-        <h5>
-            Заполнить поле для поиска
-        </h5>
-    </label>
-    <form action="{% url 'fill_in_search_name_col' %}" method="POST" enctype="multipart/form-data" >
-        {% csrf_token %}
-    
-        <input type="file" class='form-control' id="file_name" name="file_name" required>
-        <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
-    </form>
-    <br>
-
-    ======================Выборка по производителю=================================================
-    <label for="manufacturer">
-        <h5>
-            Выборка по производителю
-        </h5>
-    </label>
-    <form action="{% url 'sort_by_manufacturer' %}" method="POST" >
-        {% csrf_token %}
-    
-        <input type="text" class='form-control' id="manufacturer" name="manufacturer" required>
-        <input type="submit" value="Отправить" class="btn btn-sm btn-block btn-outline-dark">
-    </form>
-    <br>
+       
 
 
-     
-</body>
-</html>
+{% endblock %}

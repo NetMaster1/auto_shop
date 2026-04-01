@@ -69,8 +69,8 @@ def product_quant_correct(request):
 
         messages.success(request, 'Product table quantity and total_sum changed')   
         return redirect("dashboard")  
-    return redirect ('login_page')
-        
+    return redirect ('login_page')        
+
 def change_ozon_qnt_for_short_deflectors (request):
     # tdelta=datetime.timedelta(hours=3)
     # dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
