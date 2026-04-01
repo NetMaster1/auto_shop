@@ -11,7 +11,7 @@ def start():
 	#scheduler.add_job(wb_update_prices_auto, 'interval', hours=2)
 	#receives list of orders from wb every hour & synchronizes erms db remainders & remainders at ozon
 	#scheduler.add_job(wb_synchronize_orders_with_ozon, 'interval', minutes=5, max_instances=1)
-	scheduler.add_job(wb_synchronize_orders_with_ozon, 'interval', minutes=30)
+	scheduler.add_job(wb_synchronize_orders_with_ozon, 'interval', minutes=10)
 	scheduler.add_job(list_of_sdek_offices_update, 'interval', hours=168)
 	#scheduler.add_job(scheduled_dispatch, 'interval', minutes=10)
 	#scheduler.add_job(scheduled_dispatch, 'interval', seconds=5)

@@ -1442,6 +1442,76 @@ def delivery_auto(request):
 
         return redirect("dashboard")
 
+def inventory (request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            tdelta=datetime.timedelta(hours=3)
+            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            dateTime=dT_utcnow+tdelta
+            file = request.FILES["file_name"]
+            df1 = pandas.read_excel(file)
+            cycle = len(df1)
+            dict_new_article={}
+            for i in range(cycle):
+                row = df1.iloc[i]#reads each row of the df1 one by one
+                article=str(row.Article)
+                if '/' in str(article):
+                    article=article.replace('/', '_')
+                #====================getting rid of extra spaces in the string==================================
+                #article=article.replace(' ', '')#getting rid of extra spaces
+                #article=article.strip()#getting rid of extra spaces at both sides of the string
+                article=article.split()
+                article=' '.join(article)
+
+                if Product.objects.filter(article=article).exists():
+                    product=Product.objects.get(article=article)
+                    if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
+                        rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
+                        pre_remainder=rho_latest_before.current_remainder
+                    else:
+                        pre_remainder=0
+                    if pre_remainder > row.Qnty:
+                        quantity=pre_remainder - int(row.Qnty)
+                        doc_type = DocumentType.objects.get(name="Списание ТМЦ")
+                        rho = RemainderHistory.objects.create(
+                            rho_type=doc_type,
+                            created=dateTime,
+                            article=article,
+                            ozon_id=product.ozon_id,
+                            name=product.name,
+                            pre_remainder=pre_remainder,
+                            incoming_quantity=0,
+                            outgoing_quantity=quantity,
+                            current_remainder=pre_remainder - int(quantity),
+                            # retail_price=rho_latest.retail_price,
+                            # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                        )
+                    elif  pre_remainder < row.Qnty:
+                        quantity=int(row.Qnty) - pre_remainder
+                        doc_type = DocumentType.objects.get(name="Оприходование ТМЦ")
+                        rho = RemainderHistory.objects.create(
+                            rho_type=doc_type,
+                            created=dateTime,
+                            article=article,
+                            ozon_id=product.ozon_id,
+                            name=product.name,
+                            pre_remainder=pre_remainder,
+                            incoming_quantity=quantity,
+                            outgoing_quantity=0,
+                            current_remainder=pre_remainder + int(quantity),
+                            # retail_price=rho_latest.retail_price,
+                            # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                        )     
+                    else:
+                        continue
+                else:
+                    dict_new_article[row.Article]=row.Title
+                    
+            messages.error(request, f'Наименования с артикулами {dict_new_article} не были проведены, так как товар отсутствует в БД.')
+            return redirect("dashboard")
+    else:
+        return redirect ('login')
+
 #За один запрос можно изменить наличие для 100 товаров. 
 #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
 #В настоящий момент у нас уже более 100 позиций по Дефлектор капота
@@ -1758,10 +1828,126 @@ def sale (request):
     return redirect ('dashboard')
 
 def recognition (request):
-    pass
+    if request.user.is_authenticated:
+        doc_type = DocumentType.objects.get(name="Оприходование ТМЦ")
+        if request.method =='POST':
+            tdelta=datetime.timedelta(hours=3)
+            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            dateTime=dT_utcnow+tdelta
+            article = request.POST["article"]
+            quantity = request.POST["quantity"]
+            if Product.objects.filter(article=article).exists():
+                product=Product.objects.get(article=article)
+                product.quantity+= int(quantity)
+                product.save()
+                if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
+                    rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
+                    pre_remainder=rho_latest_before.current_remainder
+                else:
+                    pre_remainder=0
+                        # creating remainder_history
+                rho = RemainderHistory.objects.create(
+                    rho_type=doc_type,
+                    created=dateTime,
+                    article=article,
+                    ozon_id=product.ozon_id,
+                    name=product.name,
+                    pre_remainder=pre_remainder,
+                    incoming_quantity=quantity,
+                    outgoing_quantity=0,
+                    current_remainder=pre_remainder + int(quantity),
+                    # retail_price=rho_latest.retail_price,
+                    # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                )
+            else:
+                messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
+                return redirect("dashboard")
+      
+            messages.error(request,"Документ проведен")
+            return redirect("dashboard")
+    else:
+        return render ("dashboard")
 
 def return_product (request):
-    pass
+    if request.user.is_authenticated:
+        doc_type = DocumentType.objects.get(name="Возврат ТМЦ")
+        if request.method =='POST':
+            tdelta=datetime.timedelta(hours=3)
+            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            dateTime=dT_utcnow+tdelta
+            article = request.POST["article"]
+            quantity = request.POST["quantity"]
+            if Product.objects.filter(article=article).exists():
+                product=Product.objects.get(article=article)
+                product.quantity+= int(quantity)
+                product.save()
+                if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
+                    rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
+                    pre_remainder=rho_latest_before.current_remainder
+                else:
+                    pre_remainder=0
+                        # creating remainder_history
+                rho = RemainderHistory.objects.create(
+                    rho_type=doc_type,
+                    created=dateTime,
+                    article=article,
+                    ozon_id=product.ozon_id,
+                    name=product.name,
+                    pre_remainder=pre_remainder,
+                    incoming_quantity=quantity,
+                    outgoing_quantity=0,
+                    current_remainder=pre_remainder + int(quantity),
+                    # retail_price=rho_latest.retail_price,
+                    # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                )
+            else:
+                messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
+                return redirect("dashboard")
+            messages.error(request,"Документ проведен")
+            return redirect("dashboard")
+    else:
+        return render ("dashboard")
+
+def sign_off_product (request):
+    if request.user.is_authenticated:
+        doc_type = DocumentType.objects.get(name="Списание ТМЦ")
+        if request.method =='POST':
+            tdelta=datetime.timedelta(hours=3)
+            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            dateTime=dT_utcnow+tdelta
+            article = request.POST["article"]
+            quantity = request.POST["quantity"]
+            if Product.objects.filter(article=article).exists():
+                product=Product.objects.get(article=article)
+                product.quantity=- int(quantity)
+                product.save()
+                if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
+                    rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
+                    pre_remainder=rho_latest_before.current_remainder
+                else:
+                    pre_remainder=0
+                        # creating remainder_history
+                rho = RemainderHistory.objects.create(
+                    rho_type=doc_type,
+                    created=dateTime,
+                    article=article,
+                    ozon_id=product.ozon_id,
+                    name=product.name,
+                    pre_remainder=pre_remainder,
+                    incoming_quantity=0,
+                    outgoing_quantity=quantity,
+                    current_remainder=pre_remainder - int(quantity),
+                    # retail_price=rho_latest.retail_price,
+                    # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                )
+            else:
+                messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
+                return redirect("dashboard")
+            messages.error(request,"Документ проведен")
+            return redirect("dashboard")
+    else:
+        return render ("dashboard")
+
 
 def general_report (request):
     products=Product.objects.all()
@@ -1821,8 +2007,6 @@ def general_report (request):
             ws.write(row_num, col_num, str(row[col_num]), font_style)
     wb.save(response)
     return response
-#=======================End of Excel Upload Module================================
-
 
 #=================================WB Functions==============================
 #наименование не должно содержать более 60 символов. В противном случае API пропускает эти строки
@@ -2329,7 +2513,6 @@ def wb_update_prices(request):
         print(f'status_code: {status_code}')
         print(a)
         messages.error(request,f'WB Response: {a}')
-
         return redirect ('dashboard')
     
 def wb_update_prices_ver_1(request):

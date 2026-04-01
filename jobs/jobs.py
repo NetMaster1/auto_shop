@@ -24,7 +24,7 @@ def wb_synchronize_orders_with_ozon ():
 	#Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
 	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
     url=f'https://marketplace-api.wildberries.ru/api/v3/orders/new'
-    headers_wb = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+    headers_wb = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
    
     response = requests.get(url, headers=headers_wb)
     time.sleep(5)

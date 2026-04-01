@@ -390,6 +390,25 @@
           <br>
         </form>
       
+            ===============================ИНВЕНТАРИЗАЦИЯ/ВЫРАВНИВАНИЕ ОСТАТКОВ ТМЦ================================
+
+        <form action="{% url 'inventory' %}" method="POST" enctype="multipart/form-data" >
+              <br>
+            {% csrf_token %}
+                <div class="row">
+            
+                <div class="col-4">
+                    <input type="file" class='form-control' id="file_name" name="file_name" required>
+                </div>
+                <div class="col">
+                    <input type="submit" value="Ввести" class="btn btn-block btn-outline-primary"style="width: 10rem" >
+                </div>
+            </div>
+          <br>
+        </form>
+
+
+
         <!-- </div> -->
         ==========================ПРОДАЖА ТМЦ==========================================
         <!-- <div class="menu_block m-auto mt-3 ">
@@ -415,6 +434,32 @@
             </form>
             <br>
         <!-- </div> -->
+        ============================Возврат ТМЦ==================================
+        <!-- <div class="menu_block m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Продажа
+                    <br>
+                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
+                </h5>
+            </label> -->
+            <form action="{% url 'return_product' %}" method="POST" >
+                {% csrf_token %}
+            <div class="row mt-1 mb-1">
+                <div class="col-2">
+                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
+                </div>
+                <div class="col-2">
+                   <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите кол-во" required >
+                </div>
+                <div class="col-2">
+                    <input type="submit" value="Возврат"class="btn btn-block btn-outline-primary" style="width: 10rem">
+                </div>
+            </div>
+            </form>
+            <br>
+        <!-- </div> -->
+
+
         ============================ОПРИХОДОВАНИЕ ТМЦ==================================
         <!-- <div class="menu_block m-auto mt-3 ">
             <label for="file_name">
@@ -430,7 +475,7 @@
                     <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
                 </div>
                 <div class="col-2">
-                   <input type="number" class='form-control' id="retail_price" name="retail_price" placeholder="Введите цену" required >
+                   <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите кол-во" required >
                 </div>
                 <div class="col-2">
                     <input type="submit" value="Оприходование"class="btn btn-block btn-outline-primary" style="width: 10rem">
@@ -447,14 +492,14 @@
                     Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
                 </h5>
             </label> -->
-            <form action="#" method="POST" enctype="multipart/form-data" >
+            <form action="{% url 'sign_off_product' %}" method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
             <div class="row mt-1 mb-1">
                 <div class="col-2">
                     <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
                 </div>
                 <div class="col-2">
-                   <input type="number" class='form-control' id="retail_price" name="retail_price" placeholder="Введите цену" required >
+                   <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите количество" required >
                 </div>
                 <div class="col-2">
                     <input type="submit" value="Списание"class="btn btn-block btn-outline-primary" style="width: 10rem">

@@ -26,7 +26,10 @@ urlpatterns = [
     path('update_images', views.update_images, name='update_images'),
     path('update_hood_deflector_attributes', views.update_hood_deflector_attributes, name='update_hood_deflector_attributes'),
     path('return_product', views.return_product, name='return_product'),
+    path('return_product', views.return_product, name='return_product'),
+    path('sign_off_product', views.sign_off_product, name='sign_off_product'),
     path('general_report', views.general_report, name='general_report'),
+    path('inventory', views.inventory, name='inventory'),
     # path('choice', views.choice, name='choice'),
     # path('orders_history', views.orders_history, name='orders_history'),
 

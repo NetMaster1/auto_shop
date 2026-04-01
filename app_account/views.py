@@ -97,18 +97,21 @@ def confirm_email(request, user_id):
             return redirect ('email_confirmation', user.id)
             
 def login_user(request):
+    group=Group.objects.get(name="Manager").user_set.all()
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
         username=username.lower()
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            request.session.set_expiry(0)  #user session terminates on browser close
+            #request.session.set_expiry(0)  #user session terminates on browser close
             #request.session.set_expiry(600) #user session terminates every 10 minuntes
             auth.login(request, user)
-            #messages.success(request, ('Your have successfully been logged in. Welcome to ruversity.com'))
-            messages.success(request, ('Добро пожаловать. Вы успешно вошли в свой профиль.'))
-            return redirect('shopfront')
+            if request.user in group:
+                return redirect ('dashboard')
+            else:
+                messages.success(request, ('Добро пожаловать. Вы успешно вошли в свой профиль.'))
+                return redirect('shopfront')
         else:
             #messages.error(request, ('Incorrect username or password. Check your credentials & try again'))
             messages.error(request, ('Неправильное имя пользователи или пароль. Проверьте ваше данные и попробуйте еще раз'))
