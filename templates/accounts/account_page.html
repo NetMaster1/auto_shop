@@ -62,7 +62,6 @@
         </div>
       </div>
     </div>
-
 <!-- ==============================Password=============== -->
     <div class="accordion-item password_change_media_query">
         <h2 class="accordion-header">
@@ -90,7 +89,6 @@
           </div>
         </div>
     </div>
-
 <!-- ============================Purchases & Reviews============================== -->
     <div class="accordion-item">
         <h2 class="accordion-header">
@@ -314,6 +312,24 @@
           </div>
         </div>
     </div>
+
+  {% for group in request.user.groups.all %}
+        {% if group.name == 'Manager' %}
+    <!-- ===============Dashboard=================== -->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseEight">
+            <strong><a href="{% url 'dashboard' %}">Панель управления</a></strong>
+          </button>
+        </h2>
+        <div id="collapseNine" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <a href="{% url 'dashboard' %}">Перейти</a>
+          </div>
+        </div>
+    </div>
+    {% endif%}
+  {% endfor %}
 
   </div>
 
