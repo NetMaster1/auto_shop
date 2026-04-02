@@ -1368,8 +1368,8 @@ def delivery_auto(request):
                     outgoing_quantity=0,
                     current_remainder=pre_remainder + int(row.Qnty),
                     wholesale_price=int(row.Wholesale_Price),
-                    retail_price=int(row.Retail_Price),
-                    total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                    # retail_price=int(row.Retail_Price),
+                    # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
                 )
 
                 #checking if product already has Ozon_id & does not have to be created again
