@@ -1963,6 +1963,18 @@ def sale (request):
 def recognition (request):
     if request.user.is_authenticated:
         doc_type = DocumentType.objects.get(name="Оприходование ТМЦ")
+        wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        ozon_headers = {
+                "Client-Id": "1711314",
+                    "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+        dict_new_article={}
+        length_missing={}
+        wb_stock_arr_short=[]
+        wb_stock_arr_long=[]
+        dict_no_wb_id={}
+        ozon_stock_arr=[]
+        dict_no_ozon_id={}
         if request.method =='POST':
             tdelta=datetime.timedelta(hours=3)
             dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
@@ -1992,10 +2004,82 @@ def recognition (request):
                     # retail_price=rho_latest.retail_price,
                     # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
                 )
+                
+                if product.wb_bar_code and product.wb_true == True:
+                    wb_qnty=rho.current_remainder
+                    wb_stock_dict={
+                        "sku": product.wb_bar_code,#WB Barcode
+                        "amount": wb_qnty,
+                    }
+                    if product.length:
+                        if int(product.length) < 120:
+                            #warehouse=1368124
+                            wb_stock_arr_short.append(wb_stock_dict)
+                        else:
+                            #warehouse=1744108
+                            wb_stock_arr_long.append(wb_stock_dict)
+                    else:
+                            length_missing[product.article]=product.name
+                else:
+                    dict_no_wb_id[product.article]=product.name
+                        
+                #updating ozon quantities
+                if product.ozon_id:
+                    stock_dict={
+                        "offer_id": str(product.article),
+                        "product_id": str(product.ozon_id),
+                        "stock": rho.current_remainder,
+                        #warehouse (Неклюдово)
+                        "warehouse_id": 1020005000113280
+                    }
+                    ozon_stock_arr.append(stock_dict)
+                else:
+                    dict_no_ozon_id[product.article]=product.name
+
+                #updating wb quantities        
+                warehouseId=1368124
+                params= {
+                    "stocks": wb_stock_arr_short
+                }
+                url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                response = requests.put(url, json=params, headers=wb_headers)
+                status_code=response.status_code
+                #json=response.json()
+                print('Wb response short')
+                print(status_code)
+                print(response)
+                #print(json)
+                print('')
+                time.sleep(1)
+                
+                warehouseId=1744108
+                params= {
+                    "stocks": wb_stock_arr_long
+                }
+                url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                response = requests.put(url, json=params, headers=wb_headers)
+                status_code=response.status_code
+                #json=response.json()
+                print('Wb response long')
+                print(status_code)
+                print(response)
+                #print(json)
+                print('')
+                time.sleep(1)
+
+                #updating ozon quantities  
+                task={
+                    "stocks" : ozon_stock_arr
+                }
+                response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=ozon_headers)
+                print('Response from Ozon')
+                print(response)
+                json=response.json()
+                #print(status_code)
+                print(json)
             else:
                 messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
                 return redirect("dashboard")
-      
             messages.error(request,"Документ проведен")
             return redirect("dashboard")
     else:
@@ -2044,6 +2128,18 @@ def return_product (request):
 def sign_off_product (request):
     if request.user.is_authenticated:
         doc_type = DocumentType.objects.get(name="Списание ТМЦ")
+        wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        ozon_headers = {
+                "Client-Id": "1711314",
+                    "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+        dict_new_article={}
+        length_missing={}
+        wb_stock_arr_short=[]
+        wb_stock_arr_long=[]
+        dict_no_wb_id={}
+        ozon_stock_arr=[]
+        dict_no_ozon_id={}
         if request.method =='POST':
             tdelta=datetime.timedelta(hours=3)
             dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
@@ -2073,13 +2169,86 @@ def sign_off_product (request):
                     # retail_price=rho_latest.retail_price,
                     # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
                 )
+                if product.wb_bar_code and product.wb_true == True:
+                    wb_qnty=rho.current_remainder
+                    wb_stock_dict={
+                        "sku": product.wb_bar_code,#WB Barcode
+                        "amount": wb_qnty,
+                    }
+                    if product.length:
+                        if int(product.length) < 120:
+                            #warehouse=1368124
+                            wb_stock_arr_short.append(wb_stock_dict)
+                        else:
+                            #warehouse=1744108
+                            wb_stock_arr_long.append(wb_stock_dict)
+                    else:
+                            length_missing[product.article]=product.name
+                else:
+                    dict_no_wb_id[product.article]=product.name
+                        
+                #updating ozon quantities
+                if product.ozon_id:
+                    stock_dict={
+                        "offer_id": str(product.article),
+                        "product_id": str(product.ozon_id),
+                        "stock": rho.current_remainder,
+                        #warehouse (Неклюдово)
+                        "warehouse_id": 1020005000113280
+                    }
+                    ozon_stock_arr.append(stock_dict)
+                else:
+                    dict_no_ozon_id[product.article]=product.name
+
+                #updating wb quantities        
+                warehouseId=1368124
+                params= {
+                    "stocks": wb_stock_arr_short
+                }
+                url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                response = requests.put(url, json=params, headers=wb_headers)
+                status_code=response.status_code
+                #json=response.json()
+                print('Wb response short')
+                print(status_code)
+                print(response)
+                #print(json)
+                print('')
+                time.sleep(1)
+                
+                warehouseId=1744108
+                params= {
+                    "stocks": wb_stock_arr_long
+                }
+                url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                response = requests.put(url, json=params, headers=wb_headers)
+                status_code=response.status_code
+                #json=response.json()
+                print('Wb response long')
+                print(status_code)
+                print(response)
+                #print(json)
+                print('')
+                time.sleep(1)
+
+                #updating ozon quantities  
+                task={
+                    "stocks" : ozon_stock_arr
+                }
+                response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=ozon_headers)
+                print('Response from Ozon')
+                print(response)
+                json=response.json()
+                #print(status_code)
+                print(json)
+                
+                messages.error(request,"Документ проведен")
+                return redirect("dashboard")
+
             else:
                 messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
                 return redirect("dashboard")
-            messages.error(request,"Документ проведен")
-            return redirect("dashboard")
-    else:
-        return render ("dashboard")
+        
 
 def general_report (request):
     products=Product.objects.all()
