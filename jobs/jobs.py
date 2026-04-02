@@ -33,28 +33,29 @@ def wb_synchronize_orders_with_ozon ():
     # print(response)
     a=response.json()
     # print(a)
-    print('================')
+    #print('================')
     orders_list=a['orders']
-    print(orders_list)
-    print('================')
+    #print(orders_list)
+    #print('================')
     n=0
     for i in orders_list:
-        print(i)
+        #print(i)
         order_id=i['id']
         n+=1
         sku=i['skus']
         sku=sku[0]
         if Product.objects.filter(wb_bar_code=sku).exists():
             product=Product.objects.get(wb_bar_code=sku)
-            print('==============================')
-            print(f"Order #{n} shipment_id: {i['id']}; sku: {sku}; name: {product.name}; article: {product.article}" )
+            # print('==============================')
+            # print(f"Order #{n} shipment_id: {i['id']}; sku: {sku}; name: {product.name}; article: {product.article}" )
         else:
-            print('==============================')
-            print(f"Order #{n} shipment_id: {i['id']}; sku: {sku}; name: No Name" )
+            # print('==============================')
+            # print(f"Order #{n} shipment_id: {i['id']}; sku: {sku}; name: No Name" )
             continue
         
         if RemainderHistory.objects.filter(shipment_id=order_id).exists():
             print(f"RHO with shipment_id: {i['id']} exists .")
+            print('===========================================')
             continue
         else:
             # tdelta=datetime.timedelta(hours=3)
@@ -62,14 +63,21 @@ def wb_synchronize_orders_with_ozon ():
             # dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
             # dateTime=dT_utcnow+tdelta
 
-            current_dt=datetime.datetime.now()
+
+            # current_dt=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            # #current_dt=datetime.datetime.now()
+            # tdelta=datetime.timedelta(hours=3)
+            # mics=current_dt.microsecond
+            # tdelta_1=datetime.timedelta(microseconds=mics)
+            # secs=current_dt.second
+            # tdelta_2=datetime.timedelta(seconds=secs)
+            # tdelta_3=tdelta+tdelta_1+tdelta_2
+            # dateTime=current_dt+tdelta_3
+            
             tdelta=datetime.timedelta(hours=3)
-            mics=current_dt.microsecond
-            tdelta_1=datetime.timedelta(microseconds=mics)
-            secs=current_dt.second
-            tdelta_2=datetime.timedelta(seconds=secs)
-            tdelta_3=tdelta+tdelta_1+tdelta_2
-            dateTime=current_dt+tdelta_3
+            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            dateTime=dT_utcnow+tdelta
+
             print(f"Order {i['id']} created at {dateTime}")
             
             if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
