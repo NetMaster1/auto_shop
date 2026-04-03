@@ -1960,7 +1960,7 @@ def sale (request):
    
     return redirect ('dashboard')
 
-def recognition (request):
+def inventory_manual (request):
     if request.user.is_authenticated:
         doc_type = DocumentType.objects.get(name="Оприходование ТМЦ")
         wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
@@ -1991,19 +1991,41 @@ def recognition (request):
                 else:
                     pre_remainder=0
                         # creating remainder_history
-                rho = RemainderHistory.objects.create(
-                    rho_type=doc_type,
-                    created=dateTime,
-                    article=article,
-                    ozon_id=product.ozon_id,
-                    name=product.name,
-                    pre_remainder=pre_remainder,
-                    incoming_quantity=quantity,
-                    outgoing_quantity=0,
-                    current_remainder=pre_remainder + int(quantity),
-                    # retail_price=rho_latest.retail_price,
-                    # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
-                )
+                if pre_remainder > int(quantity):
+                    difference=pre_remainder - int(quantity)
+                    doc_type = DocumentType.objects.get(name="Списание ТМЦ")
+                    rho = RemainderHistory.objects.create(
+                        rho_type=doc_type,
+                        created=dateTime,
+                        article=article,
+                        ozon_id=product.ozon_id,
+                        name=product.name,
+                        pre_remainder=pre_remainder,
+                        incoming_quantity=0,
+                        outgoing_quantity=difference,
+                        current_remainder=int(quantity),
+                        # retail_price=rho_latest.retail_price,
+                        # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                    )
+                elif  pre_remainder < int(quantity):
+                    difference=int(quantity) - pre_remainder
+                    doc_type = DocumentType.objects.get(name="Оприходование ТМЦ")
+                    rho = RemainderHistory.objects.create(
+                        rho_type=doc_type,
+                        created=dateTime,
+                        article=article,
+                        ozon_id=product.ozon_id,
+                        name=product.name,
+                        pre_remainder=pre_remainder,
+                        incoming_quantity=int(difference),
+                        outgoing_quantity=0,
+                        current_remainder=int(quantity),
+                        # retail_price=rho_latest.retail_price,
+                        # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+                    )     
+                else:
+                    messages.error(request,"Остаток не был изменён, так как равен вводимому")
+                    return redirect("dashboard")
                 
                 if product.wb_bar_code and product.wb_true == True:
                     wb_qnty=rho.current_remainder
@@ -2050,7 +2072,7 @@ def recognition (request):
                 print(response)
                 #print(json)
                 print('')
-                time.sleep(1)
+                time.sleep(0.5)
                 
                 warehouseId=1744108
                 params= {
@@ -2065,7 +2087,7 @@ def recognition (request):
                 print(response)
                 #print(json)
                 print('')
-                time.sleep(1)
+                time.sleep(0.5)
 
                 #updating ozon quantities  
                 task={
@@ -2077,11 +2099,13 @@ def recognition (request):
                 json=response.json()
                 #print(status_code)
                 print(json)
+                
+                messages.error(request,"Остатки обновлены")
+                return redirect("dashboard")
+
             else:
                 messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
                 return redirect("dashboard")
-            messages.error(request,"Документ проведен")
-            return redirect("dashboard")
     else:
         return render ("dashboard")
 

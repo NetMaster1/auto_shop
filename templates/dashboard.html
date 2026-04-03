@@ -319,7 +319,48 @@
             </form>
             <br>
         </div>
-    </div>
+            ==========================ПРОДАЖА ТМЦ==========================================
+            <form action="{% url 'sale' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+            <div class="row mt-1 mb-1">
+                <div class="col-2">
+                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
+                </div>
+                <div class="col-2">
+                   <input type="number" class='form-control' id="retail_price" name="retail_price" placeholder="Введите цену" required >
+                </div>
+                <div class="col-2">
+                    <input type="submit" value="Продажа"class="btn btn-block btn-outline-primary" style="width: 10rem">
+                </div>
+            </div>
+            </form>
+            <br>
+                ============================Возврат ТМЦ==================================
+        <!-- <div class="menu_block m-auto mt-3 ">
+            <label for="file_name">
+                <h5>Продажа
+                    <br>
+                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
+                </h5>
+            </label> -->
+            <form action="{% url 'return_product' %}" method="POST" >
+                {% csrf_token %}
+            <div class="row mt-1 mb-1">
+                <div class="col-2">
+                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
+                </div>
+                <div class="col-2">
+                   <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите кол-во" required >
+                </div>
+                <div class="col-2">
+                    <input type="submit" value="Возврат"class="btn btn-block btn-outline-primary" style="width: 10rem">
+                </div>
+            </div>
+            </form>
+            <br>
+        <!-- </div> -->
+
+</div>
         {% endif %}
     {% endfor %}
 
@@ -406,11 +447,7 @@
             </div>
           <br>
         </form>
-
-
-
-        <!-- </div> -->
-        ==========================ПРОДАЖА ТМЦ==========================================
+        <strong>============================Ручное выравнивание остатков ТМЦ==================================</strong>
         <!-- <div class="menu_block m-auto mt-3 ">
             <label for="file_name">
                 <h5>Продажа
@@ -418,31 +455,8 @@
                     Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
                 </h5>
             </label> -->
-            <form action="{% url 'sale' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-            <div class="row mt-1 mb-1">
-                <div class="col-2">
-                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
-                </div>
-                <div class="col-2">
-                   <input type="number" class='form-control' id="retail_price" name="retail_price" placeholder="Введите цену" required >
-                </div>
-                <div class="col-2">
-                    <input type="submit" value="Продажа"class="btn btn-block btn-outline-primary" style="width: 10rem">
-                </div>
-            </div>
-            </form>
             <br>
-        <!-- </div> -->
-        ============================Возврат ТМЦ==================================
-        <!-- <div class="menu_block m-auto mt-3 ">
-            <label for="file_name">
-                <h5>Продажа
-                    <br>
-                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
-                </h5>
-            </label> -->
-            <form action="{% url 'return_product' %}" method="POST" >
+            <form action="{% url 'inventory_manual' %}" method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
             <div class="row mt-1 mb-1">
                 <div class="col-2">
@@ -452,7 +466,7 @@
                    <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите кол-во" required >
                 </div>
                 <div class="col-2">
-                    <input type="submit" value="Возврат"class="btn btn-block btn-outline-primary" style="width: 10rem">
+                    <input type="submit" value="Ввести"class="btn btn-block btn-outline-primary" style="width: 10rem">
                 </div>
             </div>
             </form>
@@ -460,30 +474,8 @@
         <!-- </div> -->
 
 
-        ============================ОПРИХОДОВАНИЕ ТМЦ==================================
-        <!-- <div class="menu_block m-auto mt-3 ">
-            <label for="file_name">
-                <h5>Продажа
-                    <br>
-                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
-                </h5>
-            </label> -->
-            <form action="{% url 'recognition' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-            <div class="row mt-1 mb-1">
-                <div class="col-2">
-                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
-                </div>
-                <div class="col-2">
-                   <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите кол-во" required >
-                </div>
-                <div class="col-2">
-                    <input type="submit" value="Оприходование"class="btn btn-block btn-outline-primary" style="width: 10rem">
-                </div>
-            </div>
-            </form>
-            <br>
         <!-- </div> -->
+
         =============================СПИСАНИЕ ТМЦ======================================
         <!-- <div class="menu_block m-auto mt-3 ">
             <label for="file_name">
