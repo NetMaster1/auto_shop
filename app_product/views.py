@@ -1649,9 +1649,6 @@ def inventory (request):
 #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
 #В настоящий момент у нас уже более 100 позиций по Дефлектор капота
 def zero_ozon_qnty(request):
-    #if request.method == "POST":
-    #category=ProductCategory.objects.get(name='Дефлектор капота')
-    #products=Product.objects.filter(category=category)
     products=Product.objects.all()
     headers = {
                 "Client-Id": "1711314",
@@ -1692,6 +1689,65 @@ def zero_ozon_qnty(request):
         print(json)
 
     return redirect("dashboard")
+
+def zero_wb_qnty(request):
+    if request.user.is_authenticated:
+        products=Product.objects.all()
+        wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        wb_stock_arr_short=[]
+        wb_stock_arr_long=[]
+        length_missing=[]
+        n=0
+        for product in products:
+            if product.wb_bar_code:
+                wb_stock_dict={
+                    "sku": product.wb_bar_code,#WB Barcode
+                    "amount": 0,
+                }
+                if product.length:
+                    if int(product.length) < 120:
+                        #warehouse=1368124
+                        wb_stock_arr_short.append(wb_stock_dict)
+                    else:
+                        #warehouse=1744108
+                        wb_stock_arr_long.append(wb_stock_dict)
+                else:
+                    wb_stock_arr_short.append(wb_stock_dict)
+
+        warehouseId=1368124
+        params= {
+            "stocks": wb_stock_arr_short
+        }
+        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+        response = requests.put(url, json=params, headers=wb_headers)
+        status_code=response.status_code
+        #json=response.json()
+        print('Wb response short')
+        print(status_code)
+        print(response)
+        #print(json)
+        print('')
+        time.sleep(5)
+
+        warehouseId=1744108
+        params= {
+            "stocks": wb_stock_arr_long
+        }
+        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+        response = requests.put(url, json=params, headers=wb_headers)
+        status_code=response.status_code
+        #json=response.json()
+        print('Wb response long')
+        print(status_code)
+        print(response)
+        #print(json)
+        print('')
+
+        messages.error(request, 'Остатки обнулены')
+        return redirect("dashboard")
+    
+    else:
+        return redirect ('login')
 
 #for both ozon & wb
 #За один запрос можно изменить наличие для 100 товаров. 

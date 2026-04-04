@@ -365,7 +365,7 @@
     {% endfor %}
 
     <div class="big_screen_container">
-        =============================ОТЧЕТ ПО ОСТАТКАМ===============================
+        ==========================ОТЧЕТ ПО ОСТАТКАМ=============================================
         <!-- <div class="col">
             <label for="file_name">
                 <h5>Отчеты по остаткам</h5>
@@ -377,12 +377,18 @@
                 <input type="button" value="Отчет по остаткам" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
             </a>
         </div>
-        ==========================ОБНУЛИТЬ ОСТАТКИ НА OZON=========================================
+        ==========================ОБНУЛИТЬ ОСТАТКИ НА OZON=======================================
             <br>
             <a href="{% url 'zero_ozon_qnty' %}">
             <input type="button" value="Обнулить ozon" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
         </a>
-        ===============================СИНХРОНИЗИРУЕТ КОЛ-ВО С OZON===============
+        ==========================ОБНУЛИТЬ ОСТАТКИ НА WB=========================================
+            <br>
+            <a href="{% url 'zero_wb_qnty' %}">
+            <input type="button" value="Обнулить ozon" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
+        </a>
+        ==========================СИНХРОНИЗИРОВАТЬ КОЛ-ВО С OZON И WB=============================
+        <br>
         <form action="{% url 'synchronize_qnty' %}" method="POST">
 
         {% csrf_token %}
@@ -402,12 +408,10 @@
             </div>
         </div>           
         </form>
-    
-
-
-        ===============================ПОСТУПЛЕНИЕ ТМЦ================================
+   
+        ===========================ПОСТУПЛЕНИЕ ТМЦ================================================
         <!-- <div class="menu_block m-auto mt-3 "> -->
-            <!-- <label for="file_name">
+           <br>  <!-- <label for="file_name">
                 <h5>Введите файл в формате Excel
                     <br>
                     Создает записи в таблице RemainderHistory (Поступление ТМЦ) при условии, что наименование с данным артикулом<br>
@@ -417,7 +421,7 @@
                 </h5>
             </label> --> 
         <form action="{% url 'delivery_auto' %}" method="POST" enctype="multipart/form-data" >
-              <br>
+             
             {% csrf_token %}
                 <div class="row">
             
@@ -428,13 +432,13 @@
                     <input type="submit" value="Поступление" class="btn btn-block btn-outline-primary"style="width: 10rem" >
                 </div>
             </div>
-          <br>
+       
         </form>
       
-            ===============================ИНВЕНТАРИЗАЦИЯ/ВЫРАВНИВАНИЕ ОСТАТКОВ ТМЦ================================
-
+        ===========================ИНВЕНТАРИЗАЦИЯ/ВЫРАВНИВАНИЕ ОСТАТКОВ ТМЦ================================
+            <br>
         <form action="{% url 'inventory' %}" method="POST" enctype="multipart/form-data" >
-              <br>
+            
             {% csrf_token %}
                 <div class="row">
             
