@@ -30,6 +30,7 @@ class Product (models.Model):
     ozon_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with ozon
     site_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with site
     update_true = models.BooleanField(default=True)#used to block certain items from updating
+    quantity_update_true = models.BooleanField(default=True)#used to block certain item from being included in order report
     ean = models.CharField(max_length=50, null=True, blank=True)
     quantity = models.IntegerField(default=0)
     av_price = models.IntegerField(default=0)
