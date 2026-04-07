@@ -2357,7 +2357,9 @@ def general_report (request):
                 incoming_quantity=incoming_quantity,
                 outgoing_quantity=outgoing_quantity,
                 current_remainder=current_remainder,
-                av_price=product.av_price
+                av_price=product.av_price,
+                category=product.category.name,
+                manufacturer=product.manufacturer,
             )
      
     #=======================Uploading to Excel Module===================================
@@ -2373,14 +2375,14 @@ def general_report (request):
     row_num = 0
     font_style = xlwt.XFStyle()
 
-    columns = ["Article", "Title","Av_price", "Pre_remainder", "Incoming_Qnty", 'Outgoing_Qnty', 'Current_Remainder']
+    columns = ["Артикль", "Наименование","Опт", "Начальный остаток", "Приход", 'Расход', 'Текущий остаток', 'Категория', "Производитель"]
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
 
     # sheet body, remaining rows
     font_style = xlwt.XFStyle()
     report_query = Report.objects.filter(identifier=report_identifier)
-    query = report_query.values_list("article", "name",'av_price', "pre_remainder",  "incoming_quantity", 'outgoing_quantity', 'current_remainder' )
+    query = report_query.values_list("article", "name",'av_price', "pre_remainder",  "incoming_quantity", 'outgoing_quantity', 'current_remainder', 'category', 'manufacturer' )
 
     for row in query:
         row_num += 1
