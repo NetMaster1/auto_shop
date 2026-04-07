@@ -138,6 +138,8 @@ class Report(models.Model):
     ozon_id = models.CharField(max_length=50, null=True, blank=True)
     article = models.CharField(max_length=50, null=True, blank=True)
     bar_code = models.CharField(max_length=50, null=True, blank=True)
+    category = models.CharField(max_length=50, null=True, blank=True)
+    manufacturer = models.CharField(max_length=50, null=True, blank=True)
     #total_retail_sum = models.IntegerField(default=0)
     #wholesale_price = models.IntegerField(default=0, null=True)
     #retail_price = models.IntegerField(default=0)
