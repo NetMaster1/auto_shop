@@ -2987,16 +2987,15 @@ def synchronize_wb_qnty(request):
       # the list should not contain negative quantities. Otherwise WB declines the request & sends status 400 (wrong request)  
     for product in products:
         if product.wb_bar_code and product.wb_true == True:
-            if RemainderHistory.object.filter(article=product.article).exists():
-                rho=RemainderHistory.objects.filter(article=product.article).latest('article')
+            if RemainderHistory.objects.filter(article=product.article).exists():
+                rho=RemainderHistory.objects.filter(article=product.article).latest('created')
                 wb_qnty=rho.current_remainder
-                if rho.current_remainder <0:
+                if rho.current_remainder < 0:
                     wb_qnty=0
                 wb_stock_dict={
                     "sku": product.wb_bar_code,#WB Barcode
                     "amount": wb_qnty,
                 }
-                
                 if product.length:
                     if int(product.length) < 120:
                         #warehouse=1368124
@@ -3011,38 +3010,49 @@ def synchronize_wb_qnty(request):
                 continue
         else:
             dict_no_wb_id[product.article]=product.name
-
-    warehouseId=1368124
-    params= {
-        "stocks": wb_stock_arr_short
-    }
+    
     try:
-        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-        response = requests.put(url, json=params, headers=wb_headers)
-        status_code=response.status_code
-        #json=response.json()
-        print('Wb response short')
-        print(status_code)
-        print(response)
-        #print(json)
-        print('')
-        time.sleep(3)
+        print(f'wb_stock_arr_long: {len(wb_stock_arr_long)}')
+        for i in wb_stock_arr_long:
+            print(i)
+        if len(wb_stock_arr_long) > 0:
+            
+            warehouseId=1744108
+            params= {
+                "stocks": wb_stock_arr_long
+            }
+            
+            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+            
+            response = requests.put(url, json=params, headers=wb_headers)
+            status_code=response.status_code
+            #json=response.json()
+            print('Wb response long')
+            # print(status_code)
+            print(response)
+            #print(json)
+            
+            print('')
+            time.sleep(3)
 
-        warehouseId=1744108
-        params= {
-            "stocks": wb_stock_arr_long
-        }
-        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-        response = requests.put(url, json=params, headers=wb_headers)
-        status_code=response.status_code
-        #json=response.json()
-        print('Wb response short')
-        print(status_code)
-        print(response)
-        #print(json)
-        print('')
-        time.sleep(3)
-                
+        print(f'wb_stock_arr_short: {len(wb_stock_arr_short)}')
+        if len(wb_stock_arr_short) > 0:
+            warehouseId=1368124
+            params= {
+                "stocks": wb_stock_arr_short
+            }
+            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+            response = requests.put(url, json=params, headers=wb_headers)
+            status_code=response.status_code
+            #json=response.json()
+            print('Wb response short')
+            print(status_code)
+            print(response)
+            #print(json)
+            print(len(wb_stock_arr_short))
+            print('')
+            time.sleep(3)
+                 
         messages.error(request,"Остатки обновлены")
         return redirect("dashboard")
     except:
