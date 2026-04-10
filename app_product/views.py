@@ -2331,7 +2331,7 @@ def sign_off_product (request):
         
 
 def general_report (request):
-    products=Product.objects.all()
+    products=Product.objects.filter(quantity_update_true=True)
     report_identifier = Identifier.objects.create()
     tdelta=datetime.timedelta(hours=3)
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
