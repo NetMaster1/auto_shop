@@ -1489,7 +1489,8 @@ def delivery_auto(request):
         print('Product with no length')
         for key, value in  length_missing.items():
             print(str(key) +' : ' +str(value))
-
+            
+        messages.error(request, 'Документ введён')
         return redirect("dashboard")
 
 def inventory (request):
