@@ -387,9 +387,30 @@
             <a href="{% url 'zero_wb_qnty' %}">
             <input type="button" value="Обнулить ozon" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
         </a>
-        ==========================СИНХРОНИЗИРОВАТЬ КОЛ-ВО С OZON И WB=============================
+        ==========================СИНХРОНИЗИРОВАТЬ КОЛ-ВО С OZON=============================
         <br>
-        <form action="{% url 'synchronize_qnty' %}" method="POST">
+        <form action="{% url 'synchronize_ozon_qnty' %}" method="POST">
+
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-2">
+                <select name="category" id="category" required>
+                        <!-- <option selected="true" disabled="disabled">Выберите поставщика</option> -->
+                        <option value="">Выберите категорию</option>
+                        {% for category in categories %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+
+            <div class="col-4">
+                <input type="submit" value="Обновить остатки на озон из erms" class="btn btn-block btn-outline-primary" style="width: 17rem">
+            </div>
+        </div>           
+        </form>
+        ==========================СИНХРОНИЗИРОВАТЬ КОЛ-ВО С WB=============================
+        <br>
+        <form action="{% url 'synchronize_wb_qnty' %}" method="POST">
 
         {% csrf_token %}
         <div class="row">
