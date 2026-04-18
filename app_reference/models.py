@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class AutoBrand (models.Model):
     ozon_attribute_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     ozon_attribute_value = models.CharField(max_length=50, unique=True, null=True, blank=True)
@@ -43,7 +44,6 @@ class SDEK_Office (models.Model):
     def __int__(self):
         return self.id
 
-
 #Насколько я понимаю, эта таблица лишняя и нигде не используется
 #Вместо неё данные о городах с PVZ сразу заносятся в таблицу SDEK_Office
 class SDEK_City (models.Model):
@@ -61,5 +61,10 @@ class SDEK_City (models.Model):
 
 
 
-    
+class Supplier (models.Model):
+    name = models.CharField(max_length=50, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
+ 
+    def __int__(self):
+        return self.id
 

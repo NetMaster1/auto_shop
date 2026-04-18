@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import AutoBrand, AutoModel, AutoModification, SDEK_Office, SDEK_City
+from . models import AutoBrand, AutoModel, AutoModification, SDEK_Office, SDEK_City, Supplier
 
 class AutoBrandAdmin(admin.ModelAdmin):
     list_display = ('ozon_attribute_id', 'ozon_attribute_value',)
@@ -17,6 +17,9 @@ class AutoModificationAdmin(admin.ModelAdmin):
     search_fields = ('ozon_attribute_id', 'ozon_attribute_value', 'ozon_attribute_info' )
     ordering = ('-ozon_attribute_value',)
     list_per_page=200
+    
+class SupplierAdmin(admin.ModelAdmin):
+    list_display = ('name',)
     
 # ==========================================Sdek=========
 
@@ -39,3 +42,4 @@ admin.site.register(AutoModel, AutoModelAdmin)
 admin.site.register(AutoModification, AutoModificationAdmin)
 admin.site.register(SDEK_Office, SDEK_OfficeAdmin)
 admin.site.register(SDEK_City, SDEK_CityAdmin)
+admin.site.register(Supplier, SupplierAdmin)

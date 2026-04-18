@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime, date
 from django.utils import timezone
+from app_reference.models import Supplier
 
 class ProductCategory (models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
@@ -80,6 +81,7 @@ class DocumentType (models.Model):
 class Document (models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
     name = models.ForeignKey(DocumentType, on_delete=models.DO_NOTHING, null=True)
+    supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING, null=True, blank=True)
     sum = models.IntegerField(default=0)
     paid = models.BooleanField(default=True)
 

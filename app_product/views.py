@@ -12,32 +12,6 @@ from django.contrib import messages
 import xlwt
 from django.http import HttpResponse, JsonResponse
 
-def product_page(request, article):
-    product = Product.objects.get(article=article)
-    if Review.objects.filter(product=product).exists():
-        print('Product reviews exists.')
-        reviews=Review.objects.filter(product=product).order_by('-date_posted')
-        context = {
-            'product': product,
-            'reviews': reviews,
-        }
-        return render(request, 'product_page.html', context)
-    else:
-        context = {
-            'product': product,
-        }
-        return render(request, 'product_page.html', context)
-
-def dashboard(request):
-    if request.user.is_authenticated:
-        categories=ProductCategory.objects.all()
-        context = {
-            'categories': categories,
-        }
-        return render(request, 'dashboard.html', context)
-    else:
-        return redirect ('login_page')
-
 #creates product at ozon
 #За один запрос можно изменить наличие для 100 товаров. 
 def create_product(request):
@@ -1298,6 +1272,256 @@ def getting_ozon_id_and_ozon_sku (request):
             messages.error(request, string)
             return redirect("dashboard")
 
+
+#За один запрос можно изменить наличие для 100 товаров. 
+#С одного аккаунта продавца можно отправить до 80 запросов в минуту.
+#В настоящий момент у нас уже более 100 позиций по Дефлектор капота
+def zero_ozon_qnty(request):
+    products=Product.objects.all()
+    headers = {
+                "Client-Id": "1711314",
+                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+    stock_arr=[]
+    n=0
+    for product in products:
+        if product.ozon_id:
+            # while n < 99:
+            stock_dict= {
+                        "offer_id": str(product.article),
+                        "product_id": str(product.ozon_id),
+                        "stock": 0,
+                        #warehouse (Неклюдово)
+                        "warehouse_id": 1020005000113280
+                    }
+            stock_arr.append(stock_dict)
+            n=+1
+            if len(stock_arr) == 100:
+                task={
+                    "stocks" : stock_arr
+                }
+                response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+                time.sleep(1)
+                status_code=response.status_code
+                stock_arr.clear()
+
+    if len(stock_arr) != 0:
+        task={
+            "stocks" : stock_arr
+        }
+        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+        status_code=response.status_code
+        print(status_code)
+        #print(response)
+        json=response.json()
+        print(json)
+
+    return redirect("dashboard")
+
+#for both ozon & wb
+#За один запрос можно изменить наличие для 100 товаров. 
+#С одного аккаунта продавца можно отправить до 80 запросов в минуту.
+#В настоящий момент у нас уже более 100 позиций по Дефлектор капота
+def synchronize_ozon_qnty(request):
+    tdelta=datetime.timedelta(hours=3)
+    dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+    dateTime=dT_utcnow+tdelta
+    if request.method == "POST":
+        headers = {
+                        "Client-Id": "1711314",
+                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+                    }
+        
+        stock_arr=[]
+        category = request.POST["category"]
+        category=ProductCategory.objects.get(id=category)
+        products=Product.objects.filter(category=category)
+        #update quantity of products at ozon warehouse making it equal to OOC warehouse
+        #За один запрос можно изменить наличие для 100 товаров. 
+        #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
+        for product in products:
+            if product.ozon_id and product.ozon_true == True:
+                article=product.article
+                if RemainderHistory.objects.filter(article=article).exists():
+                    #rhos=RemainderHistory.objects.filter(article=article)
+                    rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
+                    current_remainder=rho_latest.current_remainder
+                    if current_remainder < 0:
+                        current_remainder=0
+                    stock_dict={
+                        "offer_id": str(product.article),
+                        "product_id": str(product.ozon_id),
+                        "stock": current_remainder,
+                        #warehouse (Неклюдово)
+                        "warehouse_id": 1020005000113280
+                    }
+                    stock_arr.append(stock_dict)
+                    #если в списке 100 позиций, прерываем обработку и посылаем запрос
+                    #далее продолжаем обработку
+                    if len(stock_arr) == 100:
+                        task={
+                            "stocks" : stock_arr
+                        }
+                        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+                        time.sleep(1)
+                        status_code=response.status_code
+                        stock_arr.clear()
+        if len(stock_arr) != 0:
+            task={
+                "stocks" : stock_arr
+            }
+            response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
+            status_code=response.status_code
+            print(status_code)
+            #print(response)
+            json=response.json()
+            print(json)
+            #time.sleep(1)
+            
+                # if product.wb_bar_code:
+                #     warehouseId=1368124
+                #     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                #     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
+                #     wb_bar_code=str(product.wb_bar_code)
+                #     qnty=rho_latest.current_remainder
+                #     # print('======================')
+                #     # print(wb_bar_code)
+                #     # print(rho_latest.current_remainder)
+                #     params= {
+                #         "stocks": [
+                #         {
+                #             "sku": wb_bar_code,#WB Barcode
+                #             "amount": qnty,
+                #         }
+                #         ]
+                #     }
+                #     response = requests.put(url, json=params, headers=headers)
+                #     #status_code=response.status_code
+                #     #Status Code: 204 No Content
+                #     #There is no content to send for this request except for headers.
+                #     time.sleep(1)
+    return redirect ('dashboard')
+
+#updates prices at ozon
+def update_ozon_prices(request):
+    if request.user.is_authenticated:
+        headers = {
+                    "Client-Id": "1711314",
+                    "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+                }
+        if request.method == "POST":
+            file = request.FILES["file_name"]
+            df1 = pandas.read_excel(file)
+            cycle = len(df1)
+            dict_new_article={}
+            for i in range(cycle):
+                row = df1.iloc[i]#reads each row of the df1 one by one
+                article=row.Article
+                if '/' in str(article):
+                    article=article.replace('/', '_')
+                #====================getting rid of extra spaces in the string==================================
+                #article=article.replace(' ', '')#getting rid of extra spaces
+                #article=article.strip()#getting rid of extra spaces at both sides of the string
+                article=article.split()
+                article=' '.join(article)
+                #============================end of block=======================================================
+
+
+                if Product.objects.filter(article=article).exists():
+                    product=Product.objects.get(article=article)
+                
+                    task=    {
+                        "prices": [
+                            {
+                            "auto_action_enabled": "UNKNOWN",
+                            "auto_add_to_ozon_actions_list_enabled": "UNKNOWN",
+                            "currency_code": "RUB",
+                            "min_price": str(row.Min_Price),
+                            "min_price_for_auto_actions_enabled": True,
+                            "net_price": str(row.Wholesale_Price),
+                            "offer_id": "",
+                            "old_price": str(row.Old_Price),
+                            "price": str(row.Retail_Price),
+                            "price_strategy_enabled": "UNKNOWN",
+                            "product_id": product.ozon_id,
+                            "quant_size": 1,
+                            "vat": '0'
+                            }
+                        ]
+                    }
+                    response=requests.post('https://api-seller.ozon.ru/v1/product/import/prices', json=task, headers=headers) 
+                    print(response)
+                    json=response.json()
+                    print(json)
+                    print('============================')      
+                    time.sleep(1)
+                else:
+                    dict_new_article[row.Article]=row.Title
+
+            length=len(dict_new_article)
+            if length>0:
+                string=f'Ozon_id для артикулов {dict_new_article} не был сохранен, так как данные артикулы отсутствуют в базе данных'
+                messages.error(request, string)
+                return redirect("dashboard")
+            else:
+                return redirect ('dashboard')    
+           
+    else:
+        return redirect ('dashboard')
+
+def update_ozon_images(request):
+    headers = {
+                "Client-Id": "1711314",
+                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+    if request.method == "POST":
+        file = request.FILES["file_name"]
+        df1 = pandas.read_excel(file)
+        cycle = len(df1)
+        # array_list=[]
+        for i in range(cycle):
+            row = df1.iloc[i]#reads each row of the df1 one by one
+            article=row.Article
+            if '/' in str(article):
+                article=article.replace('/', '_')
+            #====================getting rid of extra spaces in the string==================================
+            #article=article.replace(' ', '')#getting rid of extra spaces
+            #article=article.strip()#getting rid of extra spaces at both sides of the string
+            article=article.split()
+            article=' '.join(article)
+            #============================end of block=======================================================  
+            product=Product.objects.get(article=row.Article)
+            if product.update_true == False:
+                continue
+            #image_1="https://mp-system.ru/media/" + str(product.image_1)
+            #print(image_1)
+            task = {
+                "color_image": "string",
+                "images": [
+                    row.Primary_Image,
+                    # str(row.Image_1),
+                    # str(row.Image_2),
+                    #str(row.Image_3)
+                   
+                ],
+                "images360": [
+                    "string"
+                ],
+                "product_id": product.ozon_id
+            }
+            # array_list.append(task)
+            time.sleep(1)
+            response=requests.post('https://api-seller.ozon.ru/v1/product/pictures/import', json=task, headers=headers)
+            time.sleep(1)
+            print(response)
+            json=response.json()
+            print(json)
+            print(f'{product.ozon_id}: {product.name}')
+            print('============================')      
+        return redirect ('dashboard')
+
+#==============================================================================
+
 def delivery_auto(request):
     doc_type = DocumentType.objects.get(name="Поступление ТМЦ")
     if request.method == "POST":
@@ -1500,6 +1724,72 @@ def delivery_auto(request):
             
         messages.error(request, 'Документ введён')
         return redirect("dashboard")
+#does not send any info to ozon
+def sale (request):
+    doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
+    if request.method == "POST":
+        dateTime=request.POST.get('dateTime', False)
+        if dateTime:
+            # converting dateTime in str format (2021-07-08T01:05) to django format ()
+            dateTime = datetime.datetime.strptime(dateTime, "%Y-%m-%dT%H:%M")
+            #adding seconds & microseconds to 'dateTime' since it comes as '2021-07-10 01:05:03:00' and we need it real value of seconds & microseconds
+            current_dt=datetime.datetime.now()
+            mics=current_dt.microsecond
+            tdelta_1=datetime.timedelta(microseconds=mics)
+            secs=current_dt.second
+            tdelta_2=datetime.timedelta(seconds=secs)
+            tdelta_3=tdelta_1+tdelta_2
+            dateTime=dateTime+tdelta_3
+        else:
+            tdelta=datetime.timedelta(hours=3)
+            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+            dateTime=dT_utcnow+tdelta
+        article = request.POST["article"]
+
+        #====================getting rid of extra spaces in the string==================================
+        #article=article.replace(' ', '')#getting rid of extra spaces
+        #article=article.strip()#getting rid of extra spaces at both sides of the string
+        article=article.split()
+        article=' '.join(article)
+        #============================end of block=======================================================
+        retail_price = request.POST["retail_price"]
+        retail_price=int(retail_price)
+        if Product.objects.filter(article=article).exists():
+            product=Product.objects.get(article=article)
+            total_qnty = product.quantity - 1
+            if total_qnty >=0:
+                total_sum=product.total_sum-product.av_price
+                product.quantity=total_qnty
+                product.total_sum=total_sum
+                product.save()
+            else:
+                messages.error(request,"Документ не проведен. Недостаточное кол-во товара на остатке")
+                return redirect("dashboard")
+        else:
+            messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
+            return redirect("dashboard")
+          # checking docs before remainder_history
+        if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
+            rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
+            pre_remainder=rho_latest_before.current_remainder
+        else:
+            pre_remainder=0
+        # creating remainder_history
+        rho = RemainderHistory.objects.create(
+            rho_type=doc_type,
+            created=dateTime,
+            article=article,
+            ozon_id=product.ozon_id,
+            name=product.name,
+            pre_remainder=pre_remainder,
+            incoming_quantity=0,
+            outgoing_quantity=1,
+            current_remainder=pre_remainder - 1,
+            retail_price=int(retail_price),
+            # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
+        )
+   
+    return redirect ('dashboard')
 
 def inventory (request):
     if request.user.is_authenticated:
@@ -1653,378 +1943,6 @@ def inventory (request):
             return redirect("dashboard")
     else:
         return redirect ('login')
-
-#За один запрос можно изменить наличие для 100 товаров. 
-#С одного аккаунта продавца можно отправить до 80 запросов в минуту.
-#В настоящий момент у нас уже более 100 позиций по Дефлектор капота
-def zero_ozon_qnty(request):
-    products=Product.objects.all()
-    headers = {
-                "Client-Id": "1711314",
-                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-            }
-    stock_arr=[]
-    n=0
-    for product in products:
-        if product.ozon_id:
-            # while n < 99:
-            stock_dict= {
-                        "offer_id": str(product.article),
-                        "product_id": str(product.ozon_id),
-                        "stock": 0,
-                        #warehouse (Неклюдово)
-                        "warehouse_id": 1020005000113280
-                    }
-            stock_arr.append(stock_dict)
-            n=+1
-            if len(stock_arr) == 100:
-                task={
-                    "stocks" : stock_arr
-                }
-                response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-                time.sleep(1)
-                status_code=response.status_code
-                stock_arr.clear()
-
-    if len(stock_arr) != 0:
-        task={
-            "stocks" : stock_arr
-        }
-        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-        status_code=response.status_code
-        print(status_code)
-        #print(response)
-        json=response.json()
-        print(json)
-
-    return redirect("dashboard")
-
-def zero_wb_qnty(request):
-    if request.user.is_authenticated:
-        products=Product.objects.all()
-        wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
-        wb_stock_arr_short=[]
-        wb_stock_arr_long=[]
-        length_missing=[]
-        n=0
-        for product in products:
-            if product.wb_bar_code:
-                wb_stock_dict={
-                    "sku": product.wb_bar_code,#WB Barcode
-                    "amount": 0,
-                }
-                if product.length:
-                    if int(product.length) < 120:
-                        #warehouse=1368124
-                        wb_stock_arr_short.append(wb_stock_dict)
-                    else:
-                        #warehouse=1744108
-                        wb_stock_arr_long.append(wb_stock_dict)
-                else:
-                    wb_stock_arr_short.append(wb_stock_dict)
-
-        warehouseId=1368124
-        params= {
-            "stocks": wb_stock_arr_short
-        }
-        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-        response = requests.put(url, json=params, headers=wb_headers)
-        status_code=response.status_code
-        #json=response.json()
-        print('Wb response short')
-        print(status_code)
-        print(response)
-        #print(json)
-        print('')
-        time.sleep(5)
-
-        warehouseId=1744108
-        params= {
-            "stocks": wb_stock_arr_long
-        }
-        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-        response = requests.put(url, json=params, headers=wb_headers)
-        status_code=response.status_code
-        #json=response.json()
-        print('Wb response long')
-        print(status_code)
-        print(response)
-        #print(json)
-        print('')
-
-        messages.error(request, 'Остатки обнулены')
-        return redirect("dashboard")
-    
-    else:
-        return redirect ('login')
-
-#for both ozon & wb
-#За один запрос можно изменить наличие для 100 товаров. 
-#С одного аккаунта продавца можно отправить до 80 запросов в минуту.
-#В настоящий момент у нас уже более 100 позиций по Дефлектор капота
-def synchronize_ozon_qnty(request):
-    tdelta=datetime.timedelta(hours=3)
-    dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
-    dateTime=dT_utcnow+tdelta
-    if request.method == "POST":
-        headers = {
-                        "Client-Id": "1711314",
-                        "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-                    }
-        
-        stock_arr=[]
-        category = request.POST["category"]
-        category=ProductCategory.objects.get(id=category)
-        products=Product.objects.filter(category=category)
-        #update quantity of products at ozon warehouse making it equal to OOC warehouse
-        #За один запрос можно изменить наличие для 100 товаров. 
-        #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
-        for product in products:
-            if product.ozon_id and product.ozon_true == True:
-                article=product.article
-                if RemainderHistory.objects.filter(article=article).exists():
-                    #rhos=RemainderHistory.objects.filter(article=article)
-                    rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-                    current_remainder=rho_latest.current_remainder
-                    if current_remainder < 0:
-                        current_remainder=0
-                    stock_dict={
-                        "offer_id": str(product.article),
-                        "product_id": str(product.ozon_id),
-                        "stock": current_remainder,
-                        #warehouse (Неклюдово)
-                        "warehouse_id": 1020005000113280
-                    }
-                    stock_arr.append(stock_dict)
-                    #если в списке 100 позиций, прерываем обработку и посылаем запрос
-                    #далее продолжаем обработку
-                    if len(stock_arr) == 100:
-                        task={
-                            "stocks" : stock_arr
-                        }
-                        response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-                        time.sleep(1)
-                        status_code=response.status_code
-                        stock_arr.clear()
-        if len(stock_arr) != 0:
-            task={
-                "stocks" : stock_arr
-            }
-            response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=headers)
-            status_code=response.status_code
-            print(status_code)
-            #print(response)
-            json=response.json()
-            print(json)
-            #time.sleep(1)
-            
-                # if product.wb_bar_code:
-                #     warehouseId=1368124
-                #     url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-                #     headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc2MDM0Nzg4NywiaWQiOiIwMTk2MzExMC04MmJiLTdjMGEtYTEzYy03MjdmMjY5NzVjZWEiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo3OTM0LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.srXrKwyCJCH_nZAzKi4PaT6pueamPhwz-hqBYP7l--UafAd0gmNTSr7xoNWxFmN1S65kG-2WBUA_l0qrYaDGvg"}
-                #     wb_bar_code=str(product.wb_bar_code)
-                #     qnty=rho_latest.current_remainder
-                #     # print('======================')
-                #     # print(wb_bar_code)
-                #     # print(rho_latest.current_remainder)
-                #     params= {
-                #         "stocks": [
-                #         {
-                #             "sku": wb_bar_code,#WB Barcode
-                #             "amount": qnty,
-                #         }
-                #         ]
-                #     }
-                #     response = requests.put(url, json=params, headers=headers)
-                #     #status_code=response.status_code
-                #     #Status Code: 204 No Content
-                #     #There is no content to send for this request except for headers.
-                #     time.sleep(1)
-    return redirect ('dashboard')
-
-def update_prices(request):
-    if request.user.is_authenticated:
-        headers = {
-                    "Client-Id": "1711314",
-                    "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-                }
-        if request.method == "POST":
-            file = request.FILES["file_name"]
-            df1 = pandas.read_excel(file)
-            cycle = len(df1)
-            dict_new_article={}
-            for i in range(cycle):
-                row = df1.iloc[i]#reads each row of the df1 one by one
-                article=row.Article
-                if '/' in str(article):
-                    article=article.replace('/', '_')
-                #====================getting rid of extra spaces in the string==================================
-                #article=article.replace(' ', '')#getting rid of extra spaces
-                #article=article.strip()#getting rid of extra spaces at both sides of the string
-                article=article.split()
-                article=' '.join(article)
-                #============================end of block=======================================================
-
-
-                if Product.objects.filter(article=article).exists():
-                    product=Product.objects.get(article=article)
-                
-                    task=    {
-                        "prices": [
-                            {
-                            "auto_action_enabled": "UNKNOWN",
-                            "auto_add_to_ozon_actions_list_enabled": "UNKNOWN",
-                            "currency_code": "RUB",
-                            "min_price": str(row.Min_Price),
-                            "min_price_for_auto_actions_enabled": True,
-                            "net_price": str(row.Wholesale_Price),
-                            "offer_id": "",
-                            "old_price": str(row.Old_Price),
-                            "price": str(row.Retail_Price),
-                            "price_strategy_enabled": "UNKNOWN",
-                            "product_id": product.ozon_id,
-                            "quant_size": 1,
-                            "vat": '0'
-                            }
-                        ]
-                    }
-                    response=requests.post('https://api-seller.ozon.ru/v1/product/import/prices', json=task, headers=headers) 
-                    print(response)
-                    json=response.json()
-                    print(json)
-                    print('============================')      
-                    time.sleep(1)
-                else:
-                    dict_new_article[row.Article]=row.Title
-
-            length=len(dict_new_article)
-            if length>0:
-                string=f'Ozon_id для артикулов {dict_new_article} не был сохранен, так как данные артикулы отсутствуют в базе данных'
-                messages.error(request, string)
-                return redirect("dashboard")
-            else:
-                return redirect ('dashboard')    
-           
-    else:
-        return redirect ('dashboard')
-
-def update_images(request):
-    headers = {
-                "Client-Id": "1711314",
-                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
-            }
-    if request.method == "POST":
-        file = request.FILES["file_name"]
-        df1 = pandas.read_excel(file)
-        cycle = len(df1)
-        # array_list=[]
-        for i in range(cycle):
-            row = df1.iloc[i]#reads each row of the df1 one by one
-            article=row.Article
-            if '/' in str(article):
-                article=article.replace('/', '_')
-            #====================getting rid of extra spaces in the string==================================
-            #article=article.replace(' ', '')#getting rid of extra spaces
-            #article=article.strip()#getting rid of extra spaces at both sides of the string
-            article=article.split()
-            article=' '.join(article)
-            #============================end of block=======================================================  
-            product=Product.objects.get(article=row.Article)
-            if product.update_true == False:
-                continue
-            #image_1="https://mp-system.ru/media/" + str(product.image_1)
-            #print(image_1)
-            task = {
-                "color_image": "string",
-                "images": [
-                    row.Primary_Image,
-                    # str(row.Image_1),
-                    # str(row.Image_2),
-                    #str(row.Image_3)
-                   
-                ],
-                "images360": [
-                    "string"
-                ],
-                "product_id": product.ozon_id
-            }
-            # array_list.append(task)
-            time.sleep(1)
-            response=requests.post('https://api-seller.ozon.ru/v1/product/pictures/import', json=task, headers=headers)
-            time.sleep(1)
-            print(response)
-            json=response.json()
-            print(json)
-            print(f'{product.ozon_id}: {product.name}')
-            print('============================')      
-        return redirect ('dashboard')
-
-#does not send any info to ozon
-def sale (request):
-    doc_type = DocumentType.objects.get(name="Продажа ТМЦ")
-    if request.method == "POST":
-        dateTime=request.POST.get('dateTime', False)
-        if dateTime:
-            # converting dateTime in str format (2021-07-08T01:05) to django format ()
-            dateTime = datetime.datetime.strptime(dateTime, "%Y-%m-%dT%H:%M")
-            #adding seconds & microseconds to 'dateTime' since it comes as '2021-07-10 01:05:03:00' and we need it real value of seconds & microseconds
-            current_dt=datetime.datetime.now()
-            mics=current_dt.microsecond
-            tdelta_1=datetime.timedelta(microseconds=mics)
-            secs=current_dt.second
-            tdelta_2=datetime.timedelta(seconds=secs)
-            tdelta_3=tdelta_1+tdelta_2
-            dateTime=dateTime+tdelta_3
-        else:
-            tdelta=datetime.timedelta(hours=3)
-            dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
-            dateTime=dT_utcnow+tdelta
-        article = request.POST["article"]
-
-        #====================getting rid of extra spaces in the string==================================
-        #article=article.replace(' ', '')#getting rid of extra spaces
-        #article=article.strip()#getting rid of extra spaces at both sides of the string
-        article=article.split()
-        article=' '.join(article)
-        #============================end of block=======================================================
-        retail_price = request.POST["retail_price"]
-        retail_price=int(retail_price)
-        if Product.objects.filter(article=article).exists():
-            product=Product.objects.get(article=article)
-            total_qnty = product.quantity - 1
-            if total_qnty >=0:
-                total_sum=product.total_sum-product.av_price
-                product.quantity=total_qnty
-                product.total_sum=total_sum
-                product.save()
-            else:
-                messages.error(request,"Документ не проведен. Недостаточное кол-во товара на остатке")
-                return redirect("dashboard")
-        else:
-            messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
-            return redirect("dashboard")
-          # checking docs before remainder_history
-        if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
-            rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
-            pre_remainder=rho_latest_before.current_remainder
-        else:
-            pre_remainder=0
-        # creating remainder_history
-        rho = RemainderHistory.objects.create(
-            rho_type=doc_type,
-            created=dateTime,
-            article=article,
-            ozon_id=product.ozon_id,
-            name=product.name,
-            pre_remainder=pre_remainder,
-            incoming_quantity=0,
-            outgoing_quantity=1,
-            current_remainder=pre_remainder - 1,
-            retail_price=int(retail_price),
-            # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
-        )
-   
-    return redirect ('dashboard')
 
 def inventory_manual (request):
     if request.user.is_authenticated:
@@ -2425,7 +2343,6 @@ def sign_off_product (request):
                 messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
                 return redirect("dashboard")
         
-
 def general_report (request):
     products=Product.objects.filter(quantity_update_true=True)
     report_identifier = Identifier.objects.create()
@@ -2486,6 +2403,32 @@ def general_report (request):
             ws.write(row_num, col_num, str(row[col_num]), font_style)
     wb.save(response)
     return response
+
+def product_page(request, article):
+    product = Product.objects.get(article=article)
+    if Review.objects.filter(product=product).exists():
+        print('Product reviews exists.')
+        reviews=Review.objects.filter(product=product).order_by('-date_posted')
+        context = {
+            'product': product,
+            'reviews': reviews,
+        }
+        return render(request, 'product_page.html', context)
+    else:
+        context = {
+            'product': product,
+        }
+        return render(request, 'product_page.html', context)
+
+def dashboard(request):
+    if request.user.is_authenticated:
+        categories=ProductCategory.objects.all()
+        context = {
+            'categories': categories,
+        }
+        return render(request, 'dashboard.html', context)
+    else:
+        return redirect ('login_page')
 
 #=================================WB Functions==============================
 #наименование не должно содержать более 60 символов. В противном случае API пропускает эти строки
@@ -2970,8 +2913,8 @@ def wb_update_prices(request):
                     task_dict={
                             "nmID": int(wb_id),
                             # "price": int(retail_price),
-                            "price": 2990,
-                            "discount": 0
+                            "price": int(row.Old_Price),
+                            "discount": 30
                         }
                     task_arr.append(task_dict)
 
@@ -3156,6 +3099,65 @@ def synchronize_wb_qnty(request):
     except:
         messages.error(request,"Остатки не обновились. Ошибка")
         return redirect("dashboard")
+
+def zero_wb_qnty(request):
+    if request.user.is_authenticated:
+        products=Product.objects.all()
+        wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        wb_stock_arr_short=[]
+        wb_stock_arr_long=[]
+        length_missing=[]
+        n=0
+        for product in products:
+            if product.wb_bar_code:
+                wb_stock_dict={
+                    "sku": product.wb_bar_code,#WB Barcode
+                    "amount": 0,
+                }
+                if product.length:
+                    if int(product.length) < 120:
+                        #warehouse=1368124
+                        wb_stock_arr_short.append(wb_stock_dict)
+                    else:
+                        #warehouse=1744108
+                        wb_stock_arr_long.append(wb_stock_dict)
+                else:
+                    wb_stock_arr_short.append(wb_stock_dict)
+
+        warehouseId=1368124
+        params= {
+            "stocks": wb_stock_arr_short
+        }
+        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+        response = requests.put(url, json=params, headers=wb_headers)
+        status_code=response.status_code
+        #json=response.json()
+        print('Wb response short')
+        print(status_code)
+        print(response)
+        #print(json)
+        print('')
+        time.sleep(5)
+
+        warehouseId=1744108
+        params= {
+            "stocks": wb_stock_arr_long
+        }
+        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+        response = requests.put(url, json=params, headers=wb_headers)
+        status_code=response.status_code
+        #json=response.json()
+        print('Wb response long')
+        print(status_code)
+        print(response)
+        #print(json)
+        print('')
+
+        messages.error(request, 'Остатки обнулены')
+        return redirect("dashboard")
+    
+    else:
+        return redirect ('login')
 
 def synchronize_qnty_SDEK_warehouse(request):
     tdelta=datetime.timedelta(hours=3)
