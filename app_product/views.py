@@ -1563,7 +1563,7 @@ def items_eligible_for_ozon_action(request):
                 else:
                     current_remainder=0
 
-                items_dict['action_price'] = min_price
+                items_dict['action_price'] = int(i['price_min_elastic'])
                 items_dict['product_id'] = i['id']
                 items_dict['stock'] = current_remainder
 
@@ -1576,7 +1576,10 @@ def items_eligible_for_ozon_action(request):
 
     response=requests.post('https://api-seller.ozon.ru/v1/products/activate', json=task, headers=headers)
     
-    messages.error(request,f'Следующие товары добавлены в акциюЖ=: {print_list}')
+    
+    messages.error(request,'Следующие товары добавлены в акцию:')
+    for i in print_list:
+        messages.error(request, i)
     return redirect("dashboard")
 
 def add_items_to_ozon_action(request):
