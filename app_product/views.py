@@ -1403,6 +1403,7 @@ def synchronize_ozon_qnty(request):
     return redirect ('dashboard')
 
 #updates prices at ozon
+#<= 1000 items
 def update_ozon_prices(request):
     if request.user.is_authenticated:
         headers = {
@@ -2913,8 +2914,8 @@ def wb_update_prices(request):
                     task_dict={
                             "nmID": int(wb_id),
                             # "price": int(retail_price),
-                            "price": int(row.Old_Price),
-                            "discount": 30
+                            "price": int(row.Retail_Price),
+                            "discount": 20
                         }
                     task_arr.append(task_dict)
 
