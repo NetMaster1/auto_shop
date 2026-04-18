@@ -13,7 +13,7 @@ urlpatterns = [
     path('product_page/<str:article>', views.product_page, name='product_page'),
 
     path('getting_ozon_id_and_ozon_sku', views.getting_ozon_id_and_ozon_sku, name='getting_ozon_id_and_ozon_sku'),
-    path('items_eligible_for_ozon_action', views.items_eligible_for_ozon_action, name='items_eligible_for_ozon_action'),
+    path('add_items_to_elastic_action_ozon', views.add_items_to_elastic_action_ozon, name='add_items_to_elastic_action_ozon'),
 
     path('delivery_auto', views.delivery_auto, name='delivery_auto'),
     path('zero_ozon_qnty', views.zero_ozon_qnty, name='zero_ozon_qnty'),

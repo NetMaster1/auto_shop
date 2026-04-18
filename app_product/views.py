@@ -1521,7 +1521,10 @@ def update_ozon_images(request):
             print('============================')      
         return redirect ('dashboard')
 
-def items_eligible_for_ozon_action(request):
+#receives a list of items eligible for elastic action
+#looks through the list and finds items whose price is between max & min price limits required for elastic action
+#if finds any, adds them to elastic action
+def add_items_to_elastic_action_ozon(request):
     tdelta=datetime.timedelta(hours=3)
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
     dateTime=dT_utcnow+tdelta
@@ -1580,9 +1583,9 @@ def items_eligible_for_ozon_action(request):
         messages.error(request, i)
     return redirect("dashboard")
 
-def add_items_to_ozon_action(request):
-    pass
-
+#receives a list of items included in elastic action
+#looks through the list & finds items whose min price is lower than min price limit required for elastic action
+#if finds any, deletes them from action
 def delete_items_from_ozon_action(request):
     pass
 #==============================================================================
