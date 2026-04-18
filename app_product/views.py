@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 import requests
 import pandas
 import time
-from .models import Product, DocumentType, RemainderHistory, Report, Identifier, ProductCategory
+from .models import Product, DocumentType, RemainderHistory, Report, Identifier, ProductCategory, Document
 from app_reference.models import AutoBrand, AutoModel, AutoModification
 from app_reviews.models import Review
 import datetime
@@ -38,6 +38,7 @@ def dashboard(request):
     else:
         return redirect ('login_page')
 
+#creates product at ozon
 #За один запрос можно изменить наличие для 100 товаров. 
 def create_product(request):
     if request.method == "POST":
@@ -1333,6 +1334,11 @@ def delivery_auto(request):
         cycle = len(df1)
         dict_new_article={}
         dict_no_ozon_id={}
+        document_sum=0
+        document=Document.objects.create(
+            name=doc_type,
+            created=dateTime,
+            )
         for i in range(cycle):
             row = df1.iloc[i]#reads each row of the df1 one by one
             article=str(row.Article)
@@ -1366,6 +1372,7 @@ def delivery_auto(request):
                 # creating remainder_history
                 rho = RemainderHistory.objects.create(
                     rho_type=doc_type,
+                    document=document,
                     created=dateTime,
                     article=article,
                     ozon_id=product.ozon_id,
@@ -1378,7 +1385,7 @@ def delivery_auto(request):
                     # retail_price=int(row.Retail_Price),
                     # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
                 )
-
+                document_sum+=int(row.Qnty)*int(row.Wholesale_Price)
                 #checking if product already has Ozon_id & does not have to be created again
                 if product.ozon_id:
                 #Сначала мы создаём новую позицию на площадке озон в функции (def ozon_product_create), которая содержит API метод
@@ -1427,10 +1434,11 @@ def delivery_auto(request):
                     else:
                         length_missing[row.Article]=row.Title
                 else:
-                    dict_no_wb_id[row.Article]=row.Title
+                    dict_no_wb_id[row.Article]=row.Title         
             else:
                 dict_new_article[row.Article]=row.Title
-                
+        document.sum=document_sum
+        document.save()       
         #updating wb quantities        
         warehouseId=1368124
         params= {
@@ -2170,6 +2178,18 @@ def inventory_manual (request):
 def return_product (request):
     if request.user.is_authenticated:
         doc_type = DocumentType.objects.get(name="Возврат ТМЦ")
+        wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        ozon_headers = {
+                "Client-Id": "1711314",
+                    "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+        dict_new_article={}
+        length_missing={}
+        wb_stock_arr_short=[]
+        wb_stock_arr_long=[]
+        dict_no_wb_id={}
+        ozon_stock_arr=[]
+        dict_no_ozon_id={}
         if request.method =='POST':
             tdelta=datetime.timedelta(hours=3)
             dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
@@ -2199,11 +2219,85 @@ def return_product (request):
                     # retail_price=rho_latest.retail_price,
                     # total_retail_sum=int(row.Retail_Price) * int(row.Qnty),
                 )
+                
+                #updating ozon quantities
+                if product.ozon_id:
+                    stock_dict={
+                        "offer_id": str(product.article),
+                        "product_id": str(product.ozon_id),
+                        "stock": rho.current_remainder,
+                        #warehouse (Неклюдово)
+                        "warehouse_id": 1020005000113280
+                    }
+                    ozon_stock_arr.append(stock_dict)
+                else:
+                    dict_no_ozon_id[product.article]=product.name
+
+                if product.wb_bar_code and product.wb_true == True:
+                    wb_qnty=rho.current_remainder
+                    wb_stock_dict={
+                        "sku": product.wb_bar_code,#WB Barcode
+                        "amount": wb_qnty,
+                    }
+                    if product.length:
+                        if int(product.length) < 120:
+                            #warehouse=1368124
+                            wb_stock_arr_short.append(wb_stock_dict)
+                        else:
+                            #warehouse=1744108
+                            wb_stock_arr_long.append(wb_stock_dict)
+                    else:
+                            length_missing[product.article]=product.name
+                else:
+                    dict_no_wb_id[product.article]=product.name
+
+                 #updating wb quantities        
+                warehouseId=1368124
+                params= {
+                    "stocks": wb_stock_arr_short
+                }
+                url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                response = requests.put(url, json=params, headers=wb_headers)
+                status_code=response.status_code
+                #json=response.json()
+                print('Wb response short')
+                print(status_code)
+                print(response)
+                #print(json)
+                print('')
+                time.sleep(0.5)
+                
+                warehouseId=1744108
+                params= {
+                    "stocks": wb_stock_arr_long
+                }
+                url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                response = requests.put(url, json=params, headers=wb_headers)
+                status_code=response.status_code
+                #json=response.json()
+                print('Wb response long')
+                print(status_code)
+                print(response)
+                #print(json)
+                print('')
+                time.sleep(0.5)
+
+                #updating ozon quantities  
+                task={
+                    "stocks" : ozon_stock_arr
+                }
+                response=requests.post('https://api-seller.ozon.ru/v2/products/stocks', json=task, headers=ozon_headers)
+                print('Response from Ozon')
+                print(response)
+                json=response.json()
+                #print(status_code)
+                print(json)
+                
+                messages.error(request,"Остатки обновлены")
+                return redirect("dashboard")
             else:
                 messages.error(request,"Документ не проведен. Товар с таким артикулом не сущствует")
                 return redirect("dashboard")
-            messages.error(request,"Документ проведен")
-            return redirect("dashboard")
     else:
         return render ("dashboard")
 
@@ -2714,6 +2808,8 @@ def wb_get_id (request):
         print(article)
         if Product.objects.filter(article=article).exists():
             product=Product.objects.get(article=article)
+            if product.wb_bar_code:
+                continue
             product.wb_id=wb_id
             product.wb_bar_code=wb_bar_code
             product.save()
@@ -2757,6 +2853,8 @@ def wb_get_id (request):
             print(article)
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
+                if product.wb_bar_code:
+                    continue
                 product.wb_id=wb_id
                 product.wb_bar_code=wb_bar_code
                 product.save()

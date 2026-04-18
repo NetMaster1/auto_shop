@@ -21,7 +21,7 @@
     {% for group in request.user.groups.all %}
         {% if group.name == 'admin' %}
     <div class="container">
-        ===============================CREATE OZON PRODUCT==============================
+        ==========================CREATE OZON PRODUCT====================================
         <div class="row m-auto mt-3 ">
             <div class="col-2">
                 Title
@@ -46,6 +46,24 @@
             </div>
             </form>
             <br>
+        </div>
+        ==========================GETTING OZON ID & SKU==================================
+        <div class="row m-auto mt-3 ">
+            <form action="{% url 'getting_ozon_id_and_ozon_sku' %}" method="POST" enctype="multipart/form-data" >
+                {% csrf_token %}
+                <label for="file_name">
+                    <h5>Введите файл в формате Excel
+                        <br>
+                        Если артикул существует в таблице Product и на mp ozon, то загружает ozon_id и ozon_sku для соответствующего <br>
+                        артикула и вносит его в таблицу Product в erms. <br>
+                        Таким образом у нас есть артикул, ozon_id и ozon_sku в таблице Product.
+                    </h5>
+                </label>
+                <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    <input type="submit" value="Получить ozon_id"
+                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
+                </form>
+                <br>
         </div>
         ========================CREATE WB PRODUCT=======================================
         <div class="row m-auto mt-3 ">
@@ -73,6 +91,52 @@
             </form>
             <br>
         </div>
+        ========================GETTING WB ID & BARCODE=======================================
+        <div class="col">
+            <a href="{% url 'wb_get_id' %}">
+                <input type="button" value="Присвоить Wb bar code" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
+            </a>
+        </div>
+        ==========================ADD WB MEDIA FILES====================================<br>
+        Prior to do this you need to save images in the database since wb takes images from the database.
+        Open admin panesl & save images in Product table.
+        <div class="row m-auto mt-3 ">
+            <div class="col-2">
+                <form action="{% url 'wb_add_media_files' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
+
+                
+                            <label for="file_name">
+                                <h5>Введите файл в формате Excel <br>
+                            </h5>
+
+                            </label>
+                    
+                
+                            <input type="file" class='form-control' id="file_name" name="file_name" required>
+                    
+                <input type="submit" value="Создать медиа для WB"
+                    class="btn btn-sm btn-block btn-outline-dark clear_storage">
+            </div>
+            </form>
+                <br>
+        </div>
+        ===========================ИНВЕНТАРИЗАЦИЯ/ВЫРАВНИВАНИЕ ОСТАТКОВ ТМЦ================================
+        <form action="{% url 'inventory' %}" method="POST" enctype="multipart/form-data" >
+            
+            {% csrf_token %}
+                <div class="row">
+            
+                <div class="col-4">
+                    <input type="file" class='form-control' id="file_name" name="file_name" required>
+                </div>
+                <div class="col">
+                    <input type="submit" value="Ввести" class="btn btn-block btn-outline-primary"style="width: 10rem" >
+                </div>
+            </div>
+          <br>
+        </form>
+        <br>
         ========================UPDATE OZON PRICES======================================
         <div class="row m-auto mt-3 ">
             <div class="col-2">
@@ -155,46 +219,7 @@
             </form>
             <br>
         </div>
-        ==========================ADD WB MEDIA FILES====================================
-        <div class="row m-auto mt-3 ">
-            <div class="col-2">
-                <form action="{% url 'wb_add_media_files' %}" method="POST" enctype="multipart/form-data" >
-                    {% csrf_token %}
-
-                
-                            <label for="file_name">
-                                <h5>Введите файл в формате Excel <br>
-                            </h5>
-
-                            </label>
-                    
-                
-                            <input type="file" class='form-control' id="file_name" name="file_name" required>
-                    
-                <input type="submit" value="Создать медиа для WB"
-                    class="btn btn-sm btn-block btn-outline-dark clear_storage">
-            </div>
-            </form>
-                <br>
-        </div>
-        ==========================GETTING OZON ID & SKU==================================
-        <div class="row m-auto mt-3 ">
-            <form action="{% url 'getting_ozon_id_and_ozon_sku' %}" method="POST" enctype="multipart/form-data" >
-                {% csrf_token %}
-                <label for="file_name">
-                    <h5>Введите файл в формате Excel
-                        <br>
-                        Если артикул существует в таблице Product и на mp ozon, то загружает ozon_id и ozon_sku для соответствующего <br>
-                        артикула и вносит его в таблицу Product в erms. <br>
-                        Таким образом у нас есть артикул, ozon_id и ozon_sku в таблице Product.
-                    </h5>
-                </label>
-                <input type="file" class='form-control' id="file_name" name="file_name" required>
-                    <input type="submit" value="Получить ozon_id"
-                        class="btn btn-sm btn-block btn-outline-dark clear_storage">
-                </form>
-                <br>
-        </div>
+        
         ========================СЕРВИСНАЯ ФУНКЦИЯ========================================
         <div class="row m-auto mt-3 ">
             <label for="file_name">
@@ -319,7 +344,7 @@
             </form>
             <br>
         </div>
-            ==========================ПРОДАЖА ТМЦ==========================================
+        ==========================ПРОДАЖА ТМЦ==========================================
             <form action="{% url 'sale' %}" method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
             <div class="row mt-1 mb-1">
@@ -335,32 +360,9 @@
             </div>
             </form>
             <br>
-                ============================Возврат ТМЦ==================================
-        <!-- <div class="menu_block m-auto mt-3 ">
-            <label for="file_name">
-                <h5>Продажа
-                    <br>
-                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
-                </h5>
-            </label> -->
-            <form action="{% url 'return_product' %}" method="POST" >
-                {% csrf_token %}
-            <div class="row mt-1 mb-1">
-                <div class="col-2">
-                    <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
-                </div>
-                <div class="col-2">
-                   <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите кол-во" required >
-                </div>
-                <div class="col-2">
-                    <input type="submit" value="Возврат"class="btn btn-block btn-outline-primary" style="width: 10rem">
-                </div>
-            </div>
-            </form>
-            <br>
-        <!-- </div> -->
 
-</div>
+
+    </div>
         {% endif %}
     {% endfor %}
 
@@ -387,8 +389,11 @@
             <a href="{% url 'zero_wb_qnty' %}">
             <input type="button" value="Обнулить ozon" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
         </a>
-        ==========================СИНХРОНИЗИРОВАТЬ КОЛ-ВО С OZON=============================
-        <br>
+        ==========================СИНХРОНИЗИРОВАТЬ КОЛ-ВО С OZON=============================<br>
+        Синхронизацию остатков необходимо делать каждый раз после получения возвратов, так как озон автоматически увеличивает
+        свои остатки при получении возвратов. Так как мы не знаем, в каком состоянии находятся товары, мы синхро
+        наши остатки из erms с озоном. После проверки возвратов сделать возврат на наш склад вручную. Документ Возврат 
+        изменять кол-во в erms, на озон и на WB.
         <form action="{% url 'synchronize_ozon_qnty' %}" method="POST">
 
         {% csrf_token %}
@@ -408,24 +413,24 @@
             </div>
         </div>           
         </form>
-        ==========================СИНХРОНИЗИРОВАТЬ КОЛ-ВО С WB=============================
-        <br>
+        ==========================СИНХРОНИЗИРОВАТЬ КОЛ-ВО С WB=============================<br>
+        Синхронизацию остатков необходимо делать каждый раз после получения возвратов, так как WB автоматически увеличивает
+        свои остатки при получении возвратов. Так как мы не знаем, в каком состоянии находятся товары, мы синхро
+        наши остатки из erms с WB. После проверки возвратов сделать возврат на наш склад вручную. Документ Возврат 
+        изменять кол-во в erms, на озон и на WB.
 
         <a href="{% url 'synchronize_wb_qnty' %}">
             <input type="button" value="Обновить остатки на WB из erms" class="btn btn-block btn-outline-primary" style="width: 10rem" > 
         </a>
    
         ===========================ПОСТУПЛЕНИЕ ТМЦ================================================
-        <!-- <div class="menu_block m-auto mt-3 "> -->
-           <br>  <!-- <label for="file_name">
+        Корректирует остатки в erms, на озон и на WB.
+       <br>
                 <h5>Введите файл в формате Excel
                     <br>
-                    Создает записи в таблице RemainderHistory (Поступление ТМЦ) при условии, что наименование с данным артикулом<br>
-                    существует в таблице Product. Cинхронизирует current_remainder из таблицы RemainderHistory с кол-вом на mp ozon при<br>
-                    условии, что наименование содержит ozon_id. Не создаёт нового наименования ни в erms ни на ozon. Столбец Title <br>
-                    для ввода названия вообще не используется.
+        
                 </h5>
-            </label> --> 
+            </label>
         <form action="{% url 'delivery_auto' %}" method="POST" enctype="multipart/form-data" >
              
             {% csrf_token %}
@@ -438,34 +443,10 @@
                     <input type="submit" value="Поступление" class="btn btn-block btn-outline-primary"style="width: 10rem" >
                 </div>
             </div>
-       
         </form>
       
-        ===========================ИНВЕНТАРИЗАЦИЯ/ВЫРАВНИВАНИЕ ОСТАТКОВ ТМЦ================================
-            <br>
-        <form action="{% url 'inventory' %}" method="POST" enctype="multipart/form-data" >
-            
-            {% csrf_token %}
-                <div class="row">
-            
-                <div class="col-4">
-                    <input type="file" class='form-control' id="file_name" name="file_name" required>
-                </div>
-                <div class="col">
-                    <input type="submit" value="Ввести" class="btn btn-block btn-outline-primary"style="width: 10rem" >
-                </div>
-            </div>
-          <br>
-        </form>
         <strong>============================Ручное выравнивание остатков ТМЦ==================================</strong>
-        <!-- <div class="menu_block m-auto mt-3 ">
-            <label for="file_name">
-                <h5>Продажа
-                    <br>
-                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
-                </h5>
-            </label> -->
-            <br>
+        Корректирует остатки в erms, на озон и на WB.
             <form action="{% url 'inventory_manual' %}" method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
             <div class="row mt-1 mb-1">
@@ -481,20 +462,10 @@
             </div>
             </form>
             <br>
-        <!-- </div> -->
 
-
-        <!-- </div> -->
-
-        =============================СПИСАНИЕ ТМЦ======================================
-        <!-- <div class="menu_block m-auto mt-3 ">
-            <label for="file_name">
-                <h5>Продажа
-                    <br>
-                    Содаёт запись в таблице RemainderHistory (Продажа ТМЦ)
-                </h5>
-            </label> -->
-            <form action="{% url 'sign_off_product' %}" method="POST" enctype="multipart/form-data" >
+        =============================Возврат ТМЦ======================================<br>
+        Корректирует остатки в erms, на озон и на WB.
+            <form action="{% url 'return_product' %}" method="POST" >
                 {% csrf_token %}
             <div class="row mt-1 mb-1">
                 <div class="col-2">
@@ -504,12 +475,29 @@
                    <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите количество" required >
                 </div>
                 <div class="col-2">
-                    <input type="submit" value="Списание"class="btn btn-block btn-outline-primary" style="width: 10rem">
+                    <input type="submit" value="Возврат"class="btn btn-block btn-outline-primary" style="width: 10rem">
                 </div>
             </div>
             </form>
             <br>
-        <!-- </div> -->
+        =============================СПИСАНИЕ ТМЦ======================================<br>
+        Корректирует остатки в erms, на озон и на WB.
+        <form action="{% url 'sign_off_product' %}" method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+        <div class="row mt-1 mb-1">
+            <div class="col-2">
+                <input type="text" class='form-control' id="article" name="article" placeholder="Введите артикул" required>
+            </div>
+            <div class="col-2">
+                <input type="number" class='form-control' id="quantity" name="quantity" placeholder="Введите количество" required >
+            </div>
+            <div class="col-2">
+                <input type="submit" value="Списание"class="btn btn-block btn-outline-primary" style="width: 10rem">
+            </div>
+        </div>
+        </form>
+        <br>
+    </div>
       
 
        

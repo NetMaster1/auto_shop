@@ -81,11 +81,12 @@ class Document (models.Model):
     created = models.DateTimeField(default=timezone.now, null=True)
     name = models.ForeignKey(DocumentType, on_delete=models.DO_NOTHING, null=True)
     sum = models.IntegerField(default=0)
+    paid = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name='Documents'
-    def __str__(self):
-        return self.name
+        verbose_name='Document'
+    def __int__(self):
+        return self.id
 
 class RemainderHistory(models.Model):
     #temporary utility field for numbering rhos while displaying them at change_sale_posted html page
