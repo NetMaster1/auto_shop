@@ -1547,10 +1547,14 @@ def items_eligible_for_ozon_action(request):
     for i in  products:
         items_dict={}
         min_price=int(i['price'])/100*77
+        counter=0
         if Product.objects.filter(ozon_id=i['id']).exists():
             product=Product.objects.get(ozon_id=i['id'])
             if product.ozon_true == True and min_price < int(i['price_min_elastic']) and min_price > int(i['price_max_elastic']):
                 print_list.append(product.name)
+                counter+=1
+                print('=======================')
+                print(f'{counter} Наименование: {product.name} {product.article}')
                 if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
                     rho_latest_before = RemainderHistory.objects.filter(article=product.article,  created__lt=dateTime).latest('created')
                     current_remainder=rho_latest_before.current_remainder
