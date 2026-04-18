@@ -1521,6 +1521,63 @@ def update_ozon_images(request):
             print('============================')      
         return redirect ('dashboard')
 
+def items_eligible_for_ozon_action(request):
+    tdelta=datetime.timedelta(hours=3)
+    dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
+    dateTime=dT_utcnow+tdelta
+    headers = {
+                "Client-Id": "1711314",
+                "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+            }
+   
+    task = {
+            "action_id": 1977747,
+            "limit": 100,
+            "offset": 0,
+            "last_id": "bnVсbA=="
+        }
+    response=requests.post('https://api-seller.ozon.ru/v1/actions/products', json=task, headers=headers)
+    print(response)
+    json=response.json()
+    #print(json)
+    result=json['result']
+    products=result['products']
+    items_eligible_for_ozon_action=[]
+    print_list=[]
+    for i in  products:
+        items_dict={}
+        min_price=int(i['price'])/100*77
+        if Product.objects.filter(ozon_id=i['id']).exists():
+            product=Product.objects.get(ozon_id=i['id'])
+            if product.ozon_true == True and min_price < int(i['price_min_elastic']) and min_price > int(i['price_max_elastic']):
+                print_list.append(product.name)
+                if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
+                    rho_latest_before = RemainderHistory.objects.filter(article=product.article,  created__lt=dateTime).latest('created')
+                    current_remainder=rho_latest_before.current_remainder
+                else:
+                    current_remainder=0
+
+                items_dict['action_price'] = min_price
+                items_dict['product_id'] = i['id']
+                items_dict['stock'] = current_remainder
+
+                items_eligible_for_ozon_action.append(items_dict)
+                
+    task= {
+        "action_id": 1977747,#elastic boost
+        "products": items_eligible_for_ozon_action
+        }           
+
+    response=requests.post('https://api-seller.ozon.ru/v1/products/activate', json=task, headers=headers)
+    
+    messages.error(request,f'Следующие товары добавлены в акциюЖ=: {print_list}')
+    return redirect("dashboard")
+
+def add_items_to_ozon_action(request):
+    pass
+
+def delete_items_from_ozon_action(request):
+    pass
 #==============================================================================
 
 def delivery_auto(request):
