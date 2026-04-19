@@ -1219,6 +1219,8 @@ def getting_ozon_id_and_ozon_sku (request):
                 #============================end of block=======================================================
                 if Product.objects.filter(article=article).exists():
                     product=Product.objects.get(article=article)
+                    if product.ozon_id:
+                        continue
                     #ozon_id assigned by Ozon for further saving it in erms product model
                     #and using it for changing quantity of product at ozon;
                     #Cуществует два метода получения ozon_id
@@ -2982,7 +2984,7 @@ def wb_update_prices(request):
                             "nmID": int(wb_id),
                             # "price": int(retail_price),
                             "price": int(row.Retail_Price),
-                            "discount": 20
+                            "discount": 25
                         }
                     task_arr.append(task_dict)
 
