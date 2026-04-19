@@ -39,7 +39,6 @@ urlpatterns = [
     path('wb_add_media_files', views.wb_add_media_files, name='wb_add_media_files'),
     path('wb_get_id', views.wb_get_id, name='wb_get_id'),
     path('wb_update_prices', views.wb_update_prices, name='wb_update_prices'),
-    path('wb_update_prices_ver_1', views.wb_update_prices_ver_1, name='wb_update_prices_ver_1'),
     path('zero_wb_warehouse_qnty', views.zero_wb_warehouse_qnty, name='zero_wb_warehouse_qnty'),
     path('zero_sdek_warehouse_qnty', views.zero_sdek_warehouse_qnty, name='zero_sdek_warehouse_qnty'),
     path('wb_ozon_sync', views.wb_ozon_sync, name='wb_ozon_sync'),

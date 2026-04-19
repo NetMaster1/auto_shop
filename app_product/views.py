@@ -2999,34 +2999,6 @@ def wb_update_prices(request):
         messages.error(request,f'WB Response: {a}')
         return redirect ('dashboard')
     
-def wb_update_prices_ver_1(request):
-    #Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
-	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
-    url=f'https://discounts-prices-api.wildberries.ru/api/v2/upload/task'
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
-    products=Product.objects.all()
-    for product in products:
-        if product.wb_id:
-            wb_id=product.wb_id
-            task_dict={
-                    "nmID": int(wb_id),
-                    # "price": int(retail_price),
-                    "price": 3990,
-                    "discount": 30
-                }
-            task_arr.append(task_dict)
-  
-    params={
-        "data" : task_arr
-    }
-    response = requests.post(url, json=params, headers=headers)
-    status_code=response.status_code
-    a=response.json()
-    print(f'status_code: {status_code}')
-    print(a)
-    messages.error(request,f'WB Response: {a}')
-
-    return redirect ('dashboard')
 
 def synchronize_qnty_wb_ver_1(request):
     tdelta=datetime.timedelta(hours=3)
