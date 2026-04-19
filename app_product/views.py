@@ -2984,7 +2984,7 @@ def wb_update_prices(request):
                             "nmID": int(wb_id),
                             # "price": int(retail_price),
                             "price": int(row.Retail_Price),
-                            "discount": 25
+                            "discount": 23
                         }
                     task_arr.append(task_dict)
 
