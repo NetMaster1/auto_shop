@@ -2952,6 +2952,7 @@ def wb_add_media_files (request):
   messages.error(request,f'WB Response: {a}')
   return redirect ('dashboard')
 
+#max limit - 10 requests
 def wb_update_prices(request):
     #Товары, цены и скидки для них. Максимум 1 000 товаров. Цена и скидка не могут быть пустыми одновременно.
 	#Максимум 10 запросов за 6 секунд для всех методов категории Цены и скидки на один аккаунт продавца
@@ -2982,23 +2983,10 @@ def wb_update_prices(request):
                     wb_id=product.wb_id
                     task_dict={
                             "nmID": int(wb_id),
-                            # "price": int(retail_price),
                             "price": int(row.Retail_Price),
                             "discount": 23
                         }
                     task_arr.append(task_dict)
-
-
-                    # params={
-                    #         "data": [
-                    #             {
-                    #             "nmID": int(wb_id),
-                    #             # "price": int(retail_price),
-                    #             "price": 2990,
-                    #             "discount": 0
-                    #             }
-                    #         ]
-                    #     }
             
         params={
                 "data" : task_arr
