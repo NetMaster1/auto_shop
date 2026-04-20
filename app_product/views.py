@@ -3048,7 +3048,6 @@ def synchronize_wb_qnty(request):
     #one request contains from 1 to 1000 items
     #max 300 requests per minute
     wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
-    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
     stock_arr=[]
     wb_stock_arr_short=[]
     wb_stock_arr_long=[]
@@ -3078,7 +3077,10 @@ def synchronize_wb_qnty(request):
                     length_missing[product.article]=product.name
                     continue
             else:
-                continue
+                wb_stock_dict={
+                    "sku": product.wb_bar_code,#WB Barcode
+                    "amount": 0,
+                }
         else:
             dict_no_wb_id[product.article]=product.name
     
@@ -3087,14 +3089,11 @@ def synchronize_wb_qnty(request):
         for i in wb_stock_arr_long:
             print(i)
         if len(wb_stock_arr_long) > 0:
-            
             warehouseId=1744108
             params= {
                 "stocks": wb_stock_arr_long
             }
-            
             url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-            
             response = requests.put(url, json=params, headers=wb_headers)
             status_code=response.status_code
             #json=response.json()
@@ -3102,11 +3101,12 @@ def synchronize_wb_qnty(request):
             # print(status_code)
             print(response)
             #print(json)
-            
             print('')
             time.sleep(3)
 
         print(f'wb_stock_arr_short: {len(wb_stock_arr_short)}')
+        for i in wb_stock_arr_short:
+            print(i)
         if len(wb_stock_arr_short) > 0:
             warehouseId=1368124
             params= {
