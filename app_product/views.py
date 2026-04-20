@@ -2998,45 +2998,6 @@ def wb_update_prices(request):
         print(a)
         messages.error(request,f'WB Response: {a}')
         return redirect ('dashboard')
-    
-
-def synchronize_qnty_wb_ver_1(request):
-    tdelta=datetime.timedelta(hours=3)
-    dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
-    dateTime=dT_utcnow+tdelta
-    products=Product.objects.all()
-    warehouseId=1368124#warehouse for items with length under 140
-
-    #one request contains from 1 to 1000 items
-    #max 300 requests per minute
-    headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
-    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-    stock_arr=[]
-
-    for product in products:
-        if product.wb_bar_code and product.wb_true == True:
-            article=product.article
-            if RemainderHistory.objects.filter(article=article).exists():
-                #rhos=RemainderHistory.objects.filter(article=article)
-                rho_latest = RemainderHistory.objects.filter(article=article, created__lte=dateTime).latest("created")
-                wb_bar_code=str(product.wb_bar_code)
-                qnty=rho_latest.current_remainder
-                stock_dict={
-                    "sku": wb_bar_code,#WB Barcode
-                    "amount": qnty,
-                }
-                # stock_arr.append(stock_dict)
-                print(stock_dict)
-                params= {
-                    "stocks": [stock_dict,]
-                }
-                                    
-                response = requests.put(url, json=params, headers=headers)
-                status_code=response.status_code
-                #print(status_code)
-                print(response)
- 
-    return redirect ('dashboard')
 
 def synchronize_wb_qnty(request):
     tdelta=datetime.timedelta(hours=3)
