@@ -3,7 +3,7 @@ from . models import Product, DocumentType, Document, RemainderHistory, ProductC
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'category', 'article', 'wb_true', 'ozon_true', 'site_true', 'update_true', 'quantity_update_true', 'image_1', 'image_2', 'image_3', 'ozon_id', 'ozon_sku', 'wb_id', 'wb_bar_code', 'length', 'width', 'height', 'quantity', 'manufacturer', 'av_price', 'total_sum', )
-    search_fields = ('article', 'ozon_id', 'ozon_sku', 'wb_id', 'wb_bar_code' )
+    search_fields = ('article', 'ozon_id', 'ozon_sku', 'wb_id', 'wb_bar_code', 'name' )
     list_editable = ('category', 'article', 'length', 'width', 'height', 'image_1', 'image_2', 'image_3', 'update_true', 'wb_true', 'ozon_true', 'site_true', 'quantity_update_true', 'quantity', 'total_sum', 'manufacturer')
     list_per_page=100
 
@@ -15,7 +15,7 @@ class DocumentTypeAdmin(admin.ModelAdmin):
 
 class DocumentAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'sum', 'time_seconds', 'paid')
-    list_editable = ('paid',)
+    list_editable = ('paid', 'supplier')
     #I don't know how it works, but this functions created a separate column based on column 'created', but with more precise time '19 Feb 2022 15:54:00' instead of  'Feb. 21, 2022, 3:11 p.m.' I deleted 'created' from display_list. Somehow it may influence to filtering, but so far I have not noticed anything.
     def time_seconds(self, obj):
         return obj.created.strftime("%d %b %Y %H:%M:%S.%f")#displays microsecs
