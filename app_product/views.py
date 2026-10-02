@@ -3171,7 +3171,7 @@ def zero_wb_qnty(request):
 
         url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
         #response = requests.put(url, json=params, headers=wb_headers)
-        response = requests.del(url, json=params, headers=wb_headers)
+        response = requests.delete(url, json=params, headers=wb_headers)
         status_code=response.status_code
         #json=response.json()
         print('Wb response long')
