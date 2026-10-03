@@ -3129,7 +3129,7 @@ def zero_wb_qnty(request):
         #     "stocks": wb_stock_arr_short
         # }
         params= {
-            "chrtIds": wb_stock_arr_short
+            "sku": wb_stock_arr_short
         }
         url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
         #response = requests.put(url, json=params, headers=wb_headers)
@@ -3145,7 +3145,7 @@ def zero_wb_qnty(request):
 
         warehouseId=1744108
         params= {
-            "chrtIds": wb_stock_arr_long
+            "sku": wb_stock_arr_long
         }
         url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
         #response = requests.put(url, json=params, headers=wb_headers)
