@@ -2884,6 +2884,53 @@ def wb_get_id (request):
     # messages.error(request,f'WB Product: {product.name} : {product.article} : {product.wb_id}')
     return redirect ('dashboard')
 
+def wb_get_chrtId(request):
+    products=Product.objects.all()
+    counter=0
+    for product in products:
+        try:
+        #if product.article:
+            counter+=1
+            url=f'https://content-api.wildberries.ru/content/v2/get/cards/list'
+            #headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+            headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
+
+            params = {
+                "settings": {
+                    "filter": {
+                        "textSearch": product.article
+                    },
+
+                }
+            }
+
+            response = requests.post(url, json=params, headers=headers)
+            status_code=response.status_code
+            print('=======================')
+            print(f'{counter}. Status_code: {status_code}')
+            a=response.json()
+            #print(a)
+            value=a['cards'][0]['sizes'][0]['chrtID']
+                # value1=value[0]
+                # value2=value1['sizes']
+                # value3=value2[0]
+                # value4=value3['chrtID']
+            print(f'Артикул: {product.article}')
+            print(f'Name: {product.name}')
+            print(f'nmID: {product.wb_id}')
+            print(a['cards'][0]['sizes'])
+            print(f'chrtID: {value}')
+            # print(a)
+            product.wb_chrtId=value
+            product.save()
+            time.sleep(1)
+        except IndexError:
+            continue
+        except KeyError:
+            continue
+
+    return redirect ('dashboard')
+
 def wb_add_media_files (request):
   if request.method == "POST":
     #100 requests per minute
@@ -3103,57 +3150,53 @@ def zero_wb_qnty(request):
         #wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
         wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
         wb_stock_arr_short=[]
+        #wb_stock_arr_short={}
         wb_stock_arr_long=[]
-        length_missing=[]
+        #wb_stock_arr_long={}
         n=0
         for product in products:
-            if product.wb_bar_code:
-                # wb_stock_dict={
-                #     "sku": product.wb_bar_code,#WB Barcode
-                #     "amount": 0,
-                # }
+            if product.wb_chrtId:
                 if product.length:
                     if int(product.length) < 120:
-                        #warehouse=1368124
-                        #wb_stock_arr_short.append(wb_stock_dict)
-                        wb_stock_arr_short.append(product.wb_bar_code)
+                        wb_stock_arr_short.append(int(product.wb_chrtId))
                     else:
-                        #warehouse=1744108
-                        #wb_stock_arr_long.append(wb_stock_dict)
-                        wb_stock_arr_long.append(product.wb_bar_code)
-                else:
-                    wb_stock_arr_short.append(product.wb_bar_code)
+                        wb_stock_arr_long.append(int(product.wb_chrtId))
+                # else:
+                #     wb_stock_arr_short.append(product.wb_chrtId)
 
-        warehouseId=1368124
-        # params= {
-        #     "stocks": wb_stock_arr_short
-        # }
+        print(f'short_list: {wb_stock_arr_short}')
+        print(f'long_list: {wb_stock_arr_long}')
+        warehouseId=1368124 #(МГТ)
         params= {
-            "sku": wb_stock_arr_short
-        }
+                "chrtIds": wb_stock_arr_short
+            
+                }
+
         url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-        #response = requests.put(url, json=params, headers=wb_headers)
         response = requests.delete(url, json=params, headers=wb_headers)
+        # response = requests.put(url, json=params, headers=wb_headers)
         status_code=response.status_code
         #json=response.json()
         print('Wb response short')
-        print(status_code)
+        #print(status_code)
         print(response)
         #print(json)
         print('')
-        time.sleep(5)
-
-        warehouseId=1744108
+        time.sleep(10)
+                
+         
+        warehouseId=1744108 #(КГТ+)
         params= {
-            "sku": wb_stock_arr_long
+            "chrtIds": wb_stock_arr_long
         }
+
         url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-        #response = requests.put(url, json=params, headers=wb_headers)
+        # #response = requests.put(url, json=params, headers=wb_headers)
         response = requests.delete(url, json=params, headers=wb_headers)
         status_code=response.status_code
         #json=response.json()
         print('Wb response long')
-        print(status_code)
+        #print(status_code)
         print(response)
         #print(json)
         print('')

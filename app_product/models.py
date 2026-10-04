@@ -27,6 +27,9 @@ class Product (models.Model):
     ozon_sku = models.CharField(max_length=50, unique=True, null=True, blank=True)
     wb_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     wb_bar_code = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    #аналог sku. Присваивается разным размерам или цветам одного наименования
+    #используется для изменения остатков на wb
+    wb_chrtId = models.CharField(max_length=50, unique=True, null=True, blank=True)
     wb_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with wb
     ozon_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with ozon
     site_true = models.BooleanField(default=True)#used to block certain items' quantities from synchronizing with site

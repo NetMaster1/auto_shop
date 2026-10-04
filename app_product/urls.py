@@ -37,6 +37,7 @@ urlpatterns = [
     path('wb_create_product', views.wb_create_product, name='wb_create_product'),
     path('wb_add_media_files', views.wb_add_media_files, name='wb_add_media_files'),
     path('wb_get_id', views.wb_get_id, name='wb_get_id'),
+    path('wb_get_chrtId', views.wb_get_chrtId, name='wb_get_chrtId'),
     path('wb_update_prices', views.wb_update_prices, name='wb_update_prices'),
     path('zero_sdek_warehouse_qnty', views.zero_sdek_warehouse_qnty, name='zero_sdek_warehouse_qnty'),
     path('wb_ozon_sync', views.wb_ozon_sync, name='wb_ozon_sync'),
