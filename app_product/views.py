@@ -3216,87 +3216,50 @@ def zero_wb_qnty(request):
         products=Product.objects.all()
         #wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
         wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
-        wb_stock_arr_short=[]
-        short_dict={}
-        wb_stock_arr_long=[]
-        long_dict={}
-        counter_short=0
-        counter_long=0
+        # wb_stock_arr_short=[]
+        # short_dict={}
+        # wb_stock_arr_long=[]
+        # long_dict={}
+        # counter_short=0
+        # counter_long=0
+        counter=0
         for product in products:
             if product.wb_chrtId:
                 if product.length is not None and product.length != '':
+                    counter+=1
                     if int(product.length) < 120:
-                        short_dict={"chrtId": int(product.wb_chrtId), "amount": 0}
-                        wb_stock_arr_short.append(short_dict)
-                        if len(wb_stock_arr_short) == 50:
-                            counter_short+=1
-                            warehouseId=1368124 #(МГТ)
-                            params= {
-                                        "stocks": wb_stock_arr_short
-                                    }
-                            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-                            response = requests.put(url, json=params, headers=wb_headers)
-                            status_code=response.status_code
-                            #json=response.json()
-                            print(f'Wb response short counter: {counter_short}')
-                            #print(status_code)
-                            print(response)
-                            #print(json)
-                            print('-----------------------------------')
-                            time.sleep(3)
-                            wb_stock_arr_short.clear()
+                        warehouseId=1368124 #(МГТ)
+                        params= {
+                                    "stocks": [{'chrtId': product.wb_chrtId, 'amount': 0}]
+                                }
+                        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                        response = requests.put(url, json=params, headers=wb_headers)
+                        status_code=response.status_code
+                        #json=response.json()
+                        #print(f'Wb response short counter: {counter_short}')
+                        #print(status_code)
+                        print(response)
+                        print(f'{counter}. {product.name} {product.article} {product.wb_chrtId})
+                        #print(json)
+                        print('-----------------------------------')
+                        time.sleep(1)
+
                     else:
-                        long_dict={"chrtId": int(product.wb_chrtId), "amount": 0}
-                        wb_stock_arr_long.append(long_dict)
-                        if len(wb_stock_arr_long) == 50:
-                            counter_long+=1
-                            warehouseId=1744108 #(КГТ+)
-                            params= {
-                                        "stocks": wb_stock_arr_long
-                                    }
-                            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-                            response = requests.put(url, json=params, headers=wb_headers)
-                            status_code=response.status_code
-                            #json=response.json()
-                            print(f'Wb response long counter: {counter_long}')
-                            #print(status_code)
-                            print(response)
-                            #print(json)
-                            print('-------------------------------------------')
-                            time.sleep(3)
-                            wb_stock_arr_long.clear()
-
-        if len(wb_stock_arr_short) != 0:
-            warehouseId=1368124 #(МГТ)
-            params= {
-                        "stocks": wb_stock_arr_short
-                    }
-            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-            response = requests.put(url, json=params, headers=wb_headers)
-            status_code=response.status_code
-            #json=response.json()
-            print('Wb response short final portion')
-            #print(status_code)
-            print(response)
-            #print(json)
-            print('----------------------------------------------------------')
-            time.sleep(3)
-
-        if len(wb_stock_arr_long) != 0:
-            warehouseId=1744108 #(кгт+)
-            params= {
-                        "stocks": wb_stock_arr_long
-                    }
-            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-            response = requests.put(url, json=params, headers=wb_headers)
-            status_code=response.status_code
-            #json=response.json()
-            print('Wb response long final portion')
-            #print(status_code)
-            print(response)
-            #print(json)
-            print('-----------------------------------------------------------------')
-            time.sleep(3)
+                        warehouseId=1744108 #(кгт+)
+                        params= {
+                                    "stocks": [{'chrtId': product.wb_chrtId, 'amount': 0}]
+                                }
+                        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                        response = requests.put(url, json=params, headers=wb_headers)
+                        status_code=response.status_code
+                        #json=response.json()
+                        #print(f'Wb response short counter: {counter_short}')
+                        #print(status_code)
+                        print(response)
+                        print(f'{counter}. {product.name} {product.article} {product.wb_chrtId})
+                        #print(json)
+                        print('-----------------------------------')
+                        time.sleep(1)
 
    
         messages.error(request, 'Остатки обнулены')
