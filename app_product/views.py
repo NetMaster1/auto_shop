@@ -3144,7 +3144,6 @@ def synchronize_wb_qnty(request):
         messages.error(request,"Остатки не обновились. Ошибка")
         return redirect("dashboard")
 
-
 #данный метод не просто обнулят остатки, но и удаляет карточку со склада
 #этим методом лучше не пользоваться для обнуления остатков
 def delete_card_from_wb_wh(request):
@@ -3216,12 +3215,6 @@ def zero_wb_qnty(request):
         products=Product.objects.all()
         #wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
         wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
-        # wb_stock_arr_short=[]
-        # short_dict={}
-        # wb_stock_arr_long=[]
-        # long_dict={}
-        # counter_short=0
-        # counter_long=0
         counter=0
         for product in products:
             if product.wb_chrtId is not None and product.wb_chrtId != '':
@@ -3247,7 +3240,7 @@ def zero_wb_qnty(request):
                         print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
                         #print(json)
                         print('-----------------------------------')
-                        time.sleep(1)
+                        time.sleep(3)
 
                     else:
                         warehouseId=1744108 #(кгт+)
@@ -3269,7 +3262,7 @@ def zero_wb_qnty(request):
                         print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
                         #print(json)
                         print('-----------------------------------')
-                        time.sleep(1)
+                        time.sleep(3)
 
    
         messages.error(request, 'Остатки обнулены')
