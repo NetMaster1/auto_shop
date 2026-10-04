@@ -3220,8 +3220,8 @@ def zero_wb_qnty(request):
         short_dict={}
         wb_stock_arr_long=[]
         long_dict={}
-        counter_short
-        counter_long
+        counter_short=0
+        counter_long=0
         for product in products:
             if product.wb_chrtId:
                 if product.length is not None and product.length != '':
