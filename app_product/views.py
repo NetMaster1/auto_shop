@@ -3224,13 +3224,18 @@ def zero_wb_qnty(request):
         # counter_long=0
         counter=0
         for product in products:
-            if product.wb_chrtId:
+            if product.wb_chrtId is not None and product.wb_chrtId != '':
                 if product.length is not None and product.length != '':
                     counter+=1
                     if int(product.length) < 120:
                         warehouseId=1368124 #(МГТ)
                         params= {
-                                    "stocks": [{'chrtId': product.wb_chrtId, 'amount': 0}]
+                                    "stocks": [
+                                        {
+                                            "chrtId": int(product.wb_chrtId), 
+                                            "amount": 0
+                                        }
+                                    ]
                                 }
                         url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
                         response = requests.put(url, json=params, headers=wb_headers)
@@ -3247,7 +3252,12 @@ def zero_wb_qnty(request):
                     else:
                         warehouseId=1744108 #(кгт+)
                         params= {
-                                    "stocks": [{'chrtId': product.wb_chrtId, 'amount': 0}]
+                                    "stocks": [
+                                            {
+                                                    "chrtId": int(product.wb_chrtId), 
+                                                    "amount": 0
+                                            }
+                                        ]
                                 }
                         url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
                         response = requests.put(url, json=params, headers=wb_headers)
