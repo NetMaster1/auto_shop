@@ -3056,93 +3056,70 @@ def synchronize_wb_qnty(request):
     dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
     dateTime=dT_utcnow+tdelta
     products=Product.objects.all()
-    warehouseId=1368124#warehouse for items with length under 140
 
     #one request contains from 1 to 1000 items
     #max 300 requests per minute
     #wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
     wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
-    stock_arr=[]
-    wb_stock_arr_short=[]
-    wb_stock_arr_long=[]
-    dict_no_wb_id={}
-    length_missing={}
-
-      # the list should not contain negative quantities. Otherwise WB declines the request & sends status 400 (wrong request)  
+    counter=0
     for product in products:
-        if product.wb_bar_code and product.wb_true == True:
-            if RemainderHistory.objects.filter(article=product.article).exists():
-                rho=RemainderHistory.objects.filter(article=product.article).latest('created')
-                wb_qnty=rho.current_remainder
-                if rho.current_remainder < 0:
-                    wb_qnty=0
-                wb_stock_dict={
-                    "sku": product.wb_bar_code,#WB Barcode
-                    "amount": wb_qnty,
-                }
-                if product.length:
-                    if int(product.length) < 120:
-                        #warehouse=1368124
-                        wb_stock_arr_short.append(wb_stock_dict)
+        if product.wb_chrtId is not None and product.wb_chrtId != '':
+            if product.length is not None and product.length != '':
+                counter+=1
+                if RemainderHistory.objects.filter(article=product.article).exists():
+                    rho_latest = RemainderHistory.objects.filter(article=product.article, created__lte=dateTime).latest("created")
+                    if rho_latest.current_remainder < 0:
+                        amount=0
                     else:
-                        #warehouse=1744108
-                        wb_stock_arr_long.append(wb_stock_dict)
-                else:
-                    length_missing[product.article]=product.name
-                    continue
-            else:
-                wb_stock_dict={
-                    "sku": product.wb_bar_code,#WB Barcode
-                    "amount": 0,
-                }
-        else:
-            dict_no_wb_id[product.article]=product.name
-    
-    try:
-        print(f'wb_stock_arr_long: {len(wb_stock_arr_long)}')
-        for i in wb_stock_arr_long:
-            print(i)
-        if len(wb_stock_arr_long) > 0:
-            warehouseId=1744108
-            params= {
-                "stocks": wb_stock_arr_long
-            }
-            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-            response = requests.put(url, json=params, headers=wb_headers)
-            status_code=response.status_code
-            #json=response.json()
-            print('Wb response long')
-            # print(status_code)
-            print(response)
-            #print(json)
-            print('')
-            time.sleep(3)
+                        amount=rho_latest.current_remainder
+                    if int(product.length) < 120:
+                        warehouseId=1368124 #(МГТ)
+                        params= {
+                                    "stocks": [
+                                        {
+                                            "chrtId": int(product.wb_chrtId), 
+                                            "amount": amount
+                                        }
+                                    ]
+                                }
+                        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                        response = requests.put(url, json=params, headers=wb_headers)
+                        status_code=response.status_code
+                        #json=response.json()
+                        #print(f'Wb response short counter: {counter_short}')
+                        #print(status_code)
+                        print(response)
+                        print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
+                        #print(json)
+                        print('-----------------------------------')
+                        time.sleep(3)
 
-        print(f'wb_stock_arr_short: {len(wb_stock_arr_short)}')
-        for i in wb_stock_arr_short:
-            print(i)
-        if len(wb_stock_arr_short) > 0:
-            warehouseId=1368124
-            params= {
-                "stocks": wb_stock_arr_short
-            }
-            url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-            response = requests.put(url, json=params, headers=wb_headers)
-            status_code=response.status_code
-            #json=response.json()
-            print('Wb response short')
-            print(status_code)
-            print(response)
-            #print(json)
-            print(len(wb_stock_arr_short))
-            print('')
-            time.sleep(3)
-                 
-        messages.error(request,"Остатки обновлены")
-        return redirect("dashboard")
-    except:
-        messages.error(request,"Остатки не обновились. Ошибка")
-        return redirect("dashboard")
+                    else:
+                        warehouseId=1744108 #(кгт+)
+                        params= {
+                                    "stocks": [
+                                            {
+                                                    "chrtId": int(product.wb_chrtId), 
+                                                    "amount": amount
+                                            }
+                                        ]
+                                }
+                        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                        response = requests.put(url, json=params, headers=wb_headers)
+                        status_code=response.status_code
+                        #json=response.json()
+                        #print(f'Wb response short counter: {counter_short}')
+                        #print(status_code)
+                        print(response)
+                        print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
+                        #print(json)
+                        print('-----------------------------------')
+                        time.sleep(3)
+
+
+    messages.error(request, 'Остатки синхронизированы')
+    return redirect("dashboard")
+
 
 #данный метод не просто обнулят остатки, но и удаляет карточку со склада
 #этим методом лучше не пользоваться для обнуления остатков
