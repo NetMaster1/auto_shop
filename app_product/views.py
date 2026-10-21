@@ -3092,7 +3092,7 @@ def synchronize_wb_qnty(request):
                         print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
                         #print(json)
                         print('-----------------------------------')
-                        time.sleep(3)
+                        time.sleep(0.5)
 
                     else:
                         warehouseId=1744108 #(кгт+)
@@ -3114,7 +3114,7 @@ def synchronize_wb_qnty(request):
                         print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
                         #print(json)
                         print('-----------------------------------')
-                        time.sleep(3)
+                        time.sleep(0.5)
 
 
     messages.error(request, 'Остатки синхронизированы')
