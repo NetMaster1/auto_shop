@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime, date
 from django.utils import timezone
-from app_reference.models import Supplier
+from app_reference.models import Supplier, Warehouse
 
 class ProductCategory (models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
@@ -102,6 +102,7 @@ class RemainderHistory(models.Model):
     #created = models.DateTimeField(format='%Y-%m-%dT%H:%M:%S', default=timezone.now, null=True)
     #created = serializers.DateTimeField(format='iso-8601', required=False, read_only=True)
     rho_type = models.ForeignKey(DocumentType, on_delete=models.DO_NOTHING, null=True)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.DO_NOTHING, null=True)
     ean = models.CharField(max_length=50, null=True, blank=True)
     name = models.CharField(max_length=250)
     status = models.CharField(max_length=50, null=True, blank=True)#displays who initiated the creation of rho (ozon, WB or myself)
