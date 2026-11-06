@@ -59,8 +59,6 @@ class SDEK_City (models.Model):
     def __int__(self):
         return self.id
 
-
-
 class Supplier (models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
     address = models.CharField(max_length=100, null=True, blank=True)
@@ -68,3 +66,8 @@ class Supplier (models.Model):
     def __int__(self):
         return self.id
 
+class Warehouse (models.Model):
+    name = models.CharField(max_length=25, unique=True, null=True, blank=True)
+ 
+    def __int__(self):
+        return self.id

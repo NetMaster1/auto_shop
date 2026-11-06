@@ -235,6 +235,15 @@ def ozon_push(request):#receives a notification from ozon on a new order
             }
         }
 
+
+      {
+   "error": {
+      "code": "ERROR_UNKNOWN",
+      "message": "ошибка",
+      "details": null
+   }
+}
+
       #Sending the answer in json format via HttpResponse method
       #before using HTTPResponse method you have to manually convert python dictionnary to json object which is done in the
       #following string
