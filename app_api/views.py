@@ -222,6 +222,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
                 "code": "ERROR_UNKNOWN",
                 "message": "message_type is not defined",
                 "details": None
+                #"details": null
               }
         }
       except:
@@ -230,6 +231,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
               "code": "ERROR_UNKNOWN",
               "message": "ошибка",
               "details": None
+              #"details": null
             }
         }
 
