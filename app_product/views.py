@@ -1864,7 +1864,7 @@ def sale (request):
 def inventory (request):
     if request.user.is_authenticated:
         if request.method == "POST":
-            wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+            wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
             ozon_headers = {
                     "Client-Id": "1711314",
                         "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
@@ -1936,10 +1936,10 @@ def inventory (request):
                     else:
                         continue
                     
-                    if product.wb_bar_code and product.wb_true == True:
+                    if product.wb_true == True and product.wb_chrtId and product.wb_chrtId != '':
                         wb_qnty=rho.current_remainder
                         wb_stock_dict={
-                            "sku": product.wb_bar_code,#WB Barcode
+                            "chrtId": int(product.wb_chrtId),
                             "amount": wb_qnty,
                         }
                         if product.length:
@@ -2017,7 +2017,7 @@ def inventory (request):
 def inventory_manual (request):
     if request.user.is_authenticated:
         doc_type = DocumentType.objects.get(name="Оприходование ТМЦ")
-        wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+        wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
         ozon_headers = {
                 "Client-Id": "1711314",
                     "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
@@ -2037,8 +2037,6 @@ def inventory_manual (request):
             quantity = request.POST["quantity"]
             if Product.objects.filter(article=article).exists():
                 product=Product.objects.get(article=article)
-                product.quantity+= int(quantity)
-                product.save()
                 if RemainderHistory.objects.filter(article=article, created__lt=dateTime).exists():
                     rho_latest_before = RemainderHistory.objects.filter(article=article,  created__lt=dateTime).latest('created')
                     pre_remainder=rho_latest_before.current_remainder
@@ -2080,11 +2078,13 @@ def inventory_manual (request):
                 else:
                     messages.error(request,"Остаток не был изменён, так как равен вводимому")
                     return redirect("dashboard")
+                product.quantity= int(quantity)
+                product.save()
                 
                 if product.wb_true == True and product.wb_chrtId is not None  and product.wb_chrtId != '':
                     wb_qnty=rho.current_remainder
                     wb_stock_dict={
-                        "sku": product.chrtId,
+                        "chrtId": int(product.wb_chrtId),
                         "amount": wb_qnty,
                     }
                     if product.length:
@@ -2095,7 +2095,7 @@ def inventory_manual (request):
                             #warehouse=1744108
                             wb_stock_arr_long.append(wb_stock_dict)
                     else:
-                            length_missing[product.article]=product.name
+                        length_missing[product.article]=product.name
                 else:
                     dict_no_wb_id[product.article]=product.name
                         
@@ -2221,10 +2221,10 @@ def return_product (request):
                 else:
                     dict_no_ozon_id[product.article]=product.name
 
-                if product.wb_bar_code and product.wb_true == True:
+                if product.wb_true == True and product.wb_chrtId is not None  and product.wb_chrtId != '':
                     wb_qnty=rho.current_remainder
                     wb_stock_dict={
-                        "sku": product.wb_bar_code,#WB Barcode
+                        "wb_chrtId": product.wb_chrtId,
                         "amount": wb_qnty,
                     }
                     if product.length:
@@ -3063,7 +3063,7 @@ def synchronize_wb_qnty(request):
     wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
     counter=0
     for product in products:
-        if product.wb_chrtId is not None and product.wb_chrtId != '':
+        if product.wb_true == True and product.wb_chrtId is not None  and product.wb_chrtId != '':
             if product.length is not None and product.length != '':
                 counter+=1
                 if RemainderHistory.objects.filter(article=product.article).exists():
@@ -3193,7 +3193,7 @@ def zero_wb_qnty(request):
         wb_headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
         counter=0
         for product in products:
-            if product.wb_chrtId is not None and product.wb_chrtId != '':
+            if product.wb_true == True and product.wb_chrtId is not None  and product.wb_chrtId != '':
                 if product.length is not None and product.length != '':
                     counter+=1
                     if int(product.length) < 120:
