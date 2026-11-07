@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class AutoBrand (models.Model):
     ozon_attribute_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     ozon_attribute_value = models.CharField(max_length=50, unique=True, null=True, blank=True)
