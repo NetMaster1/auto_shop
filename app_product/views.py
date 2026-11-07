@@ -3194,51 +3194,34 @@ def zero_wb_qnty(request):
             if product.wb_true == True and product.wb_chrtId is not None  and product.wb_chrtId != '':
                 if product.length is not None and product.length != '':
                     counter+=1
+                    params= {
+                                "stocks": [
+                                    {
+                                        "chrtId": int(product.wb_chrtId), 
+                                        "amount": 0
+                                    }
+                                ]
+                            }
                     if int(product.length) < 120:
                         warehouseId=1368124 #(МГТ)
-                        params= {
-                                    "stocks": [
-                                        {
-                                            "chrtId": int(product.wb_chrtId), 
-                                            "amount": 0
-                                        }
-                                    ]
-                                }
-                        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-                        response = requests.put(url, json=params, headers=wb_headers)
-                        status_code=response.status_code
-                        #json=response.json()
-                        #print(f'Wb response short counter: {counter_short}')
-                        #print(status_code)
-                        print(response)
-                        print(f'MГТ: {warehouseId}')
-                        print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
-                        #print(json)
-                        print('-----------------------------------')
-                        time.sleep(0.5)
-
                     else:
                         warehouseId=1744108 #(кгт+)
-                        params= {
-                                    "stocks": [
-                                            {
-                                                    "chrtId": int(product.wb_chrtId), 
-                                                    "amount": 0
-                                            }
-                                        ]
-                                }
-                        url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-                        response = requests.put(url, json=params, headers=wb_headers)
-                        status_code=response.status_code
-                        #json=response.json()
-                        #print(f'Wb response short counter: {counter_short}')
-                        #print(status_code)
-                        print(response)
+
+                    url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
+                    response = requests.put(url, json=params, headers=wb_headers)
+                    status_code=response.status_code
+                    #json=response.json()
+                    #print(f'Wb response short counter: {counter_short}')
+                    #print(status_code)
+                    print(response)
+                    if warehouseId == '1368124':
+                        print(f'МГТ: {warehouseId}')
+                    else:
                         print(f'КГТ+: {warehouseId}')
-                        print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
-                        #print(json)
-                        print('-----------------------------------')
-                        time.sleep(0.5)
+                    print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
+                    #print(json)
+                    print('-----------------------------------')
+                    time.sleep(0.5)
 
    
         messages.error(request, 'Остатки обнулены')
