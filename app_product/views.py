@@ -3186,7 +3186,6 @@ def delete_card_from_wb_wh(request):
     else:
         return redirect ('login')
 
-
 def zero_wb_qnty(request):
     if request.user.is_authenticated:
         products=Product.objects.all()

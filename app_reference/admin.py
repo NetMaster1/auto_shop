@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import AutoBrand, AutoModel, AutoModification, SDEK_Office, SDEK_City, Supplier, Warehouse,
+from . models import AutoBrand, AutoModel, AutoModification, SDEK_Office, SDEK_City, Supplier, Warehouse
 
 class AutoBrandAdmin(admin.ModelAdmin):
     list_display = ('ozon_attribute_id', 'ozon_attribute_value',)

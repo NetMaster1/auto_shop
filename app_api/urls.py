@@ -10,6 +10,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('ozon_push', views.ozon_push, name='ozon_push'),
     path('payment_status', views.payment_status, name='payment_status'),
+    path('get_ozon_fbo_remainder', views.get_ozon_fbo_remainder, name='get_ozon_fbo_remainder'),
     path('wb_test', views.wb_test, name='wb_test'),
     path('wb_categories', views.wb_categories, name='wb_categories'),
     path('wb_subjects', views.wb_subjects, name='wb_subjects'),

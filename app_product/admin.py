@@ -24,7 +24,7 @@ class DocumentAdmin(admin.ModelAdmin):
     time_seconds.short_description = 'Precise Time'
 
 class RemainderHistoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'time_seconds', 'rho_type', 'article', 'name', 'status', 'shipment_id', 'pre_remainder', 'incoming_quantity', 'outgoing_quantity', 'current_remainder')
+    list_display = ('id', 'time_seconds', 'rho_type', 'article', 'name', 'status', 'shipment_id', 'pre_remainder', 'incoming_quantity', 'outgoing_quantity', 'current_remainder', 'warehouse')
     search_fields = ('article', 'ozon_id', 'ozon_sku')
     list_editable = ('pre_remainder', 'incoming_quantity', 'outgoing_quantity', 'current_remainder',)
     list_per_page=50

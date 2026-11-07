@@ -466,6 +466,42 @@ def payment_status(request):#receives an http notice from Y-kassa on a successfu
 		except Exception as e:
 			print(e)
 
+
+def get_ozon_fbo_remainder (request):
+  products=Product.objects.all()
+  skus_array = []
+  headers = {
+              "Client-Id": "1711314",
+              "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+          }
+  for product in products:
+    if product.ozon_sku:
+      skus_array.append(product.ozon_sku)
+
+  task ={
+      "limit": 1000,
+      "skus": skus_array
+        }
+
+  response=requests.post('https://api-seller.ozon.ru/v1/product/info/stocks-by-warehouse/fbo', json=task, headers=headers)
+  time.sleep(3)
+  status_code=response.status_code
+  print(status_code)
+  json=response.json()
+  #print(json)
+  #skus=json['products']['items'][0]['product_id']
+  skus=json['products']
+  for sku in skus:
+    if sku['present'] > 0:
+      product=Product.objects.get(ozon_sku=sku)
+    print(sku)
+  
+  messages.error(request,f'Status code: {status_code}')
+  return redirect ('dashboard')
+
+
+
+
 #===================================WB Reference Data===========================================
 def wb_test(request):
     #url = "https://common-api.wildberries.ru/ping"
