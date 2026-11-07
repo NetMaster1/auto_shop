@@ -3213,10 +3213,11 @@ def zero_wb_qnty(request):
                         #print(f'Wb response short counter: {counter_short}')
                         #print(status_code)
                         print(response)
+                        print(f'MГТ: {warehouseId}')
                         print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
                         #print(json)
                         print('-----------------------------------')
-                        time.sleep(3)
+                        #time.sleep(1)
 
                     else:
                         warehouseId=1744108 #(кгт+)
@@ -3235,10 +3236,11 @@ def zero_wb_qnty(request):
                         #print(f'Wb response short counter: {counter_short}')
                         #print(status_code)
                         print(response)
+                        print(f'КГТ+: {warehouseId}')
                         print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
                         #print(json)
                         print('-----------------------------------')
-                        time.sleep(3)
+                        #time.sleep(1)
 
    
         messages.error(request, 'Остатки обнулены')
