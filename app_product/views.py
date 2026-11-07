@@ -2081,10 +2081,10 @@ def inventory_manual (request):
                     messages.error(request,"Остаток не был изменён, так как равен вводимому")
                     return redirect("dashboard")
                 
-                if product.wb_bar_code and product.wb_true == True:
+                if product.wb_true == True and product.wb_chrtId is not None  and product.wb_chrtId != '':
                     wb_qnty=rho.current_remainder
                     wb_stock_dict={
-                        "sku": product.wb_bar_code,#WB Barcode
+                        "sku": product.chrtId,
                         "amount": wb_qnty,
                     }
                     if product.length:
