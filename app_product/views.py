@@ -1274,7 +1274,6 @@ def getting_ozon_id_and_ozon_sku (request):
             messages.error(request, string)
             return redirect("dashboard")
 
-
 #За один запрос можно изменить наличие для 100 товаров. 
 #С одного аккаунта продавца можно отправить до 80 запросов в минуту.
 #В настоящий момент у нас уже более 100 позиций по Дефлектор капота
@@ -3120,7 +3119,6 @@ def synchronize_wb_qnty(request):
     messages.error(request, 'Остатки синхронизированы')
     return redirect("dashboard")
 
-
 #данный метод не просто обнулят остатки, но и удаляет карточку со склада
 #этим методом лучше не пользоваться для обнуления остатков
 def delete_card_from_wb_wh(request):
@@ -3217,7 +3215,7 @@ def zero_wb_qnty(request):
                         print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
                         #print(json)
                         print('-----------------------------------')
-                        #time.sleep(1)
+                        time.sleep(0.5)
 
                     else:
                         warehouseId=1744108 #(кгт+)
@@ -3240,7 +3238,7 @@ def zero_wb_qnty(request):
                         print(f'{counter}. {product.name} {product.article} {product.wb_chrtId}')
                         #print(json)
                         print('-----------------------------------')
-                        #time.sleep(1)
+                        time.sleep(0.5)
 
    
         messages.error(request, 'Остатки обнулены')
