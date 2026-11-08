@@ -3433,3 +3433,30 @@ def change_site_retail_price (request):
                 product.site_retail_price=str(row.Site_Retail_Price)
                 product.save()
     return redirect ('shopfront')
+
+
+# def update_ozon_min_price_timer (request):
+#     headers = {
+#         "Client-Id": "1711314",
+#         "Api-Key": 'b54f0a3f-2e1a-4366-807e-165387fb5ba7'
+#         }
+#     products=Product.objects.all()
+#     product_id_list=[]
+#     for product in products:
+#         if product.ozon_true == True and product.ozon_id is not None  and product.ozon_id != '':
+#             product_id_list.append(product.ozon_id)
+#     for i in product_id_list:
+#         print(i)
+            
+#     task =  {
+#             "product_ids": product_id_list
+#         }
+
+#     response=requests.post('https://api-seller.ozon.ru/v1/product/action/timer/update', json=task, headers=headers)
+#     time.sleep(5)
+
+#     status_code=response.status_code
+#     print(f'Status code: {status_code}')
+#     print(response)
+#     json=response.json()
+#     print(json)

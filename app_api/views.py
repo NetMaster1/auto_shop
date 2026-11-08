@@ -224,7 +224,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
                 "details": None
                 #"details": null
               }
-        }
+          }
       except:
         json_data = {
             "error": {
@@ -233,7 +233,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
               "details": None
               #"details": null
             }
-        }
+          }
 
 
       {

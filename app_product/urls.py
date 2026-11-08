@@ -45,4 +45,5 @@ urlpatterns = [
 
     path('change_site_retail_price', views.change_site_retail_price, name='change_site_retail_price'),
     # path('service.php', views.service.php, name='service.php'),
+    #path('update_ozon_min_price_timer', views.update_ozon_min_price_timer, name='update_ozon_min_price_timer'),
 ]
