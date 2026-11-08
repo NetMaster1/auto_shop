@@ -255,8 +255,8 @@ def update_ozon_min_price_timer ():
     time.sleep(5)
 
     status_code=response.status_code
-    print(f'Status code: {status_code}')
-    print(response)
+    # print(f'Status code: {status_code}')
+    # print(response)
     json=response.json()
     print(json)
     

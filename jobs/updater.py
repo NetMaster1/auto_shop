@@ -14,7 +14,7 @@ def start():
 	#scheduler.add_job(wb_synchronize_orders_with_ozon, 'interval', minutes=5, max_instances=1)
 	scheduler.add_job(wb_synchronize_orders_with_ozon, 'interval', minutes=10)
 	scheduler.add_job(list_of_sdek_offices_update, 'interval', hours=168)
-	scheduler.add_job(update_ozon_min_price_timer, 'interval', minutes=3)
+	scheduler.add_job(update_ozon_min_price_timer, 'interval', hours=600)
 	#scheduler.add_job(scheduled_dispatch, 'interval', minutes=10)
 	#scheduler.add_job(scheduled_dispatch, 'interval', seconds=5)
 	scheduler.start()
