@@ -52,9 +52,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
           # datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-2]
 
           json_data = {
-            "version": "3.13.1",
-            "name": "python",
-            "time": dateTime
+            "result": True
           }
 
         elif message_type=="TYPE_NEW_POSTING":
@@ -84,6 +82,14 @@ def ozon_push(request):#receives a notification from ozon on a new order
           print(product.name)
           print(f'Ozon_id: {product.ozon_id}')
           print(f'Ozon_sku: {product.ozon_sku}')
+
+          if RemainderHistory.objects.filter(shipment_id=shipment_id).exists():
+            json_data = {
+              "result": True
+            }
+            a= JsonResponse(json_data, safe=False)
+            print(a)
+            return JsonResponse(json_data, safe=False)
 
           if RemainderHistory.objects.filter(article=product.article, created__lt=dateTime).exists():
             print("True")
@@ -124,7 +130,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
             else:
               warehouseId=1744108
             url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
-            headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwMzAydjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjMsImVudCI6MSwiZXhwIjoxNzkwMjgxNDk1LCJmb3IiOiJzZWxmIiwiaWQiOiIwMTlkMjkzZi0xY2MwLTdjNGMtYjJiNi03ZGVkNWU2YWEwYTUiLCJpaWQiOjEwMjIxMDYwMCwib2lkIjo0MjQ1NTQ1LCJzIjo4MTY2Miwic2lkIjoiZGQ0NjA0NTItNzVkMy00NDk5LTllODgtYzI1YTUxNTcwYTcyIiwidCI6ZmFsc2UsInVpZCI6MTAyMjEwNjAwfQ.uJFJU8Ffebme-qp6b42cx-c61fHM_7ee1At0IcQ_Kx14D8LvCUMVvRrvMJEHdR9BRb3w9xrEpVBbBco1lr_m2g"}
+            headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
             stock_arr=[]
             wb_bar_code=str(product.wb_bar_code)
             qnty=rho.current_remainder
@@ -142,7 +148,7 @@ def ozon_push(request):#receives a notification from ozon on a new order
             #There is no content to send for this request except for headers.
           json_data = {
             "result": True
-            }
+          }
           
         elif message_type=="TYPE_POSTING_CANCELLED": 
           status='initiated by ozon'
@@ -214,17 +220,13 @@ def ozon_push(request):#receives a notification from ozon on a new order
             #There is no content to send for this request except for headers.
           json_data = {
             "result": True
-            }
+          }
 
         else:
           json_data = {
-              "error": {
-                "code": "ERROR_UNKNOWN",
-                "message": "message_type is not defined",
-                "details": None
-                #"details": null
-              }
-          }
+              "result": True
+            }
+            
       except:
         json_data = {
             "error": {
@@ -235,14 +237,16 @@ def ozon_push(request):#receives a notification from ozon on a new order
             }
           }
 
+    else:
+      json_data = {
+      "error": {
+        "code": "ERROR_UNKNOWN",
+        "message": "ошибка",
+        "details": None
+        #"details": null
+      }
+    }
 
-      {
-   "error": {
-      "code": "ERROR_UNKNOWN",
-      "message": "ошибка",
-      "details": null
-   }
-}
 
       #Sending the answer in json format via HttpResponse method
       #before using HTTPResponse method you have to manually convert python dictionnary to json object which is done in the
@@ -254,14 +258,17 @@ def ozon_push(request):#receives a notification from ozon on a new order
       #Sending the answer in json format via JsonRespose method.
       #It's a djago method which converts python dict to json & automatically & sets the required headers.
       #headers display which format the data is formatted in (json, dict or others)
-      # a= JsonResponse(json_data, safe=False)
-      # print(a)
+      a=JsonResponse(json_data, safe=False)
+      print(a)
       return JsonResponse(json_data, safe=False)
 
-      #return JsonResponse(json_data, status=200)
 
+      #return JsonResponse(json_data, status=200)
       #messages.success(request, data)
       #return redirect("dashboard")
+
+
+
 
 #url, куда приходит уведомление от ю-касса. Используется для изменения статуса заказа на "succeeded"
 #и формирования заказа на отпрвку в СДЕК
