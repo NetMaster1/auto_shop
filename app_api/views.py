@@ -54,7 +54,7 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
           json_data = {
             "version": "1.0",
             "name": "evvy_shop",
-            "time": datetime
+            "time": str(datetime),
           }
 
         elif message_type=="TYPE_NEW_POSTING":
