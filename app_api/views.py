@@ -127,7 +127,7 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
           product.save()
 
           #changing qnty at WB
-          if product.wb_bar_code:
+          if product.chartId:
             if product.length < 120:
               warehouseId=1368124
             else:
@@ -135,10 +135,10 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
             url=f'https://marketplace-api.wildberries.ru/api/v3/stocks/{warehouseId}'
             headers = {"Authorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjYwOTAzdjEiLCJ0eXAiOiJKV1QifQ.eyJhY2MiOjEsImVudCI6MSwiZXhwIjoxODA2Njk3ODQ5LCJpZCI6IjAxYTBmYmJjLWNiY2MtNzcwMC05NjdiLTFiODY2ODcwZmE1MSIsImlpZCI6MTAyMjEwNjAwLCJvaWQiOjQyNDU1NDUsInMiOjE2MTI2LCJzaWQiOiJkZDQ2MDQ1Mi03NWQzLTQ0OTktOWU4OC1jMjVhNTE1NzBhNzIiLCJ0IjpmYWxzZSwidWlkIjoxMDIyMTA2MDB9.xC2c2k2Ktg2b_ElHUdWIh5hFkWvQ3ELSOLuoYrr-497vxtERoe3FEl7PIUUWStRCotdGIAlwyDmTCVY4e_UJdA"}
             stock_arr=[]
-            wb_bar_code=str(product.wb_bar_code)
+            chartId=str(product.wb_chrtId)
             qnty=rho.current_remainder
             stock_dict={
-                "sku": wb_bar_code,#WB Barcode
+                "chartId": chartId,#WB Barcode
                 "amount": qnty,
             }
             stock_arr.append(stock_dict)
