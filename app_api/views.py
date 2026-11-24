@@ -34,7 +34,7 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
         #получение данных запроса POST от стороннего сайта в формате json и преобразование данных в формат словаря Python
         data = json.loads(request.body)
         print(data)
-
+        
         #получение данных из текста в формате json
         #message_type=data.get("message_type")
 
@@ -42,6 +42,8 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
         message_type=data['message_type']
         if message_type=='TYPE_PING':
           print(message_type)
+          time=data['time']
+
 
           tdelta=datetime.timedelta(hours=3)
           dT_utcnow=datetime.datetime.now(tz=pytz.UTC)#Greenwich time aware of timezones
@@ -54,7 +56,7 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
           json_data = {
             "version": "1.0",
             "name": "evvy_shop",
-            "time": str(datetime),
+            "time": time,
           }
 
         elif message_type=="TYPE_NEW_POSTING":
