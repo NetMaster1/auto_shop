@@ -8,7 +8,7 @@ router.register('api', views.ServerResponseView)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('ozon_push', views.ozon_push, name='ozon_push'),
+    path('ozon_push_new', views.ozon_push_new, name='ozon_push_new'),
     path('payment_status', views.payment_status, name='payment_status'),
     path('get_ozon_fbo_remainder', views.get_ozon_fbo_remainder, name='get_ozon_fbo_remainder'),
     path('wb_test', views.wb_test, name='wb_test'),
