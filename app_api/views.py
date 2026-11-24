@@ -226,8 +226,7 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
         else:
           json_data = {
               "result": True
-            }
-            
+            }      
       except:
         json_data = {
             "error": {
@@ -237,17 +236,15 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
               #"details": null
             }
           }
-
     else:
       json_data = {
-      "error": {
-        "code": "ERROR_UNKNOWN",
-        "message": "ошибка",
-        "details": None
-        #"details": null
+        "error": {
+          "code": "ERROR_UNKNOWN",
+          "message": "ошибка",
+          "details": None
+          #"details": null
+        }
       }
-    }
-
 
       #Sending the answer in json format via HttpResponse method
       #before using HTTPResponse method you have to manually convert python dictionnary to json object which is done in the
@@ -259,14 +256,17 @@ def ozon_push_new(request):#receives a notification from ozon on a new order
       #Sending the answer in json format via JsonRespose method.
       #It's a djago method which converts python dict to json & automatically & sets the required headers.
       #headers display which format the data is formatted in (json, dict or others)
-      a=JsonResponse(json_data, safe=False)
-      print(a)
-      return JsonResponse(json_data, safe=False)
-
-
-      #return JsonResponse(json_data, status=200)
-      #messages.success(request, data)
-      #return redirect("dashboard")
+    a=JsonResponse(json_data, safe=False)
+    print(a)
+    return JsonResponse(json_data, safe=False)
+    #return JsonResponse(json_data, status=200)
+    #messages.success(request, data)
+    #return redirect("dashboard")
+    #ошибка (ValueError: The view didn't return an HttpResponse object. It returned None instead.) 
+    #возникает в Django, когда функция-представление (view) завершается, но не возвращает объект, 
+    #который можно использовать как HTTP-ответ. Проще говоря: Django ждёт от view объект класса, 
+    #наследуемого от HttpResponse (например, HttpResponse, HttpResponseRedirect, JsonResponse), 
+    #а функция в какой-то момент просто ничего не возвращает — то есть возвращает None
 
 
 
